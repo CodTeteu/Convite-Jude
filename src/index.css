@@ -169,10 +169,18 @@ a {
   .invite-page {
     @apply relative min-h-screen overflow-x-hidden text-[color:var(--invite-brown)];
     background-color: #f9fbf9;
+  }
+
+  .invite-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
     background-image: url("/light-bg.png");
-    background-attachment: fixed;
     background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
+    /* This fixed positioning avoids the iOS zoom bug better than background-attachment: fixed */
   }
 
   .invite-container {
