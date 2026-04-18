@@ -24,14 +24,21 @@ export function SectionHeading({
         className,
       )}
     >
-      <p className={cn("section-label", align === "center" && "justify-center")}>
+      <p
+        className={cn(
+          "font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-gold)]",
+          align === "center" && "justify-center",
+        )}
+      >
         {label}
       </p>
-      <h2 className="mt-6 text-4xl leading-tight font-semibold text-[color:var(--color-paper)] sm:text-5xl">
+      <h2 className="mt-4 font-script text-5xl leading-none text-[var(--invite-brown)] sm:text-6xl md:text-7xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-5 text-base leading-8 text-white/72 sm:text-lg">{description}</p>
+        <p className="mt-5 font-body text-xl leading-relaxed text-[var(--invite-brown-soft)] sm:text-2xl">
+          {description}
+        </p>
       ) : null}
     </Reveal>
   );

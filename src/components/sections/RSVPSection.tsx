@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
-import { CheckCircle2, Loader2, MessageCircleMore } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  MessageCircleMore,
+  MessageSquareText,
+  Phone,
+  User,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 import { rsvpSchema, type RSVPInput } from "@shared/schemas";
 import { inviteData, buildWhatsAppMessage, defaultSource, eventSlug } from "@/config/invite";
@@ -110,123 +118,94 @@ export function RSVPSection() {
   }
 
   return (
-    <section className="section-shell" id="rsvp">
-      <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
-        <div className="lg:pt-8">
+    <section className="invite-section" id="rsvp">
+      <div className="invite-container">
+        <div className="mx-auto max-w-3xl text-center">
           <SectionHeading
+            align="center"
+            description={inviteData.rsvp.description}
             label={inviteData.rsvp.label}
             title={inviteData.rsvp.title}
-            description={inviteData.rsvp.description}
           />
-
-          <Reveal className="mt-8 card-luxe px-6 py-7">
-            <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]/72">
-              Informações importantes
-            </p>
-            <ul className="mt-5 space-y-4 text-base leading-7 text-white/72">
-              <li>Confirmação até {inviteData.event.confirmationDeadline}.</li>
-              <li>Convidados não pagam e não há pagamento na confirmação.</li>
-              <li>Não existe área de presentes, PIX ou cardápio a exibir.</li>
-              <li>Traje passeio completo.</li>
-            </ul>
-          </Reveal>
-
-          {submittedName ? (
-            <Reveal className="mt-6 panel-luxe px-6 py-7">
-              <div className="flex items-start gap-4">
-                <CheckCircle2 className="mt-1 size-6 text-emerald-400" />
-                <div>
-                  <p className="text-lg text-[color:var(--color-paper)]">
-                    Confirmação registrada para {submittedName}.
-                  </p>
-                  <p className="mt-3 text-base leading-7 text-white/72">
-                    {inviteData.rsvp.successMessage}
-                  </p>
-                  {whatsAppUrl ? (
-                    <a
-                      className="button-primary mt-5 inline-flex"
-                      href={whatsAppUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <MessageCircleMore className="mr-2 size-4" />
-                      Continuar no WhatsApp
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-            </Reveal>
-          ) : null}
         </div>
 
-        <Reveal className="panel-luxe px-5 py-6 sm:px-7 sm:py-7">
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <Reveal className="invite-card mx-auto mt-12 max-w-4xl px-5 py-6 sm:px-8 sm:py-9" delay={0.08}>
+          <div className="rounded-[26px] border border-[#dcc9ae] bg-[#f5ead9] px-5 py-5">
+            <p className="font-heading text-[0.72rem] uppercase tracking-[0.3em] text-[var(--invite-gold)]">
+              Informações importantes
+            </p>
+            <ul className="mt-4 space-y-2 text-[var(--invite-brown-soft)]">
+              {inviteData.rsvp.infoItems.map((item) => (
+                <li className="font-body text-xl leading-relaxed sm:text-2xl" key={item}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="mb-2 block text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
+                <label className="mb-2 block font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
                   Nome completo
                 </label>
-                <input
-                  className="w-full rounded-[22px] border border-white/10 bg-black/12 px-4 py-4 text-base outline-none transition placeholder:text-white/24 focus:border-[color:var(--color-gold)]/45"
-                  placeholder="Digite seu nome"
-                  {...register("guest_name")}
-                />
+                <div className="relative">
+                  <User className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-gold)]" />
+                  <input
+                    className="w-full rounded-[22px] border border-[var(--invite-line)] bg-[var(--invite-paper)] px-11 py-4 text-[1.05rem] text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-gold-deep)] focus:border-[var(--invite-line)]"
+                    placeholder="Nome e sobrenome"
+                    {...register("guest_name")}
+                  />
+                </div>
                 {errors.guest_name ? (
-                  <p className="mt-2 text-sm text-rose-300">{errors.guest_name.message}</p>
+                  <p className="mt-2 text-sm text-rose-600">{errors.guest_name.message}</p>
                 ) : null}
               </div>
 
               <div className="sm:col-span-2">
-                <label className="mb-2 block text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
-                  Telefone
+                <label className="mb-2 block font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
+                  WhatsApp
                 </label>
-                <input
-                  className="w-full rounded-[22px] border border-white/10 bg-black/12 px-4 py-4 text-base outline-none transition placeholder:text-white/24 focus:border-[color:var(--color-gold)]/45"
-                  placeholder="(31) 98743-0940"
-                  {...register("phone")}
-                  onChange={(event) => {
-                    setValue("phone", formatPhone(event.target.value));
-                  }}
-                  value={phoneValue}
-                />
+                <div className="relative">
+                  <Phone className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-gold)]" />
+                  <input
+                    className="w-full rounded-[22px] border border-[var(--invite-line)] bg-[var(--invite-paper)] px-11 py-4 text-[1.05rem] text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-gold-deep)] focus:border-[var(--invite-line)]"
+                    placeholder="(31) 98743-0940"
+                    {...register("phone")}
+                    onChange={(event) => {
+                      setValue("phone", formatPhone(event.target.value));
+                    }}
+                    value={phoneValue}
+                  />
+                </div>
                 {errors.phone ? (
-                  <p className="mt-2 text-sm text-rose-300">{errors.phone.message}</p>
+                  <p className="mt-2 text-sm text-rose-600">{errors.phone.message}</p>
                 ) : null}
               </div>
             </div>
 
             <div>
-              <p className="mb-3 text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
-                Presença
+              <p className="mb-3 font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
+                Você comparecerá?
               </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="card-luxe cursor-pointer px-4 py-4">
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    value="attending"
-                    {...register("attendance_status")}
-                  />
-                  <span className="text-sm uppercase tracking-[0.25em] text-[color:var(--color-gold-soft)]/72">
-                    Sim, estarei presente
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="cursor-pointer">
+                  <input className="peer sr-only" type="radio" value="attending" {...register("attendance_status")} />
+                  <span className="block rounded-[24px] border border-[#d8c5aa] bg-[var(--invite-paper)] px-5 py-5 transition peer-checked:border-[var(--invite-line)] peer-checked:bg-[#f4eadb]">
+                    <span className="font-heading text-xl text-[var(--invite-brown)]">Sim</span>
+                    <span className="mt-2 block font-body text-xl leading-relaxed text-[var(--invite-brown-soft)]">
+                      Quero celebrar esse momento com você.
+                    </span>
                   </span>
-                  <p className="mt-2 text-base text-white/74">
-                    Quero celebrar esse momento com você.
-                  </p>
                 </label>
-                <label className="card-luxe cursor-pointer px-4 py-4">
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    value="not-attending"
-                    {...register("attendance_status")}
-                  />
-                  <span className="text-sm uppercase tracking-[0.25em] text-[color:var(--color-gold-soft)]/72">
-                    Não poderei comparecer
+                <label className="cursor-pointer">
+                  <input className="peer sr-only" type="radio" value="not-attending" {...register("attendance_status")} />
+                  <span className="block rounded-[24px] border border-[#d8c5aa] bg-[var(--invite-paper)] px-5 py-5 transition peer-checked:border-[var(--invite-line)] peer-checked:bg-[#f4eadb]">
+                    <span className="font-heading text-xl text-[var(--invite-brown)]">Não</span>
+                    <span className="mt-2 block font-body text-xl leading-relaxed text-[var(--invite-brown-soft)]">
+                      Ainda assim deixarei meu carinho registrado.
+                    </span>
                   </span>
-                  <p className="mt-2 text-base text-white/74">
-                    Ainda assim deixarei meu carinho registrado.
-                  </p>
                 </label>
               </div>
             </div>
@@ -234,16 +213,16 @@ export function RSVPSection() {
             {attendanceStatus === "attending" ? (
               <>
                 <div>
-                  <label className="mb-2 block text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
-                    Quantidade de acompanhantes
+                  <label className="mb-2 block font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
+                    Número de acompanhantes
                   </label>
                   <select
-                    className="w-full rounded-[22px] border border-white/10 bg-black/12 px-4 py-4 text-base outline-none transition focus:border-[color:var(--color-gold)]/45"
+                    className="w-full rounded-[22px] border border-[var(--invite-line)] bg-[var(--invite-paper)] px-4 py-4 text-[1.05rem] text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-line)]"
                     {...register("companions_count")}
                   >
                     {Array.from({ length: 9 }, (_, number) => (
                       <option key={number} value={number}>
-                        {number}
+                        {number === 0 ? "Apenas eu" : `${number} acompanhante${number > 1 ? "s" : ""}`}
                       </option>
                     ))}
                   </select>
@@ -253,18 +232,21 @@ export function RSVPSection() {
                   <div className="grid gap-4">
                     {Array.from({ length: companionsCount }, (_, index) => (
                       <div key={`companion-${index}`}>
-                        <label className="mb-2 block text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
+                        <label className="mb-2 block font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
                           Acompanhante {index + 1}
                         </label>
-                        <input
-                          className="w-full rounded-[22px] border border-white/10 bg-black/12 px-4 py-4 text-base outline-none transition placeholder:text-white/24 focus:border-[color:var(--color-gold)]/45"
-                          placeholder="Nome completo"
-                          {...register(`companions_names.${index}` as const)}
-                        />
+                        <div className="relative">
+                          <Users className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-gold)]" />
+                          <input
+                            className="w-full rounded-[22px] border border-[var(--invite-line)] bg-[var(--invite-paper)] px-11 py-4 text-[1.05rem] text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-gold-deep)] focus:border-[var(--invite-line)]"
+                            placeholder="Nome completo"
+                            {...register(`companions_names.${index}` as const)}
+                          />
+                        </div>
                       </div>
                     ))}
                     {errors.companions_names ? (
-                      <p className="text-sm text-rose-300">
+                      <p className="text-sm text-rose-600">
                         {errors.companions_names.message as string}
                       </p>
                     ) : null}
@@ -274,38 +256,25 @@ export function RSVPSection() {
             ) : null}
 
             <div>
-              <label className="mb-2 block text-[0.7rem] uppercase tracking-[0.25em] text-white/58">
-                Observações
+              <label className="mb-2 block font-heading text-[0.72rem] uppercase tracking-[0.28em] text-[var(--invite-gold)]">
+                Deixe um recado
               </label>
-              <textarea
-                className="min-h-32 w-full rounded-[22px] border border-white/10 bg-black/12 px-4 py-4 text-base outline-none transition placeholder:text-white/24 focus:border-[color:var(--color-gold)]/45"
-                placeholder="Se desejar, escreva um recado ou alguma informação importante."
-                {...register("notes")}
-              />
+              <div className="relative">
+                <MessageSquareText className="pointer-events-none absolute left-4 top-5 size-4 text-[var(--invite-gold)]" />
+                <textarea
+                  className="min-h-32 w-full rounded-[22px] border border-[var(--invite-line)] bg-[var(--invite-paper)] px-11 py-4 text-[1.05rem] text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-gold-deep)] focus:border-[var(--invite-line)]"
+                  placeholder="Se desejar, escreva um recado carinhoso para a formanda."
+                  {...register("notes")}
+                />
+              </div>
               {errors.notes ? (
-                <p className="mt-2 text-sm text-rose-300">{errors.notes.message}</p>
+                <p className="mt-2 text-sm text-rose-600">{errors.notes.message}</p>
               ) : null}
             </div>
 
-            <label className="flex items-start gap-3 rounded-[22px] border border-white/10 bg-black/10 px-4 py-4">
-              <input
-                className="mt-1 size-4 rounded border-white/20 bg-transparent accent-[color:var(--color-gold)]"
-                type="checkbox"
-                {...register("acknowledged_guidelines")}
-              />
-              <span className="text-sm leading-7 text-white/72">
-                Li as orientações do convite, entendi que este é um evento único e que
-                não existe cobrança, presente ou pagamento na confirmação.
-              </span>
-            </label>
-            {errors.acknowledged_guidelines ? (
-              <p className="text-sm text-rose-300">
-                {errors.acknowledged_guidelines.message}
-              </p>
-            ) : null}
 
             <button
-              className="button-primary flex w-full"
+              className="invite-button-primary flex w-full"
               disabled={isSubmitting}
               type="submit"
             >
@@ -320,6 +289,31 @@ export function RSVPSection() {
             </button>
           </form>
         </Reveal>
+
+        {submittedName ? (
+          <Reveal className="invite-card mx-auto mt-6 flex max-w-4xl items-start gap-4 px-6 py-6" delay={0.1}>
+            <CheckCircle2 className="mt-1 size-6 text-emerald-600" />
+            <div>
+              <p className="font-heading text-2xl text-[var(--invite-brown)]">
+                Confirmação registrada para {submittedName}.
+              </p>
+              <p className="mt-3 font-body text-xl leading-relaxed text-[var(--invite-brown-soft)] sm:text-2xl">
+                {inviteData.rsvp.successMessage}
+              </p>
+              {whatsAppUrl ? (
+                <a
+                  className="invite-button-primary mt-5 inline-flex"
+                  href={whatsAppUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <MessageCircleMore className="mr-2 size-4" />
+                  Continuar no WhatsApp
+                </a>
+              ) : null}
+            </div>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

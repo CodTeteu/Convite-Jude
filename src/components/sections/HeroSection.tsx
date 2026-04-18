@@ -1,134 +1,113 @@
-import { CalendarDays, Clock3, MapPin, Sparkles } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { inviteData } from "@/config/invite";
-import { buildGoogleCalendarUrl } from "@/lib/calendar";
+import { useCountdown } from "@/hooks/useCountdown";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
-import { Reveal } from "@/components/ui/Reveal";
+import { cn } from "@/lib/cn";
 
-function HeroImageCard({ compact = false }: { compact?: boolean }) {
+const countdownItems = [
+  { key: "days", label: "Dias" },
+  { key: "hours", label: "Horas" },
+  { key: "minutes", label: "Min" },
+  { key: "seconds", label: "Seg" },
+] as const;
+
+export function HeroSection() {
+  const countdown = useCountdown(inviteData.event.startsAt);
+
   return (
-    <motion.div
-      animate={compact ? undefined : { y: [0, -10, 0] }}
-      transition={compact ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      className="relative mx-auto w-full max-w-md"
+    <section
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#2b2018]"
+      id="inicio"
     >
-      <div className="absolute -left-10 top-8 h-28 w-28 rounded-full bg-[radial-gradient(circle,_rgba(195,164,107,0.34),_transparent_70%)] blur-2xl" />
-      <div className="absolute -bottom-10 right-2 h-36 w-36 rounded-full bg-[radial-gradient(circle,_rgba(27,58,49,0.55),_transparent_75%)] blur-3xl" />
-
-      <div className={`ornate-frame ${compact ? "aspect-[0.9]" : "aspect-[0.78]"}`}>
+      <motion.div
+        animate={{ scale: [1, 1.03, 1] }}
+        className="absolute inset-0 z-0"
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      >
         <ResponsiveImage
           asset={inviteData.hero.imageAsset}
           alt="Camilla Santana Conegundes em retrato principal de formatura"
-          eager={compact}
-          sizes={compact ? "92vw" : "(min-width: 1024px) 40vw, 92vw"}
+          className="h-full w-full object-cover object-[center_28%] sm:object-[center_24%] md:object-[center_20%]"
+          eager
+          sizes="100vw"
         />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,16,14,0.06),rgba(7,16,14,0.46)_75%,rgba(7,16,14,0.82)_100%)]" />
-      </div>
+        <div className="absolute inset-0 bg-black/42 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.08)_38%,rgba(0,0,0,0.72)_100%)]" />
+      </motion.div>
 
-      <div
-        className={`card-luxe absolute grid grid-cols-3 gap-2 px-3 py-3 backdrop-blur-2xl ${
-          compact ? "-bottom-5 left-3 right-3" : "-bottom-6 left-4 right-4 sm:left-6 sm:right-6"
-        }`}
+      <motion.div
+        className="relative z-10 flex min-h-screen w-full flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 sm:pb-10 sm:pt-28 md:pb-8"
+        initial={{ opacity: 0, y: 24 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
-        <div className="rounded-2xl border border-white/8 bg-black/10 px-3 py-3 text-center">
-          <CalendarDays className="mx-auto mb-2 size-4 text-[color:var(--color-gold-soft)]" />
-          <p className="text-[0.58rem] uppercase tracking-[0.22em] text-white/55">Data</p>
-          <p className="mt-1 text-sm text-[color:var(--color-paper)]">{inviteData.event.dateText}</p>
-        </div>
-        <div className="rounded-2xl border border-white/8 bg-black/10 px-3 py-3 text-center">
-          <Clock3 className="mx-auto mb-2 size-4 text-[color:var(--color-gold-soft)]" />
-          <p className="text-[0.58rem] uppercase tracking-[0.22em] text-white/55">Hora</p>
-          <p className="mt-1 text-sm text-[color:var(--color-paper)]">{inviteData.event.timeText}</p>
-        </div>
-        <div className="rounded-2xl border border-white/8 bg-black/10 px-3 py-3 text-center">
-          <MapPin className="mx-auto mb-2 size-4 text-[color:var(--color-gold-soft)]" />
-          <p className="text-[0.58rem] uppercase tracking-[0.22em] text-white/55">Local</p>
-          <p className="mt-1 text-sm text-[color:var(--color-paper)]">{inviteData.event.venueName}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+        <div className="flex flex-col items-center gap-4 sm:gap-5">
+          <div className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/6 px-7 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.36em] text-white/92 shadow-lg backdrop-blur-sm sm:px-9 sm:text-xs">
+            {inviteData.hero.eyebrow}
+          </div>
 
-export function HeroSection() {
-  return (
-    <section
-      id="inicio"
-      className="container-shell relative flex min-h-[100svh] items-center pt-28 pb-16 sm:pt-32 sm:pb-20"
-    >
-      <div className="grid w-full items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="relative z-10">
-          <Reveal>
-            <p className="section-label">{inviteData.hero.eyebrow}</p>
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--color-gold)]/20 bg-white/[0.05] px-4 py-2 text-[0.72rem] uppercase tracking-[0.24em] text-white/65">
-              <Sparkles className="size-4 text-[color:var(--color-gold-soft)]" />
-              {inviteData.hero.overline}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <h1 className="mt-8 text-shadow-soft">
-              <span className="block font-script text-6xl leading-none text-[color:var(--color-paper)] sm:text-7xl">
-                {inviteData.graduate.firstName}
-              </span>
-              <span className="mt-3 block max-w-xl text-3xl font-semibold uppercase tracking-[0.24em] text-[color:var(--color-gold-soft)] sm:text-4xl">
-                {inviteData.graduate.lastName}
-              </span>
+          <div className="mt-2 flex flex-col items-center">
+            <h1 className="font-script text-[4rem] leading-none text-[#fff8e7] drop-shadow-lg sm:text-[4.8rem] md:text-[7.5rem]">
+              {inviteData.hero.name}
             </h1>
-          </Reveal>
-
-          <Reveal delay={0.14}>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs uppercase tracking-[0.25em] text-white/70">
-                {inviteData.graduate.course}
-              </span>
-              <span className="inline-flex items-center rounded-full border border-[color:var(--color-gold)]/18 bg-[color:var(--color-gold)]/[0.09] px-4 py-2 text-xs uppercase tracking-[0.25em] text-[color:var(--color-gold-soft)]">
-                {inviteData.event.label}
-              </span>
-            </div>
-          </Reveal>
-
-          <Reveal className="mt-10 lg:hidden" delay={0.18}>
-            <HeroImageCard compact />
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <blockquote className="mt-16 max-w-2xl border-l border-[color:var(--color-gold)]/35 pl-5 text-lg leading-8 text-white/78 sm:mt-8 sm:text-xl">
-              “{inviteData.graduate.signatureQuote}”
-            </blockquote>
-          </Reveal>
-
-          <Reveal delay={0.24}>
-            <p className="mt-8 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
-              {inviteData.hero.intro}
+            <p className="mt-3 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-4 sm:text-lg">
+              {inviteData.hero.courseLine}
             </p>
-          </Reveal>
-
-          <Reveal delay={0.28}>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <button
-                className="button-primary"
-                onClick={() =>
-                  document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" })
-                }
-                type="button"
-              >
-                {inviteData.hero.primaryCta}
-              </button>
-              <a className="button-secondary" href={inviteData.event.mapsUrl} target="_blank" rel="noreferrer">
-                {inviteData.hero.secondaryCta}
-              </a>
-              <a className="button-ghost" href={buildGoogleCalendarUrl()} target="_blank" rel="noreferrer">
-                {inviteData.hero.tertiaryCta}
-              </a>
-            </div>
-          </Reveal>
+          </div>
         </div>
 
-        <Reveal className="relative hidden lg:block" delay={0.15}>
-          <HeroImageCard />
-        </Reveal>
-      </div>
+        <div className="mt-auto flex flex-col items-center gap-5 pb-0 sm:gap-6">
+          <div className="grid grid-cols-4 gap-2.5 text-white sm:gap-3.5">
+            {countdownItems.map((item, index) => (
+              <motion.div
+                key={item.key}
+                className={cn(
+                  "flex min-w-[68px] flex-col items-center rounded-[20px] border border-white/20 bg-black/45 px-3 py-3.5 backdrop-blur-sm shadow-lg",
+                  "transition duration-300 sm:min-w-[82px] sm:px-4 sm:py-4.5",
+                )}
+                initial={{ opacity: 0, y: 24 }}
+                transition={{ delay: 0.12 + index * 0.06, duration: 0.55 }}
+                whileInView={{ opacity: 1, y: 0 }}
+              >
+                <span className="font-heading text-3xl leading-none text-white sm:text-4xl">
+                  {String(countdown[item.key]).padStart(2, "0")}
+                </span>
+                <span className="mt-2 text-[0.6rem] uppercase tracking-[0.18em] text-white/70 sm:text-[0.65rem] sm:tracking-[0.16em]">
+                  {item.label}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          <button
+            className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-white/30 bg-white/10 px-8 py-2.5 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/18 sm:px-10"
+            onClick={() =>
+              document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" })
+            }
+            type="button"
+          >
+            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.26em] sm:text-[0.72rem] sm:tracking-[0.32em]">
+              {inviteData.hero.primaryCta}
+            </span>
+            <span className="text-base transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </button>
+        </div>
+      </motion.div>
+
+      <motion.button
+        animate={{ y: [0, 10, 0] }}
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-white/72"
+        onClick={() =>
+          document.getElementById("jornada")?.scrollIntoView({ behavior: "smooth" })
+        }
+        transition={{ repeat: Infinity, duration: 2 }}
+        type="button"
+      >
+        <ChevronDown className="size-8" />
+      </motion.button>
     </section>
   );
 }
