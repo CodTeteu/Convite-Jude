@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://camilla.lumaconvites.com.br/sitemap.xml

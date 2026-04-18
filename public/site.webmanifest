@@ -1,0 +1,15 @@
+{
+  "name": "Formatura Camilla",
+  "short_name": "Camilla",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07100e",
+  "theme_color": "#0b1714",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    }
+  ]
+}
