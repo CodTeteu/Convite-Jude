@@ -4,9 +4,9 @@ import { parse, serialize } from "cookie";
 import {
   ADMIN_COOKIE_NAME,
   ADMIN_SESSION_DURATION_SECONDS,
-} from "../../shared/constants";
-import { getServerEnv } from "./env";
-import { sendJson } from "./http";
+} from "../../shared/constants.js";
+import { getServerEnv } from "./env.js";
+import { sendJson } from "./http.js";
 
 export function createAdminCookie() {
   const env = getServerEnv();

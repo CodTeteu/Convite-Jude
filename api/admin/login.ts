@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { adminLoginSchema } from "../../shared/schemas";
-import { createAdminCookie } from "../_lib/auth";
-import { getServerEnv } from "../_lib/env";
-import { parseBody, sendJson } from "../_lib/http";
+import { adminLoginSchema } from "../../shared/schemas.js";
+import { createAdminCookie } from "../_lib/auth.js";
+import { getServerEnv } from "../_lib/env.js";
+import { parseBody, sendJson } from "../_lib/http.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {

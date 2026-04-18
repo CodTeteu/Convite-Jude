@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EVENT_SLUG, attendanceStatuses } from "./constants";
+import { EVENT_SLUG, attendanceStatuses } from "./constants.js";
 
 const phoneTransformer = z
   .string()

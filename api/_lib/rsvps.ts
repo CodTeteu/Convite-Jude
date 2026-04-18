@@ -1,4 +1,4 @@
-import type { AdminRsvpItem, AdminRsvpSummary } from "@shared/schemas";
+import type { AdminRsvpItem, AdminRsvpSummary } from "../../shared/schemas.js";
 
 export function computeSummary(items: AdminRsvpItem[]): AdminRsvpSummary {
   const attending = items.filter((item) => item.attendance_status === "attending");

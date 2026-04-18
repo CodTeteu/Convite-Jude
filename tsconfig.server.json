@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": ["ES2023"],
     "types": ["node"],
-    "moduleResolution": "bundler",
+    "moduleResolution": "NodeNext",
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["shared/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["api", "shared"]
 }

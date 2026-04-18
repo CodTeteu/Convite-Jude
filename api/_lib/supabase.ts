@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "../../shared/database";
-import { getServerEnv } from "./env";
+import type { Database } from "../../shared/database.js";
+import { getServerEnv } from "./env.js";
 
 let client: ReturnType<typeof createClient<Database>> | null = null;
 

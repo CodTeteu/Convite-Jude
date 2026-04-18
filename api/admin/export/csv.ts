@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { requireAdmin } from "../../_lib/auth";
-import { getSupabaseClient } from "../../_lib/supabase";
+import { requireAdmin } from "../../_lib/auth.js";
+import { getSupabaseClient } from "../../_lib/supabase.js";
 
 function escapeCsv(value: unknown) {
   const normalized = String(value ?? "");

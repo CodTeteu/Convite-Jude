@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { rsvpSchema } from "../shared/schemas";
-import { parseBody, sendJson } from "./_lib/http";
-import { getSupabaseClient } from "./_lib/supabase";
+import { rsvpSchema } from "../shared/schemas.js";
+import { parseBody, sendJson } from "./_lib/http.js";
+import { getSupabaseClient } from "./_lib/supabase.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {

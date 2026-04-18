@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { z } from "zod";
-import { adminUpdateSchema, type AdminRsvpItem } from "../../shared/schemas";
-import { requireAdmin } from "../_lib/auth";
-import { parseBody, sendJson } from "../_lib/http";
-import { computeSummary } from "../_lib/rsvps";
-import { getSupabaseClient } from "../_lib/supabase";
+import { adminUpdateSchema, type AdminRsvpItem } from "../../shared/schemas.js";
+import { requireAdmin } from "../_lib/auth.js";
+import { parseBody, sendJson } from "../_lib/http.js";
+import { computeSummary } from "../_lib/rsvps.js";
+import { getSupabaseClient } from "../_lib/supabase.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET" && req.method !== "PATCH") {
