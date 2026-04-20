@@ -1,6 +1,11 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
+  ArrowLeft,
+  Calendar,
   Download,
+  GraduationCap,
   Loader2,
   LogOut,
   RefreshCw,
@@ -14,6 +19,10 @@ import { attendanceLabels, type AttendanceStatus } from "@shared/constants";
 import { ApiError, adminLogin, adminLogout, fetchAdminRsvps, updateAdminRsvp } from "@/lib/api";
 import { formatDisplayDateTime } from "@/lib/format";
 
+// ===========================================
+// TYPES & CONSTANTS
+// ===========================================
+
 type DraftMap = Record<
   string,
   {
@@ -24,25 +33,11 @@ type DraftMap = Record<
 
 const statusOptions: AttendanceStatus[] = ["pending", "attending", "not-attending"];
 
-function SummaryCard({
-  label,
-  value,
-  caption,
-}: {
-  label: string;
-  value: number;
-  caption: string;
-}) {
-  return (
-    <div className="invite-card-strong px-5 py-5">
-      <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[var(--invite-sage)]">
-        {label}
-      </p>
-      <p className="mt-3 font-heading text-4xl text-[var(--invite-brown)]">{value}</p>
-      <p className="mt-2 text-sm text-[var(--invite-brown-soft)]">{caption}</p>
-    </div>
-  );
-}
+const badgeClassMap: Record<AttendanceStatus, string> = {
+  attending: "admin-badge admin-badge-attending",
+  "not-attending": "admin-badge admin-badge-not-attending",
+  pending: "admin-badge admin-badge-pending",
+};
 
 function buildDrafts(items: AdminRsvpItem[] | undefined): DraftMap {
   return Object.fromEntries(
@@ -56,11 +51,434 @@ function buildDrafts(items: AdminRsvpItem[] | undefined): DraftMap {
   );
 }
 
+// ===========================================
+// LOGIN FORM COMPONENT
+// ===========================================
+
+function LoginScreen({
+  onLogin,
+}: {
+  onLogin: (password: string) => Promise<void>;
+}) {
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    try {
+      setSubmitting(true);
+      await onLogin(password);
+      setPassword("");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="relative flex min-h-screen items-center justify-center px-5 py-16">
+      {/* Decorative background */}
+      <div className="admin-login-bg" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="invite-card-strong relative z-10 w-full max-w-md px-6 py-10 sm:px-10"
+      >
+        {/* Icon */}
+        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
+          <ShieldCheck className="size-7" />
+        </div>
+
+        {/* Title */}
+        <p className="mt-6 text-center font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
+          Área administrativa
+        </p>
+        <h1 className="mt-4 text-center font-heading text-4xl text-[var(--invite-brown)]">
+          Acesso restrito
+        </h1>
+        <p className="mt-4 text-center font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
+          Digite a senha administrativa para gerenciar as confirmações de presença.
+        </p>
+
+        {/* Form */}
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-[var(--invite-brown-soft)]">
+              Senha administrativa
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-4 pl-11 pr-5 text-lg text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                type="password"
+                value={password}
+                disabled={submitting}
+              />
+              <ShieldCheck className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
+            </div>
+          </div>
+
+          <button
+            className="invite-button-primary flex w-full"
+            disabled={submitting}
+            type="submit"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Entrando...
+              </>
+            ) : (
+              "Entrar no Painel"
+            )}
+          </button>
+        </form>
+
+        {/* Back link */}
+        <div className="mt-8 flex justify-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-[var(--invite-brown-soft)] transition hover:text-[var(--invite-brown)]"
+          >
+            <ArrowLeft className="size-4" />
+            Voltar para o convite
+          </Link>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ===========================================
+// STATS CARD COMPONENT
+// ===========================================
+
+interface StatsCardProps {
+  title: string;
+  value: number;
+  caption: string;
+  icon: React.ReactNode;
+  delay?: number;
+}
+
+function StatsCard({ title, value, caption, icon, delay = 0 }: StatsCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.4 }}
+    >
+      <div className="admin-stat-card group">
+        {/* Background icon */}
+        <div className="absolute -right-2 -top-2 text-[var(--invite-sage-soft)] opacity-20 transition-opacity group-hover:opacity-30">
+          {icon}
+        </div>
+
+        <p className="relative z-10 text-[0.68rem] uppercase tracking-[0.28em] text-[var(--invite-sage)]">
+          {title}
+        </p>
+        <p className="relative z-10 mt-3 font-heading text-4xl text-[var(--invite-brown)]">
+          {value}
+        </p>
+        <p className="relative z-10 mt-2 text-sm text-[var(--invite-brown-soft)]">
+          {caption}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ===========================================
+// SUBMISSIONS TABLE (DESKTOP)
+// ===========================================
+
+interface TableProps {
+  items: AdminRsvpItem[];
+  drafts: DraftMap;
+  setDrafts: React.Dispatch<React.SetStateAction<DraftMap>>;
+  savingId: string | null;
+  onSave: (item: AdminRsvpItem) => void;
+}
+
+function DesktopTable({ items, drafts, setDrafts, savingId, onSave }: TableProps) {
+  return (
+    <div className="invite-card mt-8 hidden overflow-hidden lg:block">
+      <div className="overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="admin-table-header">
+              <th className="px-5 py-4 font-medium">Convidado</th>
+              <th className="px-5 py-4 font-medium">Presença</th>
+              <th className="px-5 py-4 font-medium text-center">Pessoas</th>
+              <th className="px-5 py-4 font-medium">Observações</th>
+              <th className="px-5 py-4 font-medium">Admin</th>
+              <th className="px-5 py-4 font-medium">Envio</th>
+              <th className="px-5 py-4 font-medium">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, index) => (
+              <motion.tr
+                key={item.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.03 }}
+                className="admin-table-row align-top"
+              >
+                {/* Guest name + phone */}
+                <td className="px-5 py-5">
+                  <div className="flex items-center gap-3">
+                    <div className="admin-avatar flex-shrink-0">
+                      {item.guest_name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-heading text-base font-semibold text-[var(--invite-brown)]">
+                        {item.guest_name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-[var(--invite-brown-soft)]">
+                        {item.phone}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+
+                {/* Attendance status select */}
+                <td className="px-5 py-5">
+                  <select
+                    className="w-full rounded-[14px] border border-[var(--invite-line)] bg-transparent px-3 py-2.5 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
+                    onChange={(e) =>
+                      setDrafts((cur) => ({
+                        ...cur,
+                        [item.id]: {
+                          ...cur[item.id],
+                          attendance_status: e.target.value as AttendanceStatus,
+                        },
+                      }))
+                    }
+                    value={drafts[item.id]?.attendance_status ?? item.attendance_status}
+                  >
+                    {statusOptions.map((s) => (
+                      <option key={s} value={s}>
+                        {attendanceLabels[s]}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="mt-2">
+                    <span className={badgeClassMap[drafts[item.id]?.attendance_status ?? item.attendance_status]}>
+                      {attendanceLabels[drafts[item.id]?.attendance_status ?? item.attendance_status]}
+                    </span>
+                  </div>
+                </td>
+
+                {/* Companions */}
+                <td className="px-5 py-5 text-center">
+                  <span className="inline-flex items-center rounded-full border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-3 py-1 text-sm font-medium text-[var(--invite-brown)]">
+                    {item.companions_count + 1}
+                  </span>
+                  {item.companions_count > 0 && (
+                    <p className="mt-2 max-w-[180px] text-xs leading-relaxed text-[var(--invite-brown-soft)]">
+                      {item.companions_names.join(", ")}
+                    </p>
+                  )}
+                </td>
+
+                {/* Guest notes */}
+                <td className="px-5 py-5">
+                  {item.notes ? (
+                    <div className="admin-message-box max-w-[260px] whitespace-pre-wrap break-words">
+                      "{item.notes}"
+                    </div>
+                  ) : (
+                    <span className="text-xs text-[var(--invite-sage)]">—</span>
+                  )}
+                </td>
+
+                {/* Admin notes textarea */}
+                <td className="px-5 py-5">
+                  <textarea
+                    className="min-h-[80px] w-full rounded-[14px] border border-[var(--invite-line)] bg-transparent px-3 py-2.5 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
+                    onChange={(e) =>
+                      setDrafts((cur) => ({
+                        ...cur,
+                        [item.id]: {
+                          ...cur[item.id],
+                          admin_notes: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="Notas do admin"
+                    value={drafts[item.id]?.admin_notes ?? ""}
+                  />
+                </td>
+
+                {/* Date */}
+                <td className="px-5 py-5 text-sm text-[var(--invite-brown-soft)]">
+                  <span className="whitespace-nowrap">
+                    {new Date(item.created_at).toLocaleDateString("pt-BR")}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-[var(--invite-sage)]">
+                    {new Date(item.created_at).toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </td>
+
+                {/* Save action */}
+                <td className="px-5 py-5">
+                  <button
+                    className="invite-button-primary min-h-10 px-4 py-2 text-[0.68rem]"
+                    onClick={() => onSave(item)}
+                    type="button"
+                  >
+                    {savingId === item.id ? (
+                      <>
+                        <Loader2 className="mr-2 size-3.5 animate-spin" />
+                        Salvando
+                      </>
+                    ) : (
+                      "Salvar"
+                    )}
+                  </button>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ===========================================
+// SUBMISSIONS CARDS (MOBILE)
+// ===========================================
+
+function MobileCards({ items, drafts, setDrafts, savingId, onSave }: TableProps) {
+  return (
+    <div className="mt-8 space-y-4 lg:hidden">
+      {items.map((item, index) => (
+        <motion.article
+          key={item.id}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.04 }}
+          className="invite-card-strong px-5 py-6"
+        >
+          {/* Header: name + badge */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="admin-avatar flex-shrink-0">
+                {item.guest_name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-heading text-lg text-[var(--invite-brown)]">
+                  {item.guest_name}
+                </p>
+                <p className="mt-0.5 text-sm text-[var(--invite-brown-soft)]">{item.phone}</p>
+              </div>
+            </div>
+            <span className={badgeClassMap[item.attendance_status]}>
+              {attendanceLabels[item.attendance_status]}
+            </span>
+          </div>
+
+          {/* Info boxes */}
+          <div className="mt-5 grid gap-3">
+            <div className="rounded-[18px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/20 px-4 py-3">
+              <p className="text-[0.65rem] uppercase tracking-[0.22em] text-[var(--invite-sage)]">
+                Acompanhantes ({item.companions_count})
+              </p>
+              <p className="mt-1.5 text-sm text-[var(--invite-brown-soft)]">
+                {item.companions_count > 0
+                  ? item.companions_names.join(", ")
+                  : "Sem acompanhantes"}
+              </p>
+            </div>
+
+            {item.notes && (
+              <div className="rounded-[18px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/20 px-4 py-3">
+                <p className="text-[0.65rem] uppercase tracking-[0.22em] text-[var(--invite-sage)]">
+                  Observações do convidado
+                </p>
+                <p className="mt-1.5 text-sm italic leading-relaxed text-[var(--invite-brown-soft)]">
+                  "{item.notes}"
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Edit controls */}
+          <div className="mt-5 grid gap-3">
+            <select
+              className="w-full rounded-[14px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
+              onChange={(e) =>
+                setDrafts((cur) => ({
+                  ...cur,
+                  [item.id]: {
+                    ...cur[item.id],
+                    attendance_status: e.target.value as AttendanceStatus,
+                  },
+                }))
+              }
+              value={drafts[item.id]?.attendance_status ?? item.attendance_status}
+            >
+              {statusOptions.map((s) => (
+                <option key={s} value={s}>
+                  {attendanceLabels[s]}
+                </option>
+              ))}
+            </select>
+
+            <textarea
+              className="min-h-24 w-full rounded-[14px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
+              onChange={(e) =>
+                setDrafts((cur) => ({
+                  ...cur,
+                  [item.id]: {
+                    ...cur[item.id],
+                    admin_notes: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Notas do admin"
+              value={drafts[item.id]?.admin_notes ?? ""}
+            />
+
+            <button
+              className="invite-button-primary flex w-full"
+              onClick={() => onSave(item)}
+              type="button"
+            >
+              {savingId === item.id ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Salvando
+                </>
+              ) : (
+                "Salvar alterações"
+              )}
+            </button>
+          </div>
+
+          <p className="mt-4 text-xs uppercase tracking-[0.18em] text-[var(--invite-sage)]">
+            Enviado em {formatDisplayDateTime(item.created_at)}
+          </p>
+        </motion.article>
+      ))}
+    </div>
+  );
+}
+
+// ===========================================
+// MAIN ADMIN COMPONENT
+// ===========================================
+
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [submittingLogin, setSubmittingLogin] = useState(false);
-  const [password, setPassword] = useState("");
   const [data, setData] = useState<AdminRsvpsResponse | null>(null);
   const [drafts, setDrafts] = useState<DraftMap>({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,9 +521,7 @@ export default function AdminPage() {
   }, []);
 
   const filteredItems = useMemo(() => {
-    if (!data) {
-      return [];
-    }
+    if (!data) return [];
 
     const term = deferredSearch.trim().toLowerCase();
 
@@ -121,19 +537,14 @@ export default function AdminPage() {
     });
   }, [data, deferredSearch, statusFilter]);
 
-  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleLogin(password: string) {
     try {
-      setSubmittingLogin(true);
       await adminLogin(password);
-      setPassword("");
       toast.success("Acesso administrativo liberado.");
       await loadData();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Senha inválida.");
-    } finally {
-      setSubmittingLogin(false);
+      throw error;
     }
   }
 
@@ -149,10 +560,7 @@ export default function AdminPage() {
 
   async function handleSave(item: AdminRsvpItem) {
     const draft = drafts[item.id];
-
-    if (!draft) {
-      return;
-    }
+    if (!draft) return;
 
     try {
       setSavingId(item.id);
@@ -168,6 +576,7 @@ export default function AdminPage() {
     }
   }
 
+  // --- Loading state ---
   if (loading && !data && authenticated === false) {
     return (
       <div className="invite-page flex min-h-screen items-center justify-center">
@@ -176,104 +585,134 @@ export default function AdminPage() {
     );
   }
 
+  // --- Login screen ---
   if (!authenticated) {
-    return (
-      <div className="invite-page flex min-h-screen items-center justify-center px-5 py-16">
-        <div className="invite-card-strong w-full max-w-md px-6 py-8 sm:px-8">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
-            <ShieldCheck className="size-7" />
-          </div>
-          <p className="mt-8 text-center font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
-            Área administrativa
-          </p>
-          <h1 className="mt-5 text-center font-heading text-4xl text-[var(--invite-brown)]">
-            Acesso restrito
-          </h1>
-          <p className="mt-4 text-center font-body text-xl leading-relaxed text-[var(--invite-brown-soft)]">
-            Digite a senha administrativa para visualizar, filtrar e editar as
-            confirmações de presença.
-          </p>
-
-          <form className="mt-8 space-y-5" onSubmit={handleLogin}>
-            <div>
-              <label className="mb-2 block font-body text-lg text-[var(--invite-brown-soft)]">
-                Senha administrativa
-              </label>
-              <input
-                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-5 py-4 text-lg text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Digite a senha"
-                type="password"
-                value={password}
-              />
-            </div>
-
-            <button className="invite-button-primary flex w-full" disabled={submittingLogin} type="submit">
-              {submittingLogin ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Entrando
-                </>
-              ) : (
-                "Entrar"
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
-    );
+    return <LoginScreen onLogin={handleLogin} />;
   }
+
+  // --- Authenticated: Admin Dashboard ---
+  const summary = data?.summary;
 
   return (
     <div className="invite-page min-h-screen">
-      <div className="invite-container py-10 sm:py-12">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">Admin / Camilla</p>
-            <h1 className="mt-5 font-heading text-4xl text-[var(--invite-brown)] sm:text-5xl">
-              Confirmações de presença
-            </h1>
-            <p className="mt-4 max-w-2xl font-body text-xl leading-relaxed text-[var(--invite-brown-soft)]">
-              Painel seguro para acompanhar respostas, atualizar status, registrar observações
-              e exportar a lista completa.
-            </p>
+      {/* ===== STICKY HEADER ===== */}
+      <header className="admin-header">
+        <div className="invite-container flex items-center justify-between py-3.5">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/"
+              className="flex size-10 items-center justify-center rounded-full text-[var(--invite-brown-soft)] transition hover:bg-[var(--invite-sage-soft)] hover:text-[var(--invite-brown)]"
+            >
+              <ArrowLeft className="size-5" />
+            </Link>
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 items-center justify-center rounded-full bg-[var(--invite-sage-soft)]">
+                <GraduationCap className="size-5 text-[var(--invite-brown)]" />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-base font-bold tracking-wide text-[var(--invite-brown)] sm:text-lg">
+                  Painel Administrativo
+                </h1>
+                <p className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--invite-sage)]">
+                  Admin / Camilla
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button className="invite-button-secondary" onClick={() => void loadData(true)} type="button">
-              <RefreshCw className="mr-2 size-4" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              className="invite-button-secondary hidden min-h-9 px-4 py-2 text-xs sm:inline-flex"
+              onClick={() => void loadData(true)}
+              type="button"
+            >
+              <RefreshCw className="mr-2 size-3.5" />
               Atualizar
             </button>
-            <a className="invite-button-secondary" href="/api/admin/export/csv" target="_blank" rel="noreferrer">
-              <Download className="mr-2 size-4" />
-              Exportar CSV
+            <a
+              className="invite-button-secondary hidden min-h-9 px-4 py-2 text-xs sm:inline-flex"
+              href="/api/admin/export/csv"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Download className="mr-2 size-3.5" />
+              CSV
             </a>
             <button
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--invite-line)] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--invite-brown-soft)] transition duration-300 hover:border-[var(--invite-gold)]/40 hover:text-[var(--invite-brown)]"
+              className="inline-flex min-h-9 items-center justify-center rounded-full border border-[var(--invite-line)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--invite-brown-soft)] transition duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 sm:px-4"
               onClick={() => void handleLogout()}
               type="button"
             >
-              <LogOut className="mr-2 size-4" />
-              Sair
+              <LogOut className="mr-1.5 size-3.5 sm:mr-2" />
+              <span className="hidden sm:inline">Sair</span>
             </button>
           </div>
         </div>
+      </header>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard label="Respostas" value={data?.summary.total ?? 0} caption="Formulários enviados" />
-          <SummaryCard label="Confirmados" value={data?.summary.attending ?? 0} caption="Pessoas que irão" />
-          <SummaryCard label="Ausências" value={data?.summary.notAttending ?? 0} caption="Não comparecerão" />
-          <SummaryCard label="Total de pessoas" value={data?.summary.totalPeople ?? 0} caption="Incluindo acompanhantes" />
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="invite-container py-8 sm:py-10">
+        {/* Welcome */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8"
+        >
+          <h2 className="font-script text-4xl text-[var(--invite-brown)] sm:text-5xl">
+            Bem-vinda, Admin
+          </h2>
+          <p className="mt-3 max-w-2xl font-body text-xl leading-relaxed text-[var(--invite-brown-soft)]">
+            Acompanhe as confirmações de presença, atualize status, registre observações e exporte a lista completa.
+          </p>
+        </motion.div>
+
+        {/* Stats cards */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatsCard
+            title="Respostas"
+            value={summary?.total ?? 0}
+            caption="formulários"
+            icon={<Users className="size-16" />}
+            delay={0.1}
+          />
+          <StatsCard
+            title="Confirmados"
+            value={summary?.attending ?? 0}
+            caption="vão comparecer"
+            icon={<GraduationCap className="size-16" />}
+            delay={0.2}
+          />
+          <StatsCard
+            title="Ausências"
+            value={summary?.notAttending ?? 0}
+            caption="não comparecerão"
+            icon={<Calendar className="size-16" />}
+            delay={0.3}
+          />
+          <StatsCard
+            title="Total pessoas"
+            value={summary?.totalPeople ?? 0}
+            caption="com acompanhantes"
+            icon={<Users className="size-16" />}
+            delay={0.4}
+          />
         </div>
 
-        <div className="invite-card mt-8 px-5 py-5">
+        {/* Search & Filter bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.4 }}
+          className="invite-card mt-8 px-5 py-5"
+        >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
               <input
-                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-11 py-4 text-lg text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Buscar por nome ou telefone"
+                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-base text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por nome ou telefone..."
                 value={searchTerm}
               />
             </div>
@@ -282,10 +721,8 @@ export default function AdminPage() {
               {(["all", ...statusOptions] as const).map((status) => (
                 <button
                   key={status}
-                  className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.22em] transition ${
-                    statusFilter === status
-                      ? "border-[var(--invite-gold)] bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]"
-                      : "border-[var(--invite-line)] bg-transparent text-[var(--invite-brown-soft)]"
+                  className={`admin-filter-btn ${
+                    statusFilter === status ? "admin-filter-active" : "admin-filter-inactive"
                   }`}
                   onClick={() => setStatusFilter(status)}
                   type="button"
@@ -295,197 +732,78 @@ export default function AdminPage() {
               ))}
             </div>
           </div>
+        </motion.div>
+
+        {/* Mobile refresh/export buttons */}
+        <div className="mt-4 flex gap-2 sm:hidden">
+          <button
+            className="invite-button-secondary flex-1 min-h-10 px-3 py-2 text-xs"
+            onClick={() => void loadData(true)}
+            type="button"
+          >
+            <RefreshCw className="mr-1.5 size-3.5" />
+            Atualizar
+          </button>
+          <a
+            className="invite-button-secondary flex-1 min-h-10 px-3 py-2 text-xs"
+            href="/api/admin/export/csv"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Download className="mr-1.5 size-3.5" />
+            CSV
+          </a>
         </div>
 
-        {/* Mobile card list */}
-        <div className="mt-8 space-y-4 lg:hidden">
-          {filteredItems.map((item) => (
-            <article key={item.id} className="invite-card-strong px-5 py-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-heading text-lg text-[var(--invite-brown)]">{item.guest_name}</p>
-                  <p className="mt-1 text-sm text-[var(--invite-brown-soft)]">{item.phone}</p>
-                </div>
-                <span className="rounded-full border border-[var(--invite-gold)]/30 bg-[var(--invite-sage-soft)] px-3 py-1 text-[0.68rem] uppercase tracking-[0.22em] text-[var(--invite-brown)]">
-                  {attendanceLabels[item.attendance_status]}
-                </span>
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                <div className="rounded-[20px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4">
-                  <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[var(--invite-sage)]">
-                    Acompanhantes
-                  </p>
-                  <p className="mt-2 font-body text-lg text-[var(--invite-brown-soft)]">
-                    {item.companions_count > 0
-                      ? item.companions_names.join(", ")
-                      : "Sem acompanhantes"}
-                  </p>
-                </div>
-                <div className="rounded-[20px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4">
-                  <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[var(--invite-sage)]">
-                    Observações do convidado
-                  </p>
-                  <p className="mt-2 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
-                    {item.notes || "Sem observações."}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-4">
-                <select
-                  className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
-                  onChange={(event) =>
-                    setDrafts((current) => ({
-                      ...current,
-                      [item.id]: {
-                        ...current[item.id],
-                        attendance_status: event.target.value as AttendanceStatus,
-                      },
-                    }))
-                  }
-                  value={drafts[item.id]?.attendance_status ?? item.attendance_status}
-                >
-                  {statusOptions.map((status) => (
-                    <option key={status} value={status}>
-                      {attendanceLabels[status]}
-                    </option>
-                  ))}
-                </select>
-                <textarea
-                  className="min-h-28 w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
-                  onChange={(event) =>
-                    setDrafts((current) => ({
-                      ...current,
-                      [item.id]: {
-                        ...current[item.id],
-                        admin_notes: event.target.value,
-                      },
-                    }))
-                  }
-                  placeholder="Observações do admin"
-                  value={drafts[item.id]?.admin_notes ?? ""}
-                />
-                <button className="invite-button-primary flex w-full" onClick={() => void handleSave(item)} type="button">
-                  {savingId === item.id ? (
-                    <>
-                      <Loader2 className="mr-2 size-4 animate-spin" />
-                      Salvando
-                    </>
-                  ) : (
-                    "Salvar alterações"
-                  )}
-                </button>
-              </div>
-
-              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-[var(--invite-sage)]">
-                Enviado em {formatDisplayDateTime(item.created_at)}
-              </p>
-            </article>
-          ))}
-        </div>
-
-        {/* Desktop table */}
-        <div className="invite-card mt-8 hidden overflow-hidden lg:block">
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-fixed">
-              <thead className="bg-[var(--invite-sage-soft)]/30 text-left">
-                <tr className="text-[0.68rem] uppercase tracking-[0.24em] text-[var(--invite-sage)]">
-                  <th className="px-5 py-4 font-medium">Convidado</th>
-                  <th className="px-5 py-4 font-medium">Presença</th>
-                  <th className="px-5 py-4 font-medium">Acompanhantes</th>
-                  <th className="px-5 py-4 font-medium">Observações</th>
-                  <th className="px-5 py-4 font-medium">Admin</th>
-                  <th className="px-5 py-4 font-medium">Envio</th>
-                  <th className="px-5 py-4 font-medium">Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredItems.map((item) => (
-                  <tr key={item.id} className="border-t border-[var(--invite-line)] align-top">
-                    <td className="px-5 py-5">
-                      <p className="font-heading text-lg text-[var(--invite-brown)]">{item.guest_name}</p>
-                      <p className="mt-1 text-sm text-[var(--invite-brown-soft)]">{item.phone}</p>
-                    </td>
-                    <td className="px-5 py-5">
-                      <select
-                        className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
-                        onChange={(event) =>
-                          setDrafts((current) => ({
-                            ...current,
-                            [item.id]: {
-                              ...current[item.id],
-                              attendance_status: event.target.value as AttendanceStatus,
-                            },
-                          }))
-                        }
-                        value={drafts[item.id]?.attendance_status ?? item.attendance_status}
-                      >
-                        {statusOptions.map((status) => (
-                          <option key={status} value={status}>
-                            {attendanceLabels[status]}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="px-5 py-5 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
-                      {item.companions_count > 0
-                        ? item.companions_names.join(", ")
-                        : "Sem acompanhantes"}
-                    </td>
-                    <td className="px-5 py-5 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
-                      {item.notes || "Sem observações."}
-                    </td>
-                    <td className="px-5 py-5">
-                      <textarea
-                        className="min-h-28 w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-4 py-3 text-sm text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)]"
-                        onChange={(event) =>
-                          setDrafts((current) => ({
-                            ...current,
-                            [item.id]: {
-                              ...current[item.id],
-                              admin_notes: event.target.value,
-                            },
-                          }))
-                        }
-                        placeholder="Observações do admin"
-                        value={drafts[item.id]?.admin_notes ?? ""}
-                      />
-                    </td>
-                    <td className="px-5 py-5 text-sm text-[var(--invite-brown-soft)]">
-                      {formatDisplayDateTime(item.created_at)}
-                    </td>
-                    <td className="px-5 py-5">
-                      <button className="invite-button-primary min-h-11 px-4 py-2 text-[0.68rem]" onClick={() => void handleSave(item)} type="button">
-                        {savingId === item.id ? (
-                          <>
-                            <Loader2 className="mr-2 size-4 animate-spin" />
-                            Salvando
-                          </>
-                        ) : (
-                          "Salvar"
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Data loading state */}
+        {loading && data && (
+          <div className="mt-8 flex items-center justify-center py-12">
+            <Loader2 className="size-6 animate-spin text-[var(--invite-gold)]" />
           </div>
-        </div>
+        )}
 
-        {filteredItems.length === 0 ? (
-          <div className="invite-card-strong mt-8 flex flex-col items-center justify-center gap-4 px-6 py-14 text-center">
-            <Users className="size-9 text-[var(--invite-sage)]" />
-            <p className="font-heading text-lg text-[var(--invite-brown)]">
-              Nenhuma confirmação encontrada para este filtro.
+        {/* Desktop Table */}
+        {!loading && (
+          <DesktopTable
+            items={filteredItems}
+            drafts={drafts}
+            setDrafts={setDrafts}
+            savingId={savingId}
+            onSave={(item) => void handleSave(item)}
+          />
+        )}
+
+        {/* Mobile Cards */}
+        {!loading && (
+          <MobileCards
+            items={filteredItems}
+            drafts={drafts}
+            setDrafts={setDrafts}
+            savingId={savingId}
+            onSave={(item) => void handleSave(item)}
+          />
+        )}
+
+        {/* Empty state */}
+        {!loading && filteredItems.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="invite-card-strong mt-8 flex flex-col items-center justify-center gap-4 px-6 py-16 text-center"
+          >
+            <div className="flex size-20 items-center justify-center rounded-full bg-[var(--invite-sage-soft)]">
+              <Users className="size-10 text-[var(--invite-sage)]" />
+            </div>
+            <h3 className="font-heading text-xl text-[var(--invite-brown)]">
+              Nenhuma confirmação encontrada
+            </h3>
+            <p className="max-w-sm font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
+              As confirmações de presença aparecerão aqui assim que forem enviadas pelos convidados. Ajuste os filtros ou atualize o painel.
             </p>
-            <p className="max-w-md font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
-              Ajuste os filtros ou atualize o painel para carregar novas respostas.
-            </p>
-          </div>
-        ) : null}
-      </div>
+          </motion.div>
+        )}
+      </main>
     </div>
   );
 }
