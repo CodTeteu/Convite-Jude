@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Clock3, Copy, MapPin, Shirt, Users } from "lucide-react";
+import { Calendar, Check, Clock3, Copy, MapPin, Navigation, Shirt, Users } from "lucide-react";
 import { toast } from "sonner";
 import { inviteData } from "@/config/invite";
 import { buildGoogleCalendarUrl } from "@/lib/calendar";
@@ -12,7 +12,7 @@ const essentials = [
   {
     icon: Clock3,
     label: "Chegue no horário",
-    value: "Início às 22:22.",
+    value: "Início às 22:00.",
   },
   {
     icon: Shirt,
@@ -42,7 +42,7 @@ export function CelebrationSection() {
   }
 
   return (
-    <section className="invite-section !pt-4 sm:!pt-8" id="celebracao">
+    <section className="invite-section !pb-8 !pt-4 sm:!pb-12 sm:!pt-8" id="celebracao">
       <div className="invite-container">
         <SectionHeading
           align="center"
@@ -91,24 +91,42 @@ export function CelebrationSection() {
             </div>
           </Reveal>
 
-          <Reveal className="invite-card-strong px-6 py-6 sm:px-7" delay={0.08}>
-            <div className="space-y-5 text-center sm:text-left">
-              <div className="space-y-2">
-                <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[var(--invite-sage)]">
-                  Local
-                </p>
-                <h3 className="font-heading text-3xl text-[var(--invite-brown)]">
+          <Reveal className="invite-card-strong overflow-hidden" delay={0.08}>
+            <div className="bg-white px-6 pt-8 pb-4 text-center">
+              <p className="font-heading text-lg uppercase tracking-[0.4em] text-[var(--invite-emerald)]">
+                LOCAL
+              </p>
+            </div>
+            <div className="relative h-[160px] overflow-hidden sm:h-[200px]">
+              <ResponsiveImage
+                asset={inviteData.event.venueImageAsset}
+                alt="Foto do local do evento"
+                className="h-full w-full object-cover"
+                sizes="(min-width: 768px) 45vw, 100vw"
+              />
+            </div>
+
+            <div className="space-y-5 px-6 py-6 sm:px-7">
+              <div className="space-y-2 text-center sm:text-left">
+                <h3 className="font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">
                   {inviteData.event.venueName}
                 </h3>
               </div>
 
-              <div className="rounded-[24px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/40 px-5 py-5">
-                <p className="font-body text-xl leading-relaxed text-[var(--invite-brown-soft)] sm:text-2xl">
+              <div className="group relative rounded-[24px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/40 px-5 py-5 transition-colors hover:bg-[var(--invite-sage-soft)]/60">
+                <p className="pr-8 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
                   {inviteData.event.venue}
                 </p>
+                <button
+                  onClick={() => void handleCopyAddress()}
+                  className="absolute right-5 top-5 text-[var(--invite-brown-soft)] transition-colors hover:text-[var(--invite-emerald)]"
+                  title="Copiar endereço"
+                >
+                  {copying ? <Check className="size-5 text-[var(--invite-emerald)]" /> : <Copy className="size-5" />}
+                </button>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-3 sm:justify-start">
+              <div className="mt-4 flex flex-wrap justify-center gap-3 sm:justify-start">
                 <a
                   className="invite-button-secondary"
                   href={inviteData.event.mapsUrl}
@@ -118,38 +136,39 @@ export function CelebrationSection() {
                   <MapPin className="mr-2 size-4" />
                   Abrir no Maps
                 </a>
-                <button
+                <a
                   className="invite-button-secondary"
-                  onClick={() => void handleCopyAddress()}
-                  type="button"
+                  href={inviteData.event.wazeUrl}
+                  rel="noreferrer"
+                  target="_blank"
                 >
-                  <Copy className="mr-2 size-4" />
-                  {copying ? "Copiando..." : "Copiar endereço"}
-                </button>
+                  <Navigation className="mr-2 size-4" />
+                  Abrir no Waze
+                </a>
               </div>
             </div>
           </Reveal>
         </div>
 
-        <div className="mt-8 grid gap-3 md:grid-cols-3">
+        <div className="mx-auto mt-8 flex w-fit flex-col gap-6 sm:mt-12 sm:w-full sm:flex-row sm:gap-8">
           {essentials.map((item, index) => {
             const Icon = item.icon;
 
             return (
               <Reveal
-                className="invite-card px-5 py-5 text-center md:text-left"
+                className="text-left sm:flex-1"
                 delay={0.08 + index * 0.05}
                 key={item.label}
               >
-                <div className="flex items-center justify-center gap-3 md:justify-start">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
+                <div className="flex items-center justify-start gap-4">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
                     <Icon className="size-5" strokeWidth={1.8} />
                   </div>
                   <p className="text-[0.72rem] uppercase tracking-[0.24em] text-[var(--invite-sage)]">
                     {item.label}
                   </p>
                 </div>
-                <p className="mt-4 font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
+                <p className="mt-2 pl-14 font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
                   {item.value}
                 </p>
               </Reveal>

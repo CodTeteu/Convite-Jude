@@ -6,6 +6,7 @@ import { inviteData } from "@/config/invite";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { cn } from "@/lib/cn";
 
 export function FamilyGallerySection() {
   const [autoplay] = useState(() =>
@@ -15,6 +16,7 @@ export function FamilyGallerySection() {
     }),
   );
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: true }, [autoplay]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <section className="invite-section !pt-4 sm:!pt-8 !pb-4 sm:!pb-8" id="familia">
@@ -40,7 +42,10 @@ export function FamilyGallerySection() {
                         <ResponsiveImage
                           asset={slide.asset}
                           alt={slide.alt}
-                          className="h-full w-full object-cover object-top transition duration-500 hover:scale-[1.03]"
+                          className={cn(
+                            "h-full w-full object-cover transition duration-500 hover:scale-[1.03]",
+                            slide.positionClass,
+                          )}
                           sizes="(min-width: 1024px) 34vw, (min-width: 768px) 52vw, 86vw"
                         />
                       </div>
@@ -74,11 +79,35 @@ export function FamilyGallerySection() {
 
         <Reveal className="mt-10" delay={0.1}>
           <div className="space-y-5 text-center text-[var(--invite-brown-soft)] md:text-left">
-            {inviteData.familyGallery.paragraphs.map((paragraph) => (
-              <p className="font-body text-xl leading-relaxed sm:text-2xl" key={paragraph}>
-                {paragraph}
+            {isExpanded ? (
+              <>
+                {inviteData.familyGallery.paragraphs.map((paragraph, index) => (
+                  <p className="font-body text-xl leading-relaxed sm:text-2xl" key={paragraph}>
+                    {paragraph}
+                    {index === inviteData.familyGallery.paragraphs.length - 1 && (
+                      <button
+                        className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                        onClick={() => setIsExpanded(false)}
+                        type="button"
+                      >
+                        Ler menos
+                      </button>
+                    )}
+                  </p>
+                ))}
+              </>
+            ) : (
+              <p className="font-body text-xl leading-relaxed sm:text-2xl">
+                {inviteData.familyGallery.paragraphs[0]}...
+                <button
+                  className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                  onClick={() => setIsExpanded(true)}
+                  type="button"
+                >
+                  Ver mais
+                </button>
               </p>
-            ))}
+            )}
           </div>
         </Reveal>
       </div>

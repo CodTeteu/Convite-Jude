@@ -14,6 +14,7 @@ export function StorySection() {
     }),
   );
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" }, [autoplay]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <section className="invite-section !pb-0" id="jornada">
@@ -26,10 +27,8 @@ export function StorySection() {
             {inviteData.journey.title}
           </h2>
           <div className="mt-6 text-center italic text-[var(--invite-brown)]/90">
-            <p className="font-script text-2xl leading-[1.3] sm:text-3xl">
-              “A medicina, para mim, é um <br />
-              compromisso com a vida, com a <br />
-              escuta atenta, com o olhar cuidadoso.”
+            <p className="font-script text-3xl leading-[1.3] sm:text-4xl">
+              “{inviteData.graduate.signatureQuote}”
             </p>
           </div>
         </div>
@@ -79,21 +78,43 @@ export function StorySection() {
                 {inviteData.journey.title}
               </h2>
               <div className="mt-6 text-center italic text-[var(--invite-brown)]/90 lg:text-left">
-                <p className="font-script text-2xl leading-[1.3] sm:text-3xl">
-                  “A medicina, para mim, é um <br />
-                  compromisso com a vida, com a <br />
-                  escuta atenta, com o olhar cuidadoso.”
+                <p className="font-script text-3xl leading-[1.3] sm:text-4xl">
+                  “{inviteData.graduate.signatureQuote}”
                 </p>
               </div>
             </div>
 
             <div className="text-center lg:text-left">
-              <div className="space-y-6 text-[var(--invite-brown-soft)]">
-                {inviteData.journey.paragraphs.map((paragraph) => (
-                  <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose" key={paragraph}>
-                    {paragraph}
+              <div className="space-y-6 pb-2 text-[var(--invite-brown-soft)]">
+                {isExpanded ? (
+                  <>
+                    {inviteData.journey.paragraphs.map((paragraph, index) => (
+                      <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose" key={paragraph}>
+                        {paragraph}
+                        {index === inviteData.journey.paragraphs.length - 1 && (
+                          <button
+                            className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                            onClick={() => setIsExpanded(false)}
+                            type="button"
+                          >
+                            Ler menos
+                          </button>
+                        )}
+                      </p>
+                    ))}
+                  </>
+                ) : (
+                  <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose">
+                    {inviteData.journey.paragraphs[0]}...
+                    <button
+                      className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                      onClick={() => setIsExpanded(true)}
+                      type="button"
+                    >
+                      Ver mais
+                    </button>
                   </p>
-                ))}
+                )}
               </div>
             </div>
 

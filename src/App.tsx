@@ -9,10 +9,10 @@ const AdminPage = lazy(() => import("@/pages/AdminPage"));
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#08120f] text-[#e9dcc4]">
-      <div className="panel-luxe flex items-center gap-4 px-6 py-5">
-        <Loader2 className="size-5 animate-spin text-[color:var(--color-gold-soft)]" />
-        <span className="text-sm uppercase tracking-[0.3em] text-white/70">
+    <div className="invite-page flex min-h-screen items-center justify-center">
+      <div className="invite-card-strong flex items-center gap-4 px-6 py-5">
+        <Loader2 className="size-5 animate-spin text-[var(--invite-gold)]" />
+        <span className="text-sm uppercase tracking-[0.3em] text-[var(--invite-brown-soft)]">
           Abrindo painel
         </span>
       </div>
@@ -42,8 +42,8 @@ export default function App() {
         toastOptions={{
           classNames: {
             toast:
-              "!border-white/10 !bg-[#10211c] !text-[#f8f1e2] !shadow-[0_24px_80px_rgba(0,0,0,0.35)]",
-            description: "!text-[#d4c7ae]",
+              "!border-[var(--invite-line)] !bg-white/95 !text-[var(--invite-brown)] !shadow-[var(--invite-shadow)] !backdrop-blur-md",
+            description: "!text-[var(--invite-brown-soft)]",
           },
         }}
       />

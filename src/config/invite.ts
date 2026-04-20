@@ -24,7 +24,9 @@ export const inviteData = {
     endsAt: "2026-07-19T03:00:00-03:00",
     venue: "Av. Heráclito Mourão de Miranda, 1340 - Castelo, Belo Horizonte - MG, 31330-142",
     venueName: "Castelo, Belo Horizonte/MG",
+    venueImageAsset: "venue-castelo.jpg",
     mapsUrl: "https://maps.app.goo.gl/nysEJNSkwN6RpTbh6?g_st=ic",
+    wazeUrl: "https://waze.com/ul?q=Av.%20Her%C3%A1clito%20Mour%C3%A3o%20de%20Miranda%2C%201340%20-%20Castelo%2C%20Belo%20Horizonte%20-%20MG",
     dressCode: "Traje passeio completo",
     confirmationDeadline: "17/07/2026",
   },
@@ -55,6 +57,26 @@ export const inviteData = {
       {
         asset: "camilla-portrait-soft",
         alt: "Camilla em retrato delicado de formatura",
+      },
+      {
+        asset: "camilla-history-mission.jpg",
+        alt: "Camilla na Missão Amazônia",
+      },
+      {
+        asset: "camilla-history-doctor.jpg",
+        alt: "Camilla de jaleco como Dra.",
+      },
+      {
+        asset: "camilla-history-graduation.jpg",
+        alt: "Camilla na colação de grau",
+      },
+      {
+        asset: "camilla-history-childhood-portrait.jpg",
+        alt: "Camilla na infância",
+      },
+      {
+        asset: "camilla-history-graduation-pointing.jpg",
+        alt: "Camilla celebrando a conquista",
       },
     ],
     paragraphs: [
@@ -108,6 +130,12 @@ export const inviteData = {
         caption: "Com minha irmã Priscilla, minha base desde sempre.",
         positionClass: "object-center",
       },
+      {
+        asset: "camilla-family-group-2.jpg",
+        alt: "Camilla com família e amigos em momento de celebração",
+        caption: "Amor e união que multiplicam a alegria desta conquista.",
+        positionClass: "object-center",
+      },
     ],
   },
   celebration: {
@@ -120,14 +148,14 @@ export const inviteData = {
     },
     primaryImageAsset: "camilla-celebration-new.jpg",
     scheduleNarrative:
-      "No dia 18 de julho de 2026, às 22:22, quero celebrar esse momento tão especial ao lado de quem fez parte da minha caminhada. Sua presença vai tornar esta noite ainda mais inesquecível.",
+      "No dia 18 de julho de 2026, às 22:00, quero celebrar esse momento tão especial ao lado de quem fez parte da minha caminhada. Sua presença vai tornar esta noite ainda mais inesquecível.",
     locationNarrative:
       "Nos encontraremos em Belo Horizonte, em uma celebração única, pensada com carinho para receber cada convidado com acolhimento, beleza e gratidão.",
     quickNotes: [
       {
         title: "Chegue no horário",
         description:
-          "A programação foi pensada para começar pontualmente às 22:22. Sua chegada no horário ajuda a preservar a experiência da noite.",
+          "A programação foi pensada para começar pontualmente às 22:00. Sua chegada no horário ajuda a preservar a experiência da noite.",
       },
       {
         title: "Traje",
@@ -167,22 +195,23 @@ export function buildWhatsAppMessage(params: {
   attendance: "attending" | "not-attending";
   companionsNames: string[];
 }) {
-  const attendanceLine =
+  const attendanceStatus =
     params.attendance === "attending"
-      ? "Confirmo com carinho minha presença."
-      : "Infelizmente não poderei estar presente, mas envio meu carinho e admiração por essa conquista.";
+      ? "✨ Confirmo com muita alegria minha presença!"
+      : "Infelizmente não poderei estar presente fisicamente, mas meu coração e carinho estarão com você.";
 
-  const companionsLine =
+  const companionsSection =
     params.attendance === "attending" && params.companionsNames.length > 0
-      ? `Acompanhantes: ${params.companionsNames.join(", ")}.`
-      : "Sem acompanhantes.";
+      ? `\n👥 *Acompanhantes:* ${params.companionsNames.join(", ")}`
+      : "";
 
-  return `Olá, Camilla! ${attendanceLine}
+  return `Olá, Camilla! 👋
 
-Nome: ${params.name}
-${companionsLine}
+${attendanceStatus}
 
-Parabéns por essa conquista tão bonita. Será uma alegria acompanhar esse momento especial.`;
+*Convidado:* ${params.name}${companionsSection}
+
+A medicina é uma jornada linda e sua história de cuidado e humanidade nos inspira. Parabéns por essa conquista maravilhosa! 🩺🎓✨`;
 }
 
 export const calendarEvent = {
@@ -190,7 +219,7 @@ export const calendarEvent = {
   details:
     "Celebração da formatura em Medicina de Camilla Santana Conegundes.",
   location: inviteData.event.venue,
-  startDateTime: "20260719T012200Z",
+  startDateTime: "20260719T010000Z",
   endDateTime: "20260719T060000Z",
 };
 

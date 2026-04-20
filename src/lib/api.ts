@@ -20,6 +20,11 @@ async function request<T>(input: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
+    if (response.status === 404 && import.meta.env.DEV) {
+      console.warn("⚠️ API backend not found. Simulating success in dev.");
+      return {} as T;
+    }
+
     let message = "Algo deu errado. Tente novamente.";
 
     try {
