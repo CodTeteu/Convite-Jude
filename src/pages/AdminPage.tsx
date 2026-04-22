@@ -64,34 +64,34 @@ function LoginScreen({ onLogin }: { onLogin: (password: string) => Promise<void>
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center px-5 py-16">
+    <div className="relative flex h-[100svh] items-center justify-center overflow-hidden px-4 py-4 sm:min-h-screen sm:px-5 sm:py-16">
       <div className="admin-login-bg" />
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="invite-card-strong relative z-10 w-full max-w-md px-6 py-10 sm:px-10"
+        className="invite-card-strong relative z-10 w-full max-w-md px-5 py-7 sm:px-10 sm:py-10"
       >
-        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
-          <ShieldCheck className="size-7" />
+        <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)] sm:size-16">
+          <ShieldCheck className="size-5 sm:size-7" />
         </div>
-        <p className="mt-6 text-center font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
+        <p className="mt-4 text-center font-heading text-[0.68rem] uppercase tracking-[0.3em] text-[var(--invite-sage)] sm:mt-6 sm:text-[0.72rem] sm:tracking-[0.32em]">
           Área administrativa
         </p>
-        <h1 className="mt-4 text-center font-heading text-4xl text-[var(--invite-brown)]">
+        <h1 className="mt-2 text-center font-heading text-3xl text-[var(--invite-brown)] sm:mt-4 sm:text-4xl">
           Acesso restrito
         </h1>
-        <p className="mt-4 text-center font-body text-lg leading-relaxed text-[var(--invite-brown-soft)]">
+        <p className="mt-2 text-center font-body text-base leading-relaxed text-[var(--invite-brown-soft)] sm:mt-4 sm:text-lg">
           Digite a senha administrativa para gerenciar as confirmações de presença.
         </p>
-        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+        <form className="mt-5 space-y-4 sm:mt-8 sm:space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--invite-brown-soft)]">
               Senha administrativa
             </label>
             <div className="relative">
               <input
-                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-4 pl-11 pr-5 text-lg text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
+                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-lg text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] sm:py-4"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 type="password"
@@ -112,7 +112,7 @@ function LoginScreen({ onLogin }: { onLogin: (password: string) => Promise<void>
             )}
           </button>
         </form>
-        <div className="mt-8 flex justify-center">
+        <div className="mt-5 flex justify-center sm:mt-8">
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-sm text-[var(--invite-brown-soft)] transition hover:text-[var(--invite-brown)]"
