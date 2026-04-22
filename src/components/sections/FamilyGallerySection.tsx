@@ -8,6 +8,8 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { cn } from "@/lib/cn";
 
+const PREVIEW_PARAGRAPH_COUNT = 2;
+
 export function FamilyGallerySection() {
   const [autoplay] = useState(() =>
     Autoplay({
@@ -97,16 +99,27 @@ export function FamilyGallerySection() {
                 ))}
               </>
             ) : (
-              <p className="font-body text-xl leading-relaxed sm:text-2xl">
-                {inviteData.familyGallery.paragraphs[0]}...
-                <button
-                  className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
-                  onClick={() => setIsExpanded(true)}
-                  type="button"
-                >
-                  Ver mais
-                </button>
-              </p>
+              <>
+                {inviteData.familyGallery.paragraphs
+                  .slice(0, PREVIEW_PARAGRAPH_COUNT)
+                  .map((paragraph, index) => (
+                    <p className="font-body text-xl leading-relaxed sm:text-2xl" key={paragraph}>
+                      {paragraph}
+                      {index === PREVIEW_PARAGRAPH_COUNT - 1 && (
+                        <>
+                          ...
+                          <button
+                            className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                            onClick={() => setIsExpanded(true)}
+                            type="button"
+                          >
+                            Ver mais
+                          </button>
+                        </>
+                      )}
+                    </p>
+                  ))}
+              </>
             )}
           </div>
         </Reveal>

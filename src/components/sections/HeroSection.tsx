@@ -63,17 +63,17 @@ export function HeroSection() {
           </div>
 
           <div className="mt-2 flex flex-col items-center">
-            <h1 className="flex max-w-[18rem] flex-col items-center text-[#fff8e7] drop-shadow-lg sm:max-w-[32rem] md:max-w-[42rem]">
-              <span className="font-heading text-[3.5rem] font-semibold leading-none sm:text-[5rem] md:text-[7rem]">
+            <h1 className="flex max-w-[21rem] flex-col items-center text-white drop-shadow-lg sm:max-w-[36rem] md:max-w-[48rem]">
+              <span className="font-body text-[4.8rem] font-semibold italic leading-[0.82] sm:text-[6.8rem] md:text-[9rem]">
                 {heroFirstName}
               </span>
               {heroLastName ? (
-                <span className="mt-2 text-balance font-heading text-[1.45rem] font-medium leading-tight sm:text-[2rem] md:text-[2.7rem]">
+                <span className="mt-2 text-balance font-body text-[2.1rem] font-medium italic leading-[0.95] sm:mt-3 sm:text-[3rem] md:text-[4rem]">
                   {heroLastName}
                 </span>
               ) : null}
             </h1>
-            <p className="mt-3 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-4 sm:text-lg">
+            <p className="mt-5 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-6 sm:text-lg">
               {inviteData.hero.courseLine}
             </p>
           </div>

@@ -6,6 +6,8 @@ import { inviteData } from "@/config/invite";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Reveal } from "@/components/ui/Reveal";
 
+const PREVIEW_PARAGRAPH_COUNT = 2;
+
 export function StorySection() {
   const [autoplay] = useState(() =>
     Autoplay({
@@ -104,16 +106,27 @@ export function StorySection() {
                     ))}
                   </>
                 ) : (
-                  <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose">
-                    {inviteData.journey.paragraphs[0]}...
-                    <button
-                      className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
-                      onClick={() => setIsExpanded(true)}
-                      type="button"
-                    >
-                      Ver mais
-                    </button>
-                  </p>
+                  <>
+                    {inviteData.journey.paragraphs
+                      .slice(0, PREVIEW_PARAGRAPH_COUNT)
+                      .map((paragraph, index) => (
+                        <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose" key={paragraph}>
+                          {paragraph}
+                          {index === PREVIEW_PARAGRAPH_COUNT - 1 && (
+                            <>
+                              ...
+                              <button
+                                className="ml-3 inline-flex font-heading text-[0.75rem] font-bold uppercase tracking-[0.25em] text-[var(--invite-gold)] transition-colors hover:text-[var(--invite-brown)]"
+                                onClick={() => setIsExpanded(true)}
+                                type="button"
+                              >
+                                Ver mais
+                              </button>
+                            </>
+                          )}
+                        </p>
+                      ))}
+                  </>
                 )}
               </div>
             </div>
