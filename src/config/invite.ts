@@ -110,7 +110,7 @@ export const inviteData = {
         asset: "camilla-family-mother",
         alt: "Camilla e Magda em retrato afetuoso",
         caption: "Presença constante, força diária.",
-        positionClass: "object-[center_15%]",
+        positionClass: "object-center",
       },
       {
         asset: "camilla-family-group",

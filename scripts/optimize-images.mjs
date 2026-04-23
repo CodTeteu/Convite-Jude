@@ -50,10 +50,11 @@ const manifest = [
     position: "centre",
   },
   {
-    input: "WhatsApp Image 2026-04-17 at 19.39.56 (2).jpeg",
+    input: "WhatsApp Image 2026-04-23 at 09.04.31.jpeg",
     output: "camilla-family-mother",
-    width: 1400,
-    height: 1800,
+    width: 1600,
+    height: 1200,
+    extract: { left: 0, top: 185, width: 853, height: 640 },
     position: "centre",
   },
   {
@@ -181,10 +182,13 @@ async function createImageVariants(asset) {
     throw new Error(`Arquivo não encontrado: ${asset.input}`);
   }
 
-  const pipeline = sharp(inputPath).rotate().resize(asset.width, asset.height, {
-    fit: "cover",
-    position: asset.position
-  });
+  const source = sharp(inputPath).rotate();
+  const pipeline = asset.extract
+    ? source.extract(asset.extract).resize(asset.width, asset.height)
+    : source.resize(asset.width, asset.height, {
+        fit: "cover",
+        position: asset.position
+      });
 
   await Promise.all([
     pipeline.clone().avif({ quality: 54 }).toFile(path.join(outputDir, `${asset.output}.avif`)),
