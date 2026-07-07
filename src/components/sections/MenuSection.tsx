@@ -30,9 +30,19 @@ export function MenuSection() {
         {/* Single Integrated Menu Card with Blue Background */}
         <div className="max-w-2xl mx-auto">
           <Reveal delay={0.15}>
-            <div className="relative">
+            <div className="relative rounded-[32px] overflow-hidden">
               {/* Outer Shadow glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--invite-brown)] to-[#0A1628] rounded-[32px] shadow-xl" />
+              
+              {/* Texture overlays */}
+              <div 
+                className="absolute inset-0 bg-repeat opacity-[0.06] mix-blend-overlay pointer-events-none rounded-[32px]" 
+                style={{ backgroundImage: 'url("/paper-texture.svg")' }}
+              />
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-[0.45] mix-blend-overlay pointer-events-none rounded-[32px]" 
+                style={{ backgroundImage: 'url("/dark-bg.png")' }}
+              />
               
               <div className="relative text-white rounded-[32px] border border-white/10 px-6 py-8 md:px-12 md:py-12 overflow-hidden">
                 {/* Inner gold border decoration */}
