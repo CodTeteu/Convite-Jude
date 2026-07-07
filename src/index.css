@@ -35,6 +35,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--color-background);
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -43,6 +44,7 @@ body {
   background-color: var(--invite-cream);
   color: var(--invite-brown);
   font-family: var(--font-sans);
+  overscroll-behavior-y: none;
 }
 
 body::before {
