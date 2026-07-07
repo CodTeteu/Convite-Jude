@@ -34,8 +34,8 @@ export function HeroSection() {
           eager
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-[#0D2747]/30 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,39,71,0.42),rgba(13,39,71,0.08)_38%,rgba(13,39,71,0.75)_100%)]" />
+        <div className="absolute inset-0 bg-black/15" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.3),rgba(0,0,0,0)_40%,rgba(0,0,0,0.65)_100%)]" />
       </motion.div>
 
       {/* Mobile Fixed Background (No-scale to prevent zoom bugs) */}
@@ -47,8 +47,8 @@ export function HeroSection() {
           eager
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-[#0D2747]/35 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0D2747]/50 via-[#0D2747]/10 to-[#0D2747]/85" />
+        <div className="absolute inset-0 bg-black/15" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/75" />
       </div>
 
       <motion.div

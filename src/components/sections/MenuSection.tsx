@@ -1,6 +1,5 @@
 import { inviteData } from "@/config/invite";
 import { Reveal } from "@/components/ui/Reveal";
-import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 
 export function MenuSection() {
   if (!inviteData.menu?.enabled) return null;
@@ -28,29 +27,63 @@ export function MenuSection() {
           <div className="decorative-line mt-5" />
         </Reveal>
 
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-stretch">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
           
-          {/* Left Column — Visual Buffet Image with Offset Border */}
-          <Reveal className="relative flex items-center justify-center" delay={0.1}>
-            <div className="relative w-full h-full min-h-[350px] md:min-h-[450px]">
-              {/* Decorative Frame */}
-              <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[var(--invite-gold)]/20 rounded-3xl pointer-events-none" />
+          {/* Left Column — Jantar Info Card (Clean & Sophisticated, No Images) */}
+          <Reveal className="relative flex flex-col justify-center animate-in fade-in" delay={0.1}>
+            <div className="relative h-full flex flex-col justify-center">
+              {/* Slate/Navy dark background for contrast with the white paper card */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--invite-brown)] to-[#0A1628] rounded-[32px] shadow-xl" />
               
-              {/* Main Image */}
-              <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl relative">
-                <ResponsiveImage
-                  asset={inviteData.event.venueImageAsset}
-                  alt={inviteData.event.venueName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <div className="relative text-white rounded-[32px] border border-white/10 px-8 py-10 md:px-10 md:py-14 overflow-hidden flex-1 flex flex-col justify-between">
+                {/* Decorative glows */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--invite-gold)]/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[var(--invite-gold)]/5 rounded-full blur-3xl" />
+                
+                {/* Inner border decoration */}
+                <div className="absolute inset-4 md:inset-5 border border-white/10 rounded-2xl pointer-events-none" />
 
-              {/* Glowing decorative blobs around the frame */}
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--invite-gold)]/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="space-y-6 relative z-10 my-auto text-center">
+                  <p className="font-heading text-xs uppercase tracking-[0.3em] text-[var(--invite-gold)]">
+                    Jantar de Celebração
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <h3 className="font-script italic font-normal text-4xl md:text-5xl text-white">
+                      Uma Noite Especial
+                    </h3>
+                    <div className="w-12 h-[1px] bg-[var(--invite-gold)]/30 mx-auto mt-2" />
+                  </div>
+
+                  <p className="font-sans text-sm text-white/70 leading-relaxed max-w-sm mx-auto">
+                    Para comemorar esta grande conquista, convidamos você para um jantar festivo preparado com muito carinho.
+                  </p>
+
+                  <div className="py-4 space-y-4">
+                    <div className="flex flex-col items-center">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-1">Data & Horário</span>
+                      <span className="font-heading text-base text-[var(--invite-gold-soft)] font-medium">8 de Agosto de 2026</span>
+                      <span className="font-script text-2xl text-[var(--invite-gold)] mt-0.5">às 19h30</span>
+                    </div>
+
+                    <div className="w-8 h-[1px] bg-white/10 mx-auto" />
+
+                    <div className="flex flex-col items-center">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-1">Local</span>
+                      <span className="font-heading text-base text-[var(--invite-gold-soft)] font-medium">{inviteData.event.venueName}</span>
+                      <span className="font-sans text-xs text-white/60 mt-1 max-w-xs">{inviteData.event.venue}</span>
+                    </div>
+                  </div>
+
+                  <p className="font-sans text-[11px] text-[var(--invite-gold-soft)]/50 italic">
+                    * Sua presença é o nosso maior presente.
+                  </p>
+                </div>
+              </div>
             </div>
           </Reveal>
 
-          {/* Right Column — Menu Card (Paper Style, longer, taller and more detailed) */}
+          {/* Right Column — Menu Card (Paper Style, longer, taller and detailed) */}
           <Reveal delay={0.2}>
             <div className="relative h-full flex flex-col justify-center">
               {/* Tilted background for realistic paper effect */}
@@ -68,7 +101,7 @@ export function MenuSection() {
                         {course.category}
                       </h3>
                       
-                      {/* Vertical line items instead of joining them on one line */}
+                      {/* Vertical line items */}
                       <ul className="space-y-2 max-w-sm mx-auto">
                         {course.items.map((item) => (
                           <li 
