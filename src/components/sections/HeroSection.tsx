@@ -34,8 +34,8 @@ export function HeroSection() {
           eager
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/42 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.08)_38%,rgba(0,0,0,0.72)_100%)]" />
+        <div className="absolute inset-0 bg-[#0D2747]/30 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,39,71,0.42),rgba(13,39,71,0.08)_38%,rgba(13,39,71,0.75)_100%)]" />
       </motion.div>
 
       {/* Mobile Fixed Background (No-scale to prevent zoom bugs) */}
@@ -47,8 +47,8 @@ export function HeroSection() {
           eager
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/45 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/80" />
+        <div className="absolute inset-0 bg-[#0D2747]/35 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0D2747]/50 via-[#0D2747]/10 to-[#0D2747]/85" />
       </div>
 
       <motion.div
@@ -106,7 +106,7 @@ export function HeroSection() {
           </div>
 
           <button
-            className="group inline-flex min-h-11 items-center justify-center gap-2.5 rounded-full border border-white/25 bg-white/8 px-7 py-2 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/15 sm:px-9"
+            className="group inline-flex min-h-11 items-center justify-center gap-2.5 rounded-full border border-[var(--invite-gold)]/40 bg-[#0D2747]/50 px-7 py-2 text-white backdrop-blur-md transition-all duration-300 hover:bg-[#0D2747]/70 sm:px-9 shadow-[0_12px_30px_rgba(13,39,71,0.25)]"
             onClick={() =>
               document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" })
             }

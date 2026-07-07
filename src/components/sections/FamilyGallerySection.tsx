@@ -52,7 +52,7 @@ export function FamilyGallerySection() {
                         />
                       </div>
                       <figcaption className="px-5 py-5">
-                        <p className="font-body text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
+                        <p className="font-body text-sm leading-relaxed text-[var(--invite-brown-soft)] sm:text-base">
                           {slide.caption}
                         </p>
                       </figcaption>
@@ -84,7 +84,7 @@ export function FamilyGallerySection() {
             {isExpanded ? (
               <>
                 {inviteData.familyGallery.paragraphs.map((paragraph, index) => (
-                  <p className="font-body text-xl leading-relaxed sm:text-2xl" key={paragraph}>
+                  <p className="font-body text-base leading-relaxed sm:text-lg" key={paragraph}>
                     {paragraph}
                     {index === inviteData.familyGallery.paragraphs.length - 1 && (
                       <button
@@ -103,7 +103,7 @@ export function FamilyGallerySection() {
                 {inviteData.familyGallery.paragraphs
                   .slice(0, PREVIEW_PARAGRAPH_COUNT)
                   .map((paragraph, index) => (
-                    <p className="font-body text-xl leading-relaxed sm:text-2xl" key={paragraph}>
+                    <p className="font-body text-base leading-relaxed sm:text-lg" key={paragraph}>
                       {paragraph}
                       {index === PREVIEW_PARAGRAPH_COUNT - 1 && (
                         <>

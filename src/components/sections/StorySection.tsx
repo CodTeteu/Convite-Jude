@@ -28,8 +28,9 @@ export function StorySection() {
           <h2 className="mt-4 font-script italic font-medium text-5xl text-[var(--invite-brown)] sm:text-6xl">
             {inviteData.journey.title}
           </h2>
-          <div className="mt-6 text-center italic text-[var(--invite-brown)]/90">
-            <p className="font-script italic text-2xl leading-[1.3] sm:text-3xl">
+          <div className="relative py-4 px-6 border-l border-[var(--invite-gold)] bg-[var(--invite-sand)]/10 rounded-r-2xl my-6 max-w-xl mx-auto text-left shadow-[inset_0_0_12px_rgba(207,201,194,0.06)]">
+            <span className="absolute -top-3 left-4 text-4xl font-serif text-[var(--invite-gold)]/40 font-bold select-none">“</span>
+            <p className="font-script italic text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl pl-2">
               {inviteData.graduate.signatureQuote}
             </p>
           </div>
@@ -37,7 +38,7 @@ export function StorySection() {
 
         <div className="mt-10 grid items-center gap-14 lg:mt-0 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <Reveal className="relative">
-            <div className="relative overflow-hidden rounded-[34px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)]">
+            <div className="relative overflow-hidden rounded-[24px] border border-[var(--invite-gold)]/20 bg-white p-1.5 shadow-[0_16px_40px_rgba(13,39,71,0.05)]">
               <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex">
                   {inviteData.journey.images.map((image) => (
@@ -79,8 +80,9 @@ export function StorySection() {
               <h2 className="mt-4 font-script italic font-medium text-6xl text-[var(--invite-brown)]">
                 {inviteData.journey.title}
               </h2>
-              <div className="mt-6 text-center italic text-[var(--invite-brown)]/90 lg:text-left">
-                <p className="font-script italic text-2xl leading-[1.3] sm:text-3xl">
+              <div className="relative py-4 px-6 border-l border-[var(--invite-gold)] bg-[var(--invite-sand)]/10 rounded-r-2xl my-6 text-left shadow-[inset_0_0_12px_rgba(207,201,194,0.06)]">
+                <span className="absolute -top-3 left-4 text-4xl font-serif text-[var(--invite-gold)]/40 font-bold select-none">“</span>
+                <p className="font-script italic text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl pl-2">
                   {inviteData.graduate.signatureQuote}
                 </p>
               </div>
@@ -91,7 +93,7 @@ export function StorySection() {
                 {isExpanded ? (
                   <>
                     {inviteData.journey.paragraphs.map((paragraph, index) => (
-                      <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose" key={paragraph}>
+                      <p className="font-body text-base leading-relaxed sm:text-xl lg:text-[1.25rem] lg:leading-loose" key={paragraph}>
                         {paragraph}
                         {index === inviteData.journey.paragraphs.length - 1 && (
                           <button
@@ -110,7 +112,7 @@ export function StorySection() {
                     {inviteData.journey.paragraphs
                       .slice(0, PREVIEW_PARAGRAPH_COUNT)
                       .map((paragraph, index) => (
-                        <p className="font-body text-xl leading-relaxed sm:text-[1.38rem] lg:leading-loose" key={paragraph}>
+                        <p className="font-body text-base leading-relaxed sm:text-xl lg:text-[1.25rem] lg:leading-loose" key={paragraph}>
                           {paragraph}
                           {index === PREVIEW_PARAGRAPH_COUNT - 1 && (
                             <>

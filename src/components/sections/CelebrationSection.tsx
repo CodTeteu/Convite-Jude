@@ -83,10 +83,10 @@ export function CelebrationSection() {
                   <p className="font-heading text-sm uppercase tracking-[0.3em] text-[var(--invite-sage)]">
                     Colação de Grau
                   </p>
-                  <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
+                  <p className="font-body text-lg text-[var(--invite-brown-soft)] sm:text-2xl">
                     7 de agosto de 2026
                   </p>
-                  <p className="font-body text-lg text-[var(--invite-brown-soft)]/70">
+                  <p className="font-body text-base text-[var(--invite-brown-soft)]/70">
                     Espaço Palaciu&apos;s Real Eventos
                   </p>
                 </div>
@@ -95,10 +95,10 @@ export function CelebrationSection() {
                   <p className="font-heading text-sm uppercase tracking-[0.3em] text-[var(--invite-sage)]">
                     Jantar de Celebração
                   </p>
-                  <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
+                  <p className="font-body text-lg text-[var(--invite-brown-soft)] sm:text-2xl">
                     {inviteData.event.dateLong} • {inviteData.event.timeText}
                   </p>
-                  <p className="font-body text-lg text-[var(--invite-brown-soft)]/70">
+                  <p className="font-body text-base text-[var(--invite-brown-soft)]/70">
                     {inviteData.event.venueName}
                   </p>
                 </div>
@@ -135,13 +135,13 @@ export function CelebrationSection() {
 
             <div className="space-y-5 px-6 py-6 sm:px-7">
               <div className="space-y-2 text-center sm:text-left">
-                <h3 className="font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">
+                <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-3xl">
                   {inviteData.event.venueName}
                 </h3>
               </div>
 
               <div className="group relative rounded-[24px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/40 px-5 py-5 transition-colors hover:bg-[var(--invite-sage-soft)]/60">
-                <p className="pr-8 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
+                <p className="pr-8 font-body text-base leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
                   {inviteData.event.venue}
                 </p>
                 <button
@@ -195,10 +195,10 @@ export function CelebrationSection() {
                       <Icon className="size-4" strokeWidth={1.8} />
                     </div>
                     <div>
-                      <p className="font-heading text-base text-[var(--invite-brown)]">
+                      <p className="font-heading text-sm text-[var(--invite-brown)] sm:text-base">
                         {note.title}
                       </p>
-                      <p className="mt-1 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
+                      <p className="mt-1 font-body text-sm leading-relaxed text-[var(--invite-brown-soft)] sm:text-lg">
                         {note.description}
                       </p>
                     </div>

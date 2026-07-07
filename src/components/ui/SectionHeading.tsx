@@ -32,11 +32,11 @@ export function SectionHeading({
       >
         {label}
       </p>
-      <h2 className="mt-4 font-script italic font-medium text-5xl leading-none text-[var(--invite-brown)] sm:text-6xl md:text-7xl">
+      <h2 className="mt-3 font-script italic font-medium text-3xl leading-none text-[var(--invite-brown)] sm:text-5xl md:text-6xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-5 font-body text-xl leading-relaxed text-[var(--invite-brown-soft)] sm:text-2xl">
+        <p className="mt-3.5 font-body text-base leading-relaxed text-[var(--invite-brown-soft)] sm:text-lg">
           {description}
         </p>
       ) : null}
