@@ -52,28 +52,24 @@ export function HeroSection() {
       </div>
 
       <motion.div
-        className="relative z-10 flex h-full w-full flex-col items-center px-4 pb-12 pt-22 text-center sm:px-6 sm:pb-16 sm:pt-24 md:pb-14"
+        className="relative z-10 flex h-full w-full flex-col items-center px-4 pb-12 pt-10 text-center sm:px-6 sm:pb-16 sm:pt-14 md:pb-14"
         initial={{ opacity: 0, y: 24 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        <div className="flex flex-col items-center gap-4 sm:gap-5">
-          <div className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/5 px-6 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.4em] text-white/90 shadow-lg backdrop-blur-sm sm:px-7 sm:text-[0.68rem]">
-            {inviteData.hero.eyebrow}
-          </div>
-
-          <div className="mt-2 flex flex-col items-center">
-            <h1 className="flex max-w-[21rem] flex-col items-center text-white drop-shadow-lg sm:max-w-[36rem] md:max-w-[48rem]">
-              <span className="font-body text-[4.8rem] font-semibold italic leading-[0.82] sm:text-[6.8rem] md:text-[9rem]">
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center">
+            <h1 className="flex max-w-[24rem] flex-col items-center text-white drop-shadow-2xl sm:max-w-[40rem] md:max-w-[50rem]">
+              <span className="font-script text-[6.8rem] font-normal leading-[0.82] sm:text-[9.5rem] md:text-[11.5rem] select-none">
                 {heroFirstName}
               </span>
               {heroLastName ? (
-                <span className="mt-2 text-balance font-body text-[2.1rem] font-medium italic leading-[0.95] sm:mt-3 sm:text-[3rem] md:text-[4rem]">
+                <span className="text-balance font-script text-[3.2rem] font-normal leading-[0.85] sm:text-[4.6rem] md:text-[5.8rem] -mt-2 sm:-mt-4 select-none">
                   {heroLastName}
                 </span>
               ) : null}
             </h1>
-            <p className="mt-5 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-6 sm:text-lg">
+            <p className="mt-4 text-[0.85rem] uppercase tracking-[0.28em] text-white/90 sm:mt-5 sm:text-base md:text-lg">
               {inviteData.hero.courseLine}
             </p>
           </div>

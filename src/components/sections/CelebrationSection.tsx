@@ -63,27 +63,26 @@ export function CelebrationSection() {
           {/* Card 1 — Colação de Grau */}
           <Reveal className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--invite-line)]/30 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink">
             <div>
-              <div className="aspect-[16/10] relative">
+              <div className="aspect-[16/10] overflow-hidden">
                 <ResponsiveImage
                   asset="hero/venue.jpg"
                   alt="Colação de Grau"
                   className="w-full h-full object-cover object-[center_25%]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--invite-brown)]/90 via-[var(--invite-brown)]/40 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-5 h-5 opacity-80" />
-                    <span className="font-heading text-sm tracking-widest uppercase opacity-80">Colação de Grau</span>
-                  </div>
-                  <p className="font-heading text-base font-light mb-0.5">7 de agosto de 2026</p>
-                  <p className="font-script italic text-3xl opacity-90">às 19h00</p>
-                </div>
               </div>
-              <div className="p-6 md:p-8">
+              <div className="p-6 md:p-8 pb-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="w-4 h-4 text-[var(--invite-gold)]" />
+                  <span className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)]">Colação de Grau</span>
+                </div>
+                <p className="font-heading text-xl font-semibold text-[var(--invite-brown)]">7 de agosto de 2026</p>
+                <p className="font-script italic text-2xl text-[var(--invite-brown-soft)] mt-0.5">às 19h00</p>
+              </div>
+              <div className="px-6 md:px-8 pb-6">
                 <p className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)] mb-1">Local da Colação</p>
                 <p className="font-sans text-sm text-[var(--invite-brown-soft)] mb-3 font-semibold">Espaço Palaciu&apos;s Real Eventos</p>
                 
-                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50 mb-4">
+                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50">
                   <p className="pr-8 font-sans text-xs leading-relaxed text-[var(--invite-brown-soft)]">
                     {colacaoAddress}
                   </p>
@@ -133,27 +132,26 @@ export function CelebrationSection() {
           {/* Card 2 — Jantar de Celebração */}
           <Reveal className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--invite-line)]/30 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink" delay={0.08}>
             <div>
-              <div className="aspect-[16/10] relative bg-[var(--invite-sage-soft)]">
+              <div className="aspect-[16/10] overflow-hidden bg-[var(--invite-sage-soft)]">
                 <ResponsiveImage
                   asset={inviteData.event.venueImageAsset}
                   alt={inviteData.event.venueName}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--invite-brown)]/90 via-[var(--invite-brown)]/40 to-transparent pointer-events-none" />
-                <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MapPin className="w-5 h-5 opacity-80" />
-                    <span className="font-heading text-sm tracking-widest uppercase opacity-80">Jantar de Celebração</span>
-                  </div>
-                  <p className="font-heading text-base font-light mb-0.5">8 de agosto de 2026</p>
-                  <p className="font-script italic text-3xl">{inviteData.event.timeText}</p>
-                </div>
               </div>
-              <div className="p-6 md:p-8">
+              <div className="p-6 md:p-8 pb-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="w-4 h-4 text-[var(--invite-gold)]" />
+                  <span className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)]">Jantar de Celebração</span>
+                </div>
+                <p className="font-heading text-xl font-semibold text-[var(--invite-brown)]">8 de agosto de 2026</p>
+                <p className="font-script italic text-2xl text-[var(--invite-brown-soft)] mt-0.5">{inviteData.event.timeText}</p>
+              </div>
+              <div className="px-6 md:px-8 pb-6">
                 <p className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)] mb-1">Local do Jantar</p>
                 <p className="font-sans text-sm text-[var(--invite-brown-soft)] mb-3 font-semibold">{inviteData.event.venueName}</p>
 
-                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50 mb-4">
+                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50">
                   <p className="pr-8 font-sans text-xs leading-relaxed text-[var(--invite-brown-soft)]">
                     {inviteData.event.venue}
                   </p>
