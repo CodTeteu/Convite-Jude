@@ -52,7 +52,7 @@ export function HeroSection() {
       </div>
 
       <motion.div
-        className="relative z-10 flex h-full w-full flex-col items-center px-4 pb-12 pt-10 text-center sm:px-6 sm:pb-16 sm:pt-14 md:pb-14"
+        className="relative z-10 flex h-full w-full flex-col items-center px-4 pb-12 pt-16 text-center sm:px-6 sm:pb-16 sm:pt-20 md:pb-14"
         initial={{ opacity: 0, y: 24 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -60,11 +60,11 @@ export function HeroSection() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center">
             <h1 className="flex max-w-[24rem] flex-col items-center text-white drop-shadow-2xl sm:max-w-[40rem] md:max-w-[50rem]">
-              <span className="font-script text-[6.8rem] font-normal leading-[0.82] sm:text-[9.5rem] md:text-[11.5rem] select-none">
+              <span className="font-script text-[4.5rem] font-normal leading-[0.82] sm:text-[6.2rem] md:text-[8rem] select-none">
                 {heroFirstName}
               </span>
               {heroLastName ? (
-                <span className="text-balance font-script text-[3.2rem] font-normal leading-[0.85] sm:text-[4.6rem] md:text-[5.8rem] -mt-2 sm:-mt-4 select-none">
+                <span className="text-balance font-script text-[2.2rem] font-normal leading-[0.85] sm:text-[3.2rem] md:text-[4.2rem] -mt-1 sm:-mt-2 select-none">
                   {heroLastName}
                 </span>
               ) : null}
