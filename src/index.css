@@ -168,7 +168,7 @@ a {
 
   .invite-page {
     @apply relative min-h-screen overflow-x-hidden text-[color:var(--invite-brown)];
-    background-color: #f5f7fc;
+    background-color: transparent;
   }
 
   .invite-page::before {
