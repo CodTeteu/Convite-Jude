@@ -43,9 +43,9 @@ export function CelebrationSection() {
   const colacaoCalendarUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Colação+de+Grau+-+Joana+Darc&dates=20260807T220000Z/20260808T010000Z&details=Colação+de+Grau+de+Psicologia+da+Joana+Darc&location=Espaço+Palaciu's+Real+Eventos+-+Gurupi+TO";
 
   return (
-    <section className="invite-section !pb-8 !pt-4 sm:!pb-12 sm:!pt-8 overflow-hidden" id="celebracao">
+    <section className="invite-section relative bg-[var(--invite-cream)] overflow-hidden" id="celebracao">
       {/* Background blobs */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+      <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--invite-gold)] rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--invite-brown)] rounded-full blur-3xl" />
       </div>
@@ -58,71 +58,85 @@ export function CelebrationSection() {
         />
 
         {/* Horizontal scroll snap cards */}
-        <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 pb-6 md:pb-0 scroll-smooth snap-x snap-mandatory no-scrollbar -mx-4 px-6 md:mx-0 md:px-0 mt-14">
+        <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-8 pb-6 md:pb-0 scroll-smooth snap-x snap-mandatory no-scrollbar -mx-4 px-6 md:mx-0 md:px-0 mt-14">
 
           {/* Card 1 — Colação de Grau */}
-          <Reveal className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--invite-line)]/30 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink">
-            <div>
-              <div className="aspect-[16/10] overflow-hidden">
+          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink p-4 md:p-5 relative group overflow-hidden">
+            {/* Inner Gold Frame */}
+            <div className="absolute inset-2 border border-[var(--invite-gold)]/10 rounded-[24px] pointer-events-none" />
+
+            <div className="relative z-10">
+              {/* Framed Image */}
+              <div className="aspect-[16/10] overflow-hidden rounded-2xl shadow-sm border border-[var(--invite-line)]/20 relative">
                 <ResponsiveImage
                   asset="hero/venue.jpg"
                   alt="Colação de Grau"
-                  className="w-full h-full object-cover object-[center_25%]"
+                  className="w-full h-full object-cover object-[center_25%] transition-transform duration-700 group-hover:scale-103"
                 />
               </div>
-              <div className="p-6 md:p-8 pb-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <Calendar className="w-4 h-4 text-[var(--invite-gold)]" />
-                  <span className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)]">Colação de Grau</span>
+
+              {/* Card Body */}
+              <div className="pt-6 pb-3 px-2 text-center">
+                <div className="inline-flex items-center gap-1.5 justify-center mb-2 px-3 py-1 bg-[var(--invite-sage-soft)]/20 rounded-full border border-[var(--invite-sage)]/10">
+                  <Calendar className="w-3.5 h-3.5 text-[var(--invite-gold-deep)]" />
+                  <span className="font-heading text-[10px] uppercase tracking-[0.2em] text-[var(--invite-brown)]/80">Colação de Grau</span>
                 </div>
-                <p className="font-heading text-xl font-semibold text-[var(--invite-brown)]">7 de agosto de 2026</p>
-                <p className="font-script italic text-2xl text-[var(--invite-brown-soft)] mt-0.5">às 19h00</p>
+                <p className="font-heading text-lg md:text-xl font-semibold text-[var(--invite-brown)] tracking-wide">
+                  7 de agosto de 2026
+                </p>
+                <p className="font-script italic text-2xl text-[var(--invite-gold-deep)] mt-0.5">
+                  às 19h00
+                </p>
               </div>
-              <div className="px-6 md:px-8 pb-6">
-                <p className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)] mb-1">Local da Colação</p>
-                <p className="font-sans text-sm text-[var(--invite-brown-soft)] mb-3 font-semibold">Espaço Palaciu&apos;s Real Eventos</p>
+
+              {/* Address details inside framed box */}
+              <div className="px-2 pb-4">
+                <p className="font-heading text-[10px] uppercase tracking-[0.2em] text-[var(--invite-sage)] mb-1 text-center">Local da Colação</p>
+                <p className="font-sans text-xs text-[var(--invite-brown-soft)] mb-3 font-semibold text-center">Espaço Palaciu&apos;s Real Eventos</p>
                 
-                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50">
-                  <p className="pr-8 font-sans text-xs leading-relaxed text-[var(--invite-brown-soft)]">
+                <div className="group/copy relative rounded-xl border border-[var(--invite-gold)]/15 bg-[#fffbf2]/70 px-4 py-3 transition-all duration-300 hover:bg-[#fffbf2]">
+                  <p className="pr-6 font-sans text-[11px] leading-relaxed text-[var(--invite-brown-soft)] text-center">
                     {colacaoAddress}
                   </p>
                   <button
                     onClick={() => void handleCopyAddress(colacaoAddress)}
-                    className="absolute right-4 top-4 text-[var(--invite-brown-soft)]/60 transition-colors hover:text-[var(--invite-brown)]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--invite-brown-soft)]/40 transition-colors hover:text-[var(--invite-brown)]"
                     title="Copiar endereço"
                   >
-                    {copyingText === colacaoAddress ? <Check className="size-4 text-[var(--invite-gold)]" /> : <Copy className="size-4" />}
+                    {copyingText === colacaoAddress ? <Check className="size-3.5 text-[var(--invite-gold)]" /> : <Copy className="size-3.5" />}
                   </button>
                 </div>
               </div>
             </div>
-            <div className="p-6 md:p-8 pt-0 flex flex-col gap-2">
+
+            {/* Structured action buttons */}
+            <div className="relative z-10 pt-2 flex flex-col gap-2 px-2 pb-2">
               <a
-                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--invite-brown)] to-[var(--invite-brown-soft)] text-white px-4 py-3 rounded-full font-sans text-sm hover:shadow-xl transition-all duration-300"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[var(--invite-brown)] hover:bg-[var(--invite-brown-soft)] text-white px-4 py-3 rounded-full font-heading tracking-widest text-xs transition-colors duration-300 shadow-sm"
                 href={colacaoCalendarUrl}
                 rel="noreferrer"
                 target="_blank"
               >
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-3.5 h-3.5" />
                 Salvar na Agenda
               </a>
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-[var(--invite-brown)] px-4 py-2.5 rounded-full font-sans text-xs transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-1.5 bg-[var(--invite-cream)]/60 hover:bg-[var(--invite-sage-soft)]/30 text-[var(--invite-brown)] border border-[var(--invite-line)]/50 px-3 py-2.5 rounded-full font-sans text-[10px] font-semibold transition-all duration-300"
                   href={colacaoMapsUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <MapPin className="w-3.5 h-3.5" />
+                  <MapPin className="w-3 h-3 text-[var(--invite-gold)]" />
                   Google Maps
                 </a>
                 <a
-                  className="inline-flex items-center justify-center gap-2 bg-[#33ccff]/10 hover:bg-[#33ccff]/25 text-[#249ebd] px-4 py-2.5 rounded-full font-sans text-xs transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-1.5 bg-[var(--invite-cream)]/60 hover:bg-[var(--invite-sage-soft)]/30 text-[var(--invite-brown)] border border-[var(--invite-line)]/50 px-3 py-2.5 rounded-full font-sans text-[10px] font-semibold transition-all duration-300"
                   href={colacaoWazeUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <Navigation className="w-3.5 h-3.5" />
+                  <Navigation className="w-3 h-3 text-[var(--invite-gold)]" />
                   Waze
                 </a>
               </div>
@@ -130,68 +144,82 @@ export function CelebrationSection() {
           </Reveal>
 
           {/* Card 2 — Jantar de Celebração */}
-          <Reveal className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[var(--invite-line)]/30 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink" delay={0.08}>
-            <div>
-              <div className="aspect-[16/10] overflow-hidden bg-[var(--invite-sage-soft)]">
+          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink p-4 md:p-5 relative group overflow-hidden" delay={0.08}>
+            {/* Inner Gold Frame */}
+            <div className="absolute inset-2 border border-[var(--invite-gold)]/10 rounded-[24px] pointer-events-none" />
+
+            <div className="relative z-10">
+              {/* Framed Image */}
+              <div className="aspect-[16/10] overflow-hidden rounded-2xl shadow-sm border border-[var(--invite-line)]/20 relative bg-[var(--invite-sage-soft)]">
                 <ResponsiveImage
                   asset={inviteData.event.venueImageAsset}
                   alt={inviteData.event.venueName}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
                 />
               </div>
-              <div className="p-6 md:p-8 pb-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4 text-[var(--invite-gold)]" />
-                  <span className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)]">Jantar de Celebração</span>
-                </div>
-                <p className="font-heading text-xl font-semibold text-[var(--invite-brown)]">8 de agosto de 2026</p>
-                <p className="font-script italic text-2xl text-[var(--invite-brown-soft)] mt-0.5">{inviteData.event.timeText}</p>
-              </div>
-              <div className="px-6 md:px-8 pb-6">
-                <p className="font-heading text-xs uppercase tracking-[0.25em] text-[var(--invite-sage)] mb-1">Local do Jantar</p>
-                <p className="font-sans text-sm text-[var(--invite-brown-soft)] mb-3 font-semibold">{inviteData.event.venueName}</p>
 
-                <div className="group relative rounded-2xl border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-4 py-4 transition-colors hover:bg-[var(--invite-sage-soft)]/50">
-                  <p className="pr-8 font-sans text-xs leading-relaxed text-[var(--invite-brown-soft)]">
+              {/* Card Body */}
+              <div className="pt-6 pb-3 px-2 text-center">
+                <div className="inline-flex items-center gap-1.5 justify-center mb-2 px-3 py-1 bg-[var(--invite-sage-soft)]/20 rounded-full border border-[var(--invite-sage)]/10">
+                  <MapPin className="w-3.5 h-3.5 text-[var(--invite-gold-deep)]" />
+                  <span className="font-heading text-[10px] uppercase tracking-[0.2em] text-[var(--invite-brown)]/80">Jantar de Celebração</span>
+                </div>
+                <p className="font-heading text-lg md:text-xl font-semibold text-[var(--invite-brown)] tracking-wide">
+                  8 de agosto de 2026
+                </p>
+                <p className="font-script italic text-2xl text-[var(--invite-gold-deep)] mt-0.5">
+                  {inviteData.event.timeText}
+                </p>
+              </div>
+
+              {/* Address details inside framed box */}
+              <div className="px-2 pb-4">
+                <p className="font-heading text-[10px] uppercase tracking-[0.2em] text-[var(--invite-sage)] mb-1 text-center">Local do Jantar</p>
+                <p className="font-sans text-xs text-[var(--invite-brown-soft)] mb-3 font-semibold text-center">{inviteData.event.venueName}</p>
+
+                <div className="group/copy relative rounded-xl border border-[var(--invite-gold)]/15 bg-[#fffbf2]/70 px-4 py-3 transition-all duration-300 hover:bg-[#fffbf2]">
+                  <p className="pr-6 font-sans text-[11px] leading-relaxed text-[var(--invite-brown-soft)] text-center">
                     {inviteData.event.venue}
                   </p>
                   <button
                     onClick={() => void handleCopyAddress(inviteData.event.venue)}
-                    className="absolute right-4 top-4 text-[var(--invite-brown-soft)]/60 transition-colors hover:text-[var(--invite-brown)]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--invite-brown-soft)]/40 transition-colors hover:text-[var(--invite-brown)]"
                     title="Copiar endereço"
                   >
-                    {copyingText === inviteData.event.venue ? <Check className="size-4 text-[var(--invite-gold)]" /> : <Copy className="size-4" />}
+                    {copyingText === inviteData.event.venue ? <Check className="size-3.5 text-[var(--invite-gold)]" /> : <Copy className="size-3.5" />}
                   </button>
                 </div>
               </div>
             </div>
-            <div className="p-6 md:p-8 pt-0 flex flex-col gap-2">
+
+            {/* Structured action buttons */}
+            <div className="relative z-10 pt-2 flex flex-col gap-2 px-2 pb-2">
               <a
-                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--invite-brown)] to-[var(--invite-brown-soft)] text-white px-4 py-3 rounded-full font-sans text-sm hover:shadow-xl transition-all duration-300"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[var(--invite-brown)] hover:bg-[var(--invite-brown-soft)] text-white px-4 py-3 rounded-full font-heading tracking-widest text-xs transition-colors duration-300 shadow-sm"
                 href={buildGoogleCalendarUrl()}
                 rel="noreferrer"
                 target="_blank"
               >
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-3.5 h-3.5" />
                 Salvar na Agenda
               </a>
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-[var(--invite-brown)] px-4 py-2.5 rounded-full font-sans text-xs transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-1.5 bg-[var(--invite-cream)]/60 hover:bg-[var(--invite-sage-soft)]/30 text-[var(--invite-brown)] border border-[var(--invite-line)]/50 px-3 py-2.5 rounded-full font-sans text-[10px] font-semibold transition-all duration-300"
                   href={inviteData.event.mapsUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <MapPin className="w-3.5 h-3.5" />
+                  <MapPin className="w-3 h-3 text-[var(--invite-gold)]" />
                   Google Maps
                 </a>
                 <a
-                  className="inline-flex items-center justify-center gap-2 bg-[#33ccff]/10 hover:bg-[#33ccff]/25 text-[#249ebd] px-4 py-2.5 rounded-full font-sans text-xs transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-1.5 bg-[var(--invite-cream)]/60 hover:bg-[var(--invite-sage-soft)]/30 text-[var(--invite-brown)] border border-[var(--invite-line)]/50 px-3 py-2.5 rounded-full font-sans text-[10px] font-semibold transition-all duration-300"
                   href={inviteData.event.wazeUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <Navigation className="w-3.5 h-3.5" />
+                  <Navigation className="w-3 h-3 text-[var(--invite-gold)]" />
                   Waze
                 </a>
               </div>
