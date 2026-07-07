@@ -58,13 +58,13 @@ export function HeroSection() {
         whileInView={{ opacity: 1, y: 0 }}
       >
         <div className="flex flex-col items-center gap-2">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center rounded-3xl bg-[#0a1e36]/30 px-8 py-5 backdrop-blur-md border border-white/5 shadow-lg max-w-[92vw] sm:px-12 sm:py-7">
             <h1 className="flex max-w-[28rem] flex-col items-center text-white drop-shadow-2xl sm:max-w-[44rem] md:max-w-[55rem]">
               <span className="font-cursive text-[3.8rem] font-normal leading-[1.1] sm:text-[5.5rem] md:text-[6.8rem] select-none whitespace-nowrap">
                 {heroFirstName} {heroLastName}
               </span>
             </h1>
-            <p className="mt-1 text-[0.85rem] uppercase tracking-[0.28em] text-white/90 sm:mt-2 sm:text-base md:text-lg">
+            <p className="mt-2 text-[0.85rem] uppercase tracking-[0.28em] text-white/90 sm:text-base md:text-lg">
               {inviteData.hero.courseLine}
             </p>
           </div>
