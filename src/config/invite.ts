@@ -26,6 +26,7 @@ export function buildWhatsAppMessage(params: {
   name: string;
   attendance: "attending" | "not-attending";
   companionsNames: string[];
+  bingoCardsCount?: number;
 }) {
   const attendanceStatus =
     params.attendance === "attending"
@@ -37,7 +38,12 @@ export function buildWhatsAppMessage(params: {
       ? `\nAcompanhantes: ${params.companionsNames.join(", ")}`
       : "";
 
-  return `Olá! ${attendanceStatus}\n\nConvidado: ${params.name}${companionsSection}`;
+  const bingoSection =
+    params.attendance === "attending" && params.bingoCardsCount && params.bingoCardsCount > 0
+      ? `\nComprei ${params.bingoCardsCount} cartela(s) do Bingo Especial (R$ ${params.bingoCardsCount * 10},00 pagos via Pix).`
+      : "";
+
+  return `Olá! ${attendanceStatus}\n\nConvidado: ${params.name}${companionsSection}${bingoSection}`;
 }
 
 export const calendarEvent = {

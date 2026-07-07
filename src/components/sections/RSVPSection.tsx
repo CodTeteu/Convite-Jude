@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import {
@@ -6,6 +6,9 @@ import {
   Phone,
   User,
   Users,
+  Copy,
+  Check,
+  Ticket,
 } from "lucide-react";
 import { toast } from "sonner";
 import { rsvpSchema, type RSVPInput } from "@shared/schemas";
@@ -29,6 +32,21 @@ const defaultValues: RSVPInput = {
 };
 
 export function RSVPSection() {
+  const [bingoCardsCount, setBingoCardsCount] = useState<number>(0);
+  const [copyingPix, setCopyingPix] = useState<boolean>(false);
+
+  async function handleCopyPix(pixKey: string) {
+    try {
+      setCopyingPix(true);
+      await navigator.clipboard.writeText(pixKey);
+      toast.success("Chave Pix copiada com sucesso!");
+    } catch {
+      toast.error("Erro ao copiar a chave Pix.");
+    } finally {
+      setTimeout(() => setCopyingPix(false), 2000);
+    }
+  }
+
   const {
     control,
     register,
@@ -82,16 +100,27 @@ export function RSVPSection() {
 
     if (currentNames.length !== companionsCount) {
       setValue(
-        "companions_names",
-        Array.from({ length: companionsCount }, (_, index) => currentNames[index] ?? ""),
+          "companions_names",
+          Array.from({ length: companionsCount }, (_, index) => currentNames[index] ?? ""),
       );
     }
   }, [attendanceStatus, companionsCount, getValues, maxCompanions, setValue]);
 
   async function onSubmit(values: RSVPInput) {
     try {
+      let rawNotes = values.notes || "";
+      const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0 
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]` 
+        : "";
+      
+      if (rawNotes.length + bingoNote.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      }
+      const finalNotes = rawNotes + bingoNote;
+
       const payload = rsvpSchema.parse({
         ...values,
+        notes: finalNotes,
         source: defaultSource,
         event_slug: eventSlug,
       });
@@ -101,6 +130,7 @@ export function RSVPSection() {
         name: payload.guest_name,
         attendance: payload.attendance_status,
         companionsNames: payload.companions_names,
+        bingoCardsCount: payload.attendance_status === "attending" ? bingoCardsCount : 0,
       });
 
       const whatsappUrl = `https://wa.me/${inviteData.rsvp.whatsappIntl}?text=${encodeURIComponent(message)}`;
@@ -111,13 +141,24 @@ export function RSVPSection() {
           : inviteData.rsvp.successMessage,
       );
       reset(defaultValues);
+      setBingoCardsCount(0);
 
       if (inviteData.rsvp.openWhatsAppAfterSubmit) {
         window.location.assign(whatsappUrl);
       }
     } catch {
+      let rawNotes = getValues("notes") || "";
+      const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0 
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]` 
+        : "";
+      if (rawNotes.length + bingoNote.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      }
+      const finalNotes = rawNotes + bingoNote;
+
       const payload = rsvpSchema.parse({
         ...getValues(),
+        notes: finalNotes,
         source: defaultSource,
         event_slug: eventSlug,
       });
@@ -311,6 +352,64 @@ export function RSVPSection() {
                 ) : null}
               </div>
             </div>
+
+            {/* COMPRA DE CARTELAS (BINGO) */}
+            {attendanceStatus === "attending" && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="mb-6">
+                  <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl flex items-center gap-2">
+                    <Ticket className="size-5 text-[var(--invite-gold)]" />
+                    Cartela do Bingo Especial
+                  </h3>
+                  <hr className="mt-3 border-[var(--invite-line)]/50" />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-base">
+                      Deseja adquirir cartelas antecipadas? (R$ 10,00 cada)
+                    </label>
+                    <select
+                      className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
+                      value={bingoCardsCount}
+                      onChange={(e) => setBingoCardsCount(Number(e.target.value))}
+                    >
+                      <option value={0}>Não desejo adquirir no momento</option>
+                      <option value={1}>1 cartela — R$ 10,00</option>
+                      <option value={2}>2 cartelas — R$ 20,00</option>
+                      <option value={3}>3 cartelas — R$ 30,00</option>
+                      <option value={4}>4 cartelas — R$ 40,00</option>
+                      <option value={5}>5 cartelas — R$ 50,00</option>
+                    </select>
+                  </div>
+
+                  {bingoCardsCount > 0 && (
+                    <div className="rounded-2xl border border-[var(--invite-gold)]/25 bg-[#fffbf2]/70 p-5 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <p className="font-heading text-xs text-[var(--invite-gold-deep)] uppercase tracking-wider mb-2 font-semibold">Pagamento via Pix</p>
+                      <p className="text-xs text-[var(--invite-brown-soft)] mb-4 leading-relaxed">
+                        Realize o pagamento de <strong>R$ {bingoCardsCount * 10},00</strong> copiando a chave Pix abaixo. O comprovante Pix deve ser enviado no WhatsApp a seguir.
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                        <div className="flex-1 bg-white border border-[var(--invite-line)] rounded-xl px-4 py-3 font-sans text-xs text-[var(--invite-brown)] select-all break-all text-center sm:text-left">
+                          {inviteData.giftList.pixKey}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => void handleCopyPix(inviteData.giftList.pixKey)}
+                          className="inline-flex items-center justify-center gap-2 bg-[var(--invite-brown)] hover:bg-[var(--invite-brown-soft)] text-white px-5 py-3 rounded-xl font-sans text-xs font-semibold transition-colors duration-300 shrink-0"
+                        >
+                          {copyingPix ? <Check className="size-4 text-[var(--invite-gold)]" /> : <Copy className="size-4" />}
+                          Copiar Chave
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-[var(--invite-brown-soft)]/60 mt-3 text-center sm:text-left">
+                        Titular: {inviteData.giftList.pixName}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             <button
               className="invite-button-primary flex w-full justify-center items-center py-4 bg-[var(--invite-brown)] text-white hover:bg-[var(--invite-brown-soft)] transition-colors duration-300 rounded-full font-heading tracking-widest text-sm"

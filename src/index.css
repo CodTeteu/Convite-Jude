@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-script: "Great Vibes", cursive;
+  --font-script: "Cormorant Garamond", serif;
+  --font-cursive: "Great Vibes", cursive;
   --font-display: "Playfair Display", serif;
   --font-heading: "Playfair Display", serif;
   --font-body: "Cormorant Garamond", serif;
