@@ -64,7 +64,7 @@ export function HeroSection() {
                 {heroFirstName} {heroLastName}
               </span>
             </h1>
-            <p className="mt-4 text-[0.85rem] uppercase tracking-[0.28em] text-white/90 sm:mt-5 sm:text-base md:text-lg">
+            <p className="mt-1 text-[0.85rem] uppercase tracking-[0.28em] text-white/90 sm:mt-2 sm:text-base md:text-lg">
               {inviteData.hero.courseLine}
             </p>
           </div>
