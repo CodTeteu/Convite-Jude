@@ -273,6 +273,15 @@ function SubmissionCard({
               <Phone className="size-3" />
               {item.phone}
             </div>
+            {(() => {
+              const events = getEventsInfo(item);
+              if (!events) return null;
+              return (
+                <span className="mt-1.5 inline-flex items-center gap-1 rounded bg-[var(--invite-sage-soft)]/40 px-2 py-0.5 text-[9px] font-semibold text-[var(--invite-brown)] uppercase tracking-wider font-sans">
+                  {events}
+                </span>
+              );
+            })()}
           </div>
         </div>
         <span className={`${badgeClassMap[item.attendance_status]} flex items-center gap-1.5`}>
@@ -369,6 +378,13 @@ function getBingoInfo(item: AdminRsvpItem) {
   return { count, status, value: count * 10 };
 }
 
+// Helper to parse selected events from notes
+function getEventsInfo(item: AdminRsvpItem) {
+  const match = (item.notes || "").match(/\[Eventos:\s*([^\]]+)\]/);
+  if (!match) return null;
+  return match[1];
+}
+
 // ===========================================
 // READ-ONLY TABLE (DESKTOP)
 // ===========================================
@@ -424,6 +440,15 @@ function SubmissionsTable({
                           <Phone className="size-3" />
                           {item.phone}
                         </p>
+                        {(() => {
+                          const events = getEventsInfo(item);
+                          if (!events) return null;
+                          return (
+                            <span className="mt-1 inline-flex items-center gap-1 rounded bg-[var(--invite-sage-soft)]/40 px-1.5 py-0.5 text-[9px] font-semibold text-[var(--invite-brown)] uppercase tracking-wider font-sans">
+                              {events}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   </td>

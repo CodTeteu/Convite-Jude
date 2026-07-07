@@ -27,11 +27,23 @@ export function buildWhatsAppMessage(params: {
   attendance: "attending" | "not-attending";
   companionsNames: string[];
   bingoCardsCount?: number;
+  selectedEvents?: string;
 }) {
   const attendanceStatus =
     params.attendance === "attending"
       ? "Confirmo minha presença."
       : "Infelizmente não poderei comparecer.";
+
+  const eventLabelMap: Record<string, string> = {
+    colacao: "Colação de Grau",
+    jantar: "Jantar de Celebração",
+    both: "Colação de Grau e Jantar de Celebração",
+  };
+
+  const eventsSection =
+    params.attendance === "attending" && params.selectedEvents && eventLabelMap[params.selectedEvents]
+      ? `\nEventos: ${eventLabelMap[params.selectedEvents]}`
+      : "";
 
   const companionsSection =
     params.attendance === "attending" && params.companionsNames.length > 0
@@ -43,7 +55,7 @@ export function buildWhatsAppMessage(params: {
       ? `\nComprei ${params.bingoCardsCount} cartela(s) do Bingo Especial (R$ ${params.bingoCardsCount * 10},00 pagos via Pix).`
       : "";
 
-  return `Olá! ${attendanceStatus}\n\nConvidado: ${params.name}${companionsSection}${bingoSection}`;
+  return `Olá! ${attendanceStatus}${eventsSection}${companionsSection}${bingoSection}\n\nConvidado: ${params.name}`;
 }
 
 export const calendarEvent = {

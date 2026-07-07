@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
 import {
   Loader2,
   Phone,
@@ -9,9 +10,10 @@ import {
   Copy,
   Check,
   Ticket,
+  Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
-import { rsvpSchema, type RSVPInput } from "@shared/schemas";
+import { rsvpSchema } from "@shared/schemas";
 import { inviteData, buildWhatsAppMessage, defaultSource, eventSlug } from "@/config/invite";
 import { submitRsvp } from "@/lib/api";
 import { queueFailedSubmission } from "@/lib/pending-rsvp";
@@ -19,30 +21,138 @@ import { formatPhone } from "@/lib/format";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-const defaultValues: RSVPInput = {
+const rsvpFormSchema = z
+  .object({
+    guest_name: z
+      .string()
+      .trim()
+      .min(3, "Informe seu nome completo.")
+      .max(120, "Nome muito longo."),
+    phone: z
+      .string()
+      .min(10, "Informe um telefone válido com DDD.")
+      .max(20, "Telefone inválido."),
+    attendance_status: z.enum(["attending", "not-attending"]),
+    companions_count: z.coerce
+      .number()
+      .int()
+      .min(0, "Quantidade inválida.")
+      .max(20, "Limite máximo de 20 acompanhantes."),
+    companions_names: z.array(z.string().trim().min(2, "Informe o nome completo do acompanhante.")).max(20).default([]),
+    notes: z
+      .string()
+      .trim()
+      .max(500, "As observações devem ter no máximo 500 caracteres.")
+      .default(""),
+    selected_events: z.string().default(""),
+    bingo_option: z.string().default(""),
+  })
+  .superRefine((data, ctx) => {
+    if (data.attendance_status === "attending") {
+      if (!data.selected_events) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["selected_events"],
+          message: "Selecione quais eventos você irá comparecer.",
+        });
+      }
+      if (!data.bingo_option) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["bingo_option"],
+          message: "Selecione uma opção para o Bingo.",
+        });
+      }
+    }
+  });
+
+interface RSVPFormValues {
+  guest_name: string;
+  phone: string;
+  attendance_status: "attending" | "not-attending";
+  companions_count: number;
+  companions_names: string[];
+  notes: string;
+  selected_events: string;
+  bingo_option: string;
+}
+
+const defaultFormValues: RSVPFormValues = {
   guest_name: "",
   phone: "",
   attendance_status: "attending",
   companions_count: 0,
   companions_names: [],
   notes: "",
-  acknowledged_guidelines: true,
-  source: defaultSource,
-  event_slug: eventSlug,
+  selected_events: "",
+  bingo_option: "",
 };
 
 export function RSVPSection() {
-  const [bingoCardsCount, setBingoCardsCount] = useState<number>(0);
   const [copyingPix, setCopyingPix] = useState<boolean>(false);
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<RSVPFormValues>({
+    resolver: zodResolver(rsvpFormSchema) as any,
+    defaultValues: defaultFormValues,
+  });
+
+  const attendanceStatus = useWatch({
+    control,
+    name: "attendance_status",
+  });
+  const companionsCount = Number(
+    useWatch({
+      control,
+      name: "companions_count",
+    }) || 0,
+  );
+  const phoneValue =
+    useWatch({
+      control,
+      name: "phone",
+    }) || "";
+  const bingoOption = useWatch({
+    control,
+    name: "bingo_option",
+  }) || "";
+  const selectedEvents = useWatch({
+    control,
+    name: "selected_events",
+  }) || "";
+
+  const bingoCardsCount = Number(bingoOption) || 0;
+  const maxCompanions = inviteData.rsvp.maxCompanions;
 
   async function handleCopyPix(pixKey: string) {
     try {
       setCopyingPix(true);
       const name = getValues("guest_name") || "";
       const phone = getValues("phone") || "";
+      const currentSelectedEvents = getValues("selected_events") || "";
+      const currentBingoOption = getValues("bingo_option") || "";
 
       if (!name.trim() || name.trim().length < 3 || !phone.trim() || phone.replace(/\D/g, "").length < 10) {
         toast.error("Por favor, preencha seu Nome e Celular no topo do formulário antes de copiar a chave Pix, para podermos registrar seu pagamento!");
+        setCopyingPix(false);
+        return;
+      }
+
+      if (!currentSelectedEvents) {
+        toast.error("Por favor, selecione os Eventos que irá comparecer antes de copiar a chave Pix!");
+        setCopyingPix(false);
+        return;
+      }
+
+      if (!currentBingoOption) {
+        toast.error("Por favor, responda sobre a aquisição de cartelas do Bingo antes de copiar a chave Pix!");
         setCopyingPix(false);
         return;
       }
@@ -51,12 +161,25 @@ export function RSVPSection() {
       toast.success("Chave Pix copiada com sucesso!");
 
       // Submit RSVP in the background to log the purchase intention in Supabase immediately
+      const eventLabelMap: Record<string, string> = {
+        colacao: "Apenas Colação de Grau",
+        jantar: "Apenas Jantar de Celebração",
+        both: "Ambos os Eventos",
+        none: "Nenhum",
+      };
+
+      const eventLabel = eventLabelMap[currentSelectedEvents] || "Nenhum";
+      const eventNotes = `[Eventos: ${eventLabel}]`;
+      const bingoNote = bingoCardsCount > 0
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        : " [Bingo: Não deseja cartelas]";
+
       let rawNotes = getValues("notes") || "";
-      const bingoNote = ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`;
-      if (rawNotes.length + bingoNote.length > 490) {
-        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      const extraNotes = `${eventNotes}${bingoNote}`;
+      if (rawNotes.length + extraNotes.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - extraNotes.length) + "...";
       }
-      const finalNotes = rawNotes + bingoNote;
+      const finalNotes = rawNotes + extraNotes;
 
       const payload = {
         guest_name: name.trim(),
@@ -85,36 +208,6 @@ export function RSVPSection() {
     }
   }
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    getValues,
-    setValue,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<RSVPInput>({
-    resolver: zodResolver(rsvpSchema),
-    defaultValues,
-  });
-
-  const attendanceStatus = useWatch({
-    control,
-    name: "attendance_status",
-  });
-  const companionsCount = Number(
-    useWatch({
-      control,
-      name: "companions_count",
-    }) || 0,
-  );
-  const phoneValue =
-    useWatch({
-      control,
-      name: "phone",
-    }) || "";
-  const maxCompanions = inviteData.rsvp.maxCompanions;
-
   useEffect(() => {
     const currentNames = getValues("companions_names") ?? [];
     const currentCount = Number(getValues("companions_count") || 0);
@@ -138,30 +231,49 @@ export function RSVPSection() {
 
     if (currentNames.length !== companionsCount) {
       setValue(
-          "companions_names",
-          Array.from({ length: companionsCount }, (_, index) => currentNames[index] ?? ""),
+        "companions_names",
+        Array.from({ length: companionsCount }, (_, index) => currentNames[index] ?? ""),
       );
     }
   }, [attendanceStatus, companionsCount, getValues, maxCompanions, setValue]);
 
-  async function onSubmit(values: RSVPInput) {
+  async function onSubmit(values: RSVPFormValues) {
     try {
+      const eventLabelMap: Record<string, string> = {
+        colacao: "Apenas Colação de Grau",
+        jantar: "Apenas Jantar de Celebração",
+        both: "Ambos os Eventos",
+        none: "Nenhum",
+      };
+
+      const eventLabel = values.attendance_status === "attending"
+        ? eventLabelMap[values.selected_events] || "Nenhum"
+        : "Nenhum";
+
+      const eventNotes = `[Eventos: ${eventLabel}]`;
+      const bingoNote = values.attendance_status === "attending" && bingoCardsCount > 0
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        : " [Bingo: Não deseja cartelas]";
+
       let rawNotes = values.notes || "";
-      const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0 
-        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]` 
-        : "";
-      
-      if (rawNotes.length + bingoNote.length > 490) {
-        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      const extraNotes = `${eventNotes}${bingoNote}`;
+      if (rawNotes.length + extraNotes.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - extraNotes.length) + "...";
       }
-      const finalNotes = rawNotes + bingoNote;
+      const finalNotes = rawNotes + extraNotes;
 
       const payload = rsvpSchema.parse({
-        ...values,
+        guest_name: values.guest_name,
+        phone: values.phone,
+        attendance_status: values.attendance_status,
+        companions_count: values.companions_count,
+        companions_names: values.companions_names,
         notes: finalNotes,
+        acknowledged_guidelines: true,
         source: defaultSource,
         event_slug: eventSlug,
       });
+
       await submitRsvp(payload);
 
       const message = buildWhatsAppMessage({
@@ -169,6 +281,7 @@ export function RSVPSection() {
         attendance: payload.attendance_status,
         companionsNames: payload.companions_names,
         bingoCardsCount: payload.attendance_status === "attending" ? bingoCardsCount : 0,
+        selectedEvents: payload.attendance_status === "attending" ? values.selected_events : undefined,
       });
 
       const whatsappUrl = `https://wa.me/${inviteData.rsvp.whatsappIntl}?text=${encodeURIComponent(message)}`;
@@ -178,21 +291,34 @@ export function RSVPSection() {
           ? "Confirmação registrada! Redirecionando para o WhatsApp..."
           : inviteData.rsvp.successMessage,
       );
-      reset(defaultValues);
-      setBingoCardsCount(0);
+      reset(defaultFormValues);
 
       if (inviteData.rsvp.openWhatsAppAfterSubmit) {
         window.location.assign(whatsappUrl);
       }
     } catch {
+      const eventLabelMap: Record<string, string> = {
+        colacao: "Apenas Colação de Grau",
+        jantar: "Apenas Jantar de Celebração",
+        both: "Ambos os Eventos",
+        none: "Nenhum",
+      };
+
+      const eventLabel = attendanceStatus === "attending"
+        ? eventLabelMap[selectedEvents] || "Nenhum"
+        : "Nenhum";
+
+      const eventNotes = `[Eventos: ${eventLabel}]`;
+      const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        : " [Bingo: Não deseja cartelas]";
+
       let rawNotes = getValues("notes") || "";
-      const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0 
-        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]` 
-        : "";
-      if (rawNotes.length + bingoNote.length > 490) {
-        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      const extraNotes = `${eventNotes}${bingoNote}`;
+      if (rawNotes.length + extraNotes.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - extraNotes.length) + "...";
       }
-      const finalNotes = rawNotes + bingoNote;
+      const finalNotes = rawNotes + extraNotes;
 
       const payload = rsvpSchema.parse({
         ...getValues(),
@@ -319,6 +445,34 @@ export function RSVPSection() {
               </div>
             </div>
 
+            {/* SELEÇÃO DE EVENTOS */}
+            {attendanceStatus === "attending" && (
+              <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="mb-6">
+                  <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl flex items-center gap-2">
+                    <Calendar className="size-5 text-[var(--invite-gold)]" />
+                    Quais eventos você irá comparecer? <span className="text-rose-400">*</span>
+                  </h3>
+                  <hr className="mt-3 border-[var(--invite-line)]/50" />
+                </div>
+
+                <div>
+                  <select
+                    className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
+                    {...register("selected_events")}
+                  >
+                    <option value="">Selecione uma opção...</option>
+                    <option value="colacao">Apenas Colação de Grau (7 de agosto)</option>
+                    <option value="jantar">Apenas Jantar de Celebração (8 de agosto)</option>
+                    <option value="both">Ambos os Eventos (Colação e Jantar)</option>
+                  </select>
+                  {errors.selected_events ? (
+                    <p className="mt-2 text-sm text-rose-600">{errors.selected_events.message as string}</p>
+                  ) : null}
+                </div>
+              </div>
+            )}
+
             {/* ACOMPANHANTES */}
             {attendanceStatus === "attending" && (
               <div className="animate-in fade-in slide-in-from-top-2 duration-300">
@@ -397,7 +551,7 @@ export function RSVPSection() {
                 <div className="mb-6">
                   <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl flex items-center gap-2">
                     <Ticket className="size-5 text-[var(--invite-gold)]" />
-                    Cartela do Bingo Especial
+                    Cartela do Bingo Especial <span className="text-rose-400">*</span>
                   </h3>
                   <hr className="mt-3 border-[var(--invite-line)]/50" />
                 </div>
@@ -409,16 +563,19 @@ export function RSVPSection() {
                     </label>
                     <select
                       className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
-                      value={bingoCardsCount}
-                      onChange={(e) => setBingoCardsCount(Number(e.target.value))}
+                      {...register("bingo_option")}
                     >
-                      <option value={0}>Não desejo adquirir no momento</option>
-                      <option value={1}>1 cartela — R$ 10,00</option>
-                      <option value={2}>2 cartelas — R$ 20,00</option>
-                      <option value={3}>3 cartelas — R$ 30,00</option>
-                      <option value={4}>4 cartelas — R$ 40,00</option>
-                      <option value={5}>5 cartelas — R$ 50,00</option>
+                      <option value="">Selecione uma opção...</option>
+                      <option value="0">Não desejo adquirir no momento</option>
+                      <option value="1">1 cartela — R$ 10,00</option>
+                      <option value="2">2 cartelas — R$ 20,00</option>
+                      <option value="3">3 cartelas — R$ 30,00</option>
+                      <option value="4">4 cartelas — R$ 40,00</option>
+                      <option value="5">5 cartelas — R$ 50,00</option>
                     </select>
+                    {errors.bingo_option ? (
+                      <p className="mt-2 text-sm text-rose-600">{errors.bingo_option.message as string}</p>
+                    ) : null}
                   </div>
 
                   {bingoCardsCount > 0 && (
