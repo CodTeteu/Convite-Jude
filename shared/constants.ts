@@ -1,4 +1,4 @@
-export const DEFAULT_EVENT_SLUG = "joana-psicologia";
+export const DEFAULT_EVENT_SLUG = "jude";
 export const EVENT_SLUG = DEFAULT_EVENT_SLUG;
 export const ADMIN_COOKIE_NAME = "convite_admin_session";
 export const ADMIN_SESSION_DURATION_SECONDS = 60 * 60 * 12;
