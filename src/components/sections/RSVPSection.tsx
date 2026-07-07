@@ -97,8 +97,6 @@ export function RSVPSection() {
       });
       await submitRsvp(payload);
 
-      // Build the WhatsApp message from the JUST-SUBMITTED payload data
-      // (never from localStorage or stale state)
       const message = buildWhatsAppMessage({
         name: payload.guest_name,
         attendance: payload.attendance_status,
@@ -114,10 +112,6 @@ export function RSVPSection() {
       );
       reset(defaultValues);
 
-      // Use window.location.href instead of window.open()
-      // window.open() inside async/setTimeout is BLOCKED by mobile popup blockers
-      // on devices without prior popup permission (new phones, incognito, etc.)
-      // window.location.href is a navigation, not a popup — it ALWAYS works.
       if (inviteData.rsvp.openWhatsAppAfterSubmit) {
         window.location.assign(whatsappUrl);
       }
@@ -148,35 +142,35 @@ export function RSVPSection() {
           />
         </div>
 
-        <Reveal className="invite-card mx-auto mt-12 max-w-4xl px-5 py-6 sm:px-8 sm:py-9" delay={0.08}>
-          <div className="rounded-[26px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/30 px-5 py-5">
-            <p className="font-heading text-[0.72rem] uppercase tracking-[0.3em] text-[var(--invite-sage)]">
+        <Reveal className="bg-white rounded-3xl p-6 md:p-12 shadow-xl border border-[var(--invite-line)]/35 max-w-4xl mx-auto mt-12" delay={0.08}>
+          <div className="rounded-2xl border border-[var(--invite-line)]/30 bg-[var(--invite-sage-soft)]/20 px-5 py-5 mb-8">
+            <p className="font-heading text-[0.72rem] uppercase tracking-[0.3em] text-[var(--invite-sage)] mb-3">
               Informações importantes
             </p>
-            <ul className="mt-4 space-y-2 text-[var(--invite-brown-soft)]">
+            <ul className="space-y-2 text-[var(--invite-brown-soft)]">
               {inviteData.rsvp.infoItems.map((item) => (
-                <li className="font-body text-sm leading-relaxed sm:text-lg" key={item}>
-                  {item}
+                <li className="font-body text-sm leading-relaxed sm:text-base" key={item}>
+                  &bull; {item}
                 </li>
               ))}
             </ul>
           </div>
 
-          <form className="mt-8 space-y-10" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
             {/* SEUS DADOS */}
             <div>
               <div className="mb-6">
-                <h3 className="font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">Seus Dados</h3>
-                <hr className="mt-3 border-[var(--invite-line)]" />
+                <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl">Seus Dados</h3>
+                <hr className="mt-3 border-[var(--invite-line)]/50" />
               </div>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-lg">
-                    <User className="size-4" />
+                  <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-base">
+                    <User className="size-4 text-[var(--invite-sage)]" />
                     Nome Completo <span className="text-rose-400">*</span>
                   </label>
                   <input
-                    className="w-full rounded-[14px] border border-[var(--invite-line)] bg-[var(--invite-cream)]/20 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] focus:shadow-[0_0_12px_rgba(212,186,140,0.12)] focus:ring-1 focus:ring-[var(--invite-gold)]/30"
+                    className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
                     placeholder="Seu nome completo"
                     {...register("guest_name")}
                   />
@@ -186,12 +180,12 @@ export function RSVPSection() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-lg">
-                    <Phone className="size-4" />
+                  <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-base">
+                    <Phone className="size-4 text-[var(--invite-sage)]" />
                     Celular / WhatsApp <span className="text-rose-400">*</span>
                   </label>
                   <input
-                    className="w-full rounded-[14px] border border-[var(--invite-line)] bg-[var(--invite-cream)]/20 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] focus:shadow-[0_0_12px_rgba(212,186,140,0.12)] focus:ring-1 focus:ring-[var(--invite-gold)]/30"
+                    className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
                     placeholder="(00) 00000-0000"
                     {...register("phone")}
                     onChange={(event) => {
@@ -209,23 +203,36 @@ export function RSVPSection() {
             {/* PARTICIPAÇÃO */}
             <div>
               <div className="mb-6">
-                <h3 className="font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">Participação</h3>
-                <hr className="mt-3 border-[var(--invite-line)]" />
+                <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl">Participação</h3>
+                <hr className="mt-3 border-[var(--invite-line)]/50" />
               </div>
-              <div className="rounded-[20px] bg-[var(--invite-sand)]/10 border border-[var(--invite-line)] p-5">
-                <p className="mb-4 font-body text-sm font-medium text-[var(--invite-brown-soft)] text-center sm:text-lg">
+              <div className="space-y-4">
+                <p className="font-body text-sm text-[var(--invite-brown-soft)]">
                   Você poderá comparecer?
                 </p>
-                <div className="flex w-full bg-[var(--invite-sand)]/20 p-1.5 rounded-[18px] border border-[var(--invite-line)]/50">
-                  <label className="flex-1 cursor-pointer">
+                <div className="grid grid-cols-2 gap-4">
+                  <label
+                    className={`flex items-center justify-center gap-2 py-4 px-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                      attendanceStatus === "attending"
+                        ? "border-[var(--invite-brown)] bg-[var(--invite-brown)]/5 shadow-md"
+                        : "border-[var(--invite-line)]/60 hover:border-[var(--invite-brown)]/30"
+                    }`}
+                  >
                     <input className="peer sr-only" type="radio" value="attending" {...register("attendance_status")} />
-                    <span className="flex items-center justify-center rounded-[14px] border border-transparent bg-transparent py-3 font-heading text-lg text-[var(--invite-brown)] transition-all duration-300 hover:bg-white/30 peer-checked:border-[var(--invite-gold)]/30 peer-checked:bg-white peer-checked:text-[var(--invite-brown)] peer-checked:shadow-sm">
+                    <span className="font-heading text-base text-[var(--invite-brown)]">
                       Sim, irei!
                     </span>
                   </label>
-                  <label className="flex-1 cursor-pointer">
+                  
+                  <label
+                    className={`flex items-center justify-center gap-2 py-4 px-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                      attendanceStatus === "not-attending"
+                        ? "border-[var(--invite-brown)] bg-[var(--invite-brown)]/5 shadow-md"
+                        : "border-[var(--invite-line)]/60 hover:border-[var(--invite-brown)]/30"
+                    }`}
+                  >
                     <input className="peer sr-only" type="radio" value="not-attending" {...register("attendance_status")} />
-                    <span className="flex items-center justify-center rounded-[14px] border border-transparent bg-transparent py-3 font-heading text-lg text-[var(--invite-brown)]/70 transition-all duration-300 hover:bg-white/30 peer-checked:border-[var(--invite-gold)]/30 peer-checked:bg-white peer-checked:text-[var(--invite-brown)] peer-checked:shadow-sm">
+                    <span className="font-heading text-base text-[var(--invite-brown)]/70">
                       Não poderei ir
                     </span>
                   </label>
@@ -237,18 +244,18 @@ export function RSVPSection() {
             {attendanceStatus === "attending" && (
               <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="mb-6">
-                  <h3 className="font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">Acompanhantes</h3>
-                  <hr className="mt-3 border-[var(--invite-line)]" />
+                  <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl">Acompanhantes</h3>
+                  <hr className="mt-3 border-[var(--invite-line)]/50" />
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-lg">
-                      <Users className="size-4" />
+                    <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-base">
+                      <Users className="size-4 text-[var(--invite-sage)]" />
                       Número de acompanhantes
                     </label>
                     <select
-                      className="w-full rounded-[14px] border border-[var(--invite-line)] bg-[var(--invite-cream)]/20 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] focus:shadow-[0_0_12px_rgba(212,186,140,0.12)] focus:ring-1 focus:ring-[var(--invite-gold)]/30"
+                      className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
                       {...register("companions_count")}
                     >
                       {Array.from({ length: maxCompanions + 1 }, (_, number) => (
@@ -263,12 +270,12 @@ export function RSVPSection() {
                     <div className="grid gap-6 sm:grid-cols-2">
                       {Array.from({ length: companionsCount }, (_, index) => (
                         <div key={`companion-${index}`}>
-                          <label className="mb-2 flex items-center gap-2 font-body text-lg text-[var(--invite-brown-soft)]">
-                            <User className="size-4" />
+                          <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)]">
+                            <User className="size-4 text-[var(--invite-sage)]" />
                             Acompanhante {index + 1}
                           </label>
                           <input
-                            className="w-full rounded-[14px] border border-[var(--invite-line)] bg-[var(--invite-cream)]/20 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] focus:shadow-[0_0_12px_rgba(212,186,140,0.12)] focus:ring-1 focus:ring-[var(--invite-gold)]/30"
+                            className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
                             placeholder="Nome completo"
                             {...register(`companions_names.${index}` as const)}
                           />
@@ -288,14 +295,14 @@ export function RSVPSection() {
             {/* RECADO */}
             <div>
               <div className="mb-6">
-                <h3 className="flex items-center gap-2 font-heading text-2xl text-[var(--invite-brown)] sm:text-3xl">
+                <h3 className="font-heading text-xl text-[var(--invite-brown)] sm:text-2xl">
                   Deixe um recado
                 </h3>
-                <hr className="mt-3 border-[var(--invite-line)]" />
+                <hr className="mt-3 border-[var(--invite-line)]/50" />
               </div>
               <div>
                 <textarea
-                  className="min-h-32 w-full rounded-[14px] border border-[var(--invite-line)] bg-[var(--invite-cream)]/20 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)] focus:shadow-[0_0_12px_rgba(212,186,140,0.12)] focus:ring-1 focus:ring-[var(--invite-gold)]/30"
+                  className="min-h-32 w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
                   placeholder={inviteData.rsvp.messagePlaceholder}
                   {...register("notes")}
                 />
@@ -306,7 +313,7 @@ export function RSVPSection() {
             </div>
 
             <button
-              className="invite-button-primary flex w-full"
+              className="invite-button-primary flex w-full justify-center items-center py-4 bg-[var(--invite-brown)] text-white hover:bg-[var(--invite-brown-soft)] transition-colors duration-300 rounded-full font-heading tracking-widest text-sm"
               disabled={isSubmitting}
               type="submit"
             >
@@ -321,8 +328,6 @@ export function RSVPSection() {
             </button>
           </form>
         </Reveal>
-
-
       </div>
     </section>
   );

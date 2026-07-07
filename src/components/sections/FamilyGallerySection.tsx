@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { inviteData } from "@/config/invite";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Reveal } from "@/components/ui/Reveal";
@@ -19,9 +20,36 @@ export function FamilyGallerySection() {
   );
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: true }, [autoplay]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  // Block page scroll when Lightbox is open
+  useEffect(() => {
+    if (selectedImageIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedImageIndex]);
+
+  const handlePrevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex === null) return;
+    const slides = inviteData.familyGallery.slides;
+    setSelectedImageIndex((prev) => (prev !== null ? (prev - 1 + slides.length) % slides.length : null));
+  };
+
+  const handleNextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex === null) return;
+    const slides = inviteData.familyGallery.slides;
+    setSelectedImageIndex((prev) => (prev !== null ? (prev + 1) % slides.length : null));
+  };
 
   return (
-    <section className="invite-section !pt-4 sm:!pt-8 !pb-4 sm:!pb-8" id="familia">
+    <section className="invite-section !pt-4 sm:!pt-8 !pb-4 sm:!pb-8 overflow-hidden" id="familia">
       <div className="invite-container">
         <SectionHeading
           align="center"
@@ -34,43 +62,53 @@ export function FamilyGallerySection() {
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="-ml-4 flex">
-                {inviteData.familyGallery.slides.map((slide) => (
+                {inviteData.familyGallery.slides.map((slide, index) => (
                   <div
-                    className="min-w-0 flex-[0_0_86%] pl-4 md:flex-[0_0_52%] lg:flex-[0_0_34%]"
+                    className="min-w-0 flex-[0_0_80%] pl-4 sm:flex-[0_0_50%] md:flex-[0_0_40%] lg:flex-[0_0_30%]"
                     key={slide.asset}
                   >
-                    <figure className="overflow-hidden rounded-[30px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)]">
-                      <div className="aspect-[4/3]">
+                    <div
+                      onClick={() => setSelectedImageIndex(index)}
+                      className="group relative cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-lg border border-[var(--invite-line)]/35"
+                    >
+                      <div className="aspect-[3/4] overflow-hidden">
                         <ResponsiveImage
                           asset={slide.asset}
                           alt={slide.alt}
                           className={cn(
-                            "h-full w-full object-cover transition duration-500 hover:scale-[1.03]",
+                            "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
                             slide.positionClass,
                           )}
-                          sizes="(min-width: 1024px) 34vw, (min-width: 768px) 52vw, 86vw"
+                          sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 80vw"
                         />
                       </div>
-                      <figcaption className="px-5 py-5">
-                        <p className="font-body text-sm leading-relaxed text-[var(--invite-brown-soft)] sm:text-base">
-                          {slide.caption}
-                        </p>
-                      </figcaption>
-                    </figure>
+                      
+                      {/* Gradient Hover Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                        <span className="text-white text-xs uppercase tracking-widest bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                          Ampliar Foto 🔍
+                        </span>
+                      </div>
+                    </div>
+                    {slide.caption && (
+                      <p className="mt-3 px-2 text-center font-body text-sm text-[var(--invite-brown-soft)]/80 italic">
+                        {slide.caption}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
             <button
-              className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex"
+              className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex hover:bg-[var(--invite-gold)] hover:text-white transition-colors duration-300"
               onClick={() => emblaApi?.scrollPrev()}
               type="button"
             >
               <ChevronLeft className="size-5" />
             </button>
             <button
-              className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex"
+              className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex hover:bg-[var(--invite-gold)] hover:text-white transition-colors duration-300"
               onClick={() => emblaApi?.scrollNext()}
               type="button"
             >
@@ -124,6 +162,79 @@ export function FamilyGallerySection() {
           </div>
         </Reveal>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedImageIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[150] bg-black/95 backdrop-blur-md flex flex-col justify-between p-4"
+            onClick={() => setSelectedImageIndex(null)}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedImageIndex(null)}
+              className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-300 z-[160]"
+              aria-label="Fechar visualizador"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Side Controls (Desktop Only) */}
+            <button
+              onClick={handlePrevImage}
+              className="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-300 z-[160] hidden md:block"
+              aria-label="Foto anterior"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={handleNextImage}
+              className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-300 z-[160] hidden md:block"
+              aria-label="Próxima foto"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            {/* Image display wrapper */}
+            <div className="flex-1 flex items-center justify-center relative overflow-hidden w-full select-none">
+              <motion.div
+                key={`lightbox-${selectedImageIndex}`}
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="max-w-[95%] max-h-[80vh] pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ResponsiveImage
+                  asset={inviteData.familyGallery.slides[selectedImageIndex].asset}
+                  alt={inviteData.familyGallery.slides[selectedImageIndex].alt}
+                  className="rounded-xl shadow-2xl max-h-[80vh] w-auto object-contain mx-auto"
+                />
+              </motion.div>
+            </div>
+
+            {/* Bottom Details */}
+            <div className="text-center text-white/80 pb-6 font-sans">
+              <p className="text-sm font-light mb-1 px-4 leading-relaxed">
+                {inviteData.familyGallery.slides[selectedImageIndex].alt}
+              </p>
+              {inviteData.familyGallery.slides[selectedImageIndex].caption && (
+                <p className="text-xs text-white/60 mb-2 italic">
+                  {inviteData.familyGallery.slides[selectedImageIndex].caption}
+                </p>
+              )}
+              <p className="text-xs text-white/40">
+                {selectedImageIndex + 1} de {inviteData.familyGallery.slides.length}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

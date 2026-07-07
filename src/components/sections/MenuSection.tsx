@@ -1,63 +1,103 @@
-import { UtensilsCrossed } from "lucide-react";
 import { inviteData } from "@/config/invite";
 import { Reveal } from "@/components/ui/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-
-const categoryIcons: Record<string, string> = {
-  Entrada: "🍢",
-  "Prato Principal": "🥩",
-  Sobremesa: "🍰",
-};
 
 export function MenuSection() {
   if (!inviteData.menu?.enabled) return null;
 
   return (
-    <section className="invite-section !pb-6 !pt-2 sm:!pb-10 sm:!pt-4" id="cardapio">
-      <div className="invite-container">
-        <SectionHeading
-          align="center"
-          label={inviteData.menu.label}
-          title={inviteData.menu.title}
-        />
+    <section className="invite-section relative bg-[var(--invite-cream)]" id="cardapio">
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--invite-brown)] rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--invite-gold)] rounded-full blur-3xl" />
+      </div>
 
-        <Reveal className="invite-card-strong mx-auto mt-10 max-w-2xl overflow-hidden" delay={0.06}>
-          <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-[var(--invite-sage-soft)]/30 via-transparent to-[var(--invite-sage-soft)]/30 px-6 py-5">
-            <UtensilsCrossed className="size-5 text-[var(--invite-gold)]" strokeWidth={1.6} />
-            <p className="font-body text-lg text-[var(--invite-brown-soft)] sm:text-xl">
-              {inviteData.menu.description}
-            </p>
-          </div>
+      <div className="invite-container relative z-10">
+        {/* Header */}
+        <Reveal className="text-center mb-12">
+          <p className="font-heading text-[var(--invite-sage)] uppercase tracking-[0.3em] text-xs mb-3">
+            {inviteData.menu.label}
+          </p>
+          <h2 className="font-script italic font-medium text-3xl md:text-5xl text-[var(--invite-brown)] mb-2">
+            {inviteData.menu.title}
+          </h2>
+          <p className="font-heading text-base text-[var(--invite-brown-soft)]/70">
+            {inviteData.menu.description}
+          </p>
+          <div className="decorative-line mt-5" />
+        </Reveal>
 
-          <div className="divide-y divide-[var(--invite-line)] px-6 py-4 sm:px-8">
-            {inviteData.menu.courses.map((course, index) => (
-              <Reveal
-                className="py-5 first:pt-3 last:pb-3"
-                delay={0.08 + index * 0.06}
-                key={course.category}
-              >
-                <div className="mb-3 flex items-center gap-3">
-                  <span className="text-xl" role="img" aria-label={course.category}>
-                    {categoryIcons[course.category] ?? "🍽️"}
-                  </span>
-                  <p className="font-heading text-sm uppercase tracking-[0.3em] text-[var(--invite-sage)]">
-                    {course.category}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2 pl-9">
-                  {course.items.map((item) => (
-                    <span
-                      className="rounded-full border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/20 px-4 py-1.5 font-body text-base text-[var(--invite-brown)] sm:text-lg"
-                      key={item}
-                    >
-                      {item}
-                    </span>
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          {/* Menu Card — Paper Style */}
+          <Reveal delay={0.15}>
+            <div className="relative">
+              {/* Tilted background for paper effect */}
+              <div className="absolute inset-0 bg-[#fffbf2] rounded-3xl shadow-xl transform rotate-1 transition-transform duration-500 hover:rotate-0" />
+              <div className="relative bg-white/95 rounded-3xl shadow-sm border border-[var(--invite-line)]/40 p-6 md:p-10 overflow-hidden">
+                {/* Inner frame decoration */}
+                <div className="absolute inset-3 md:inset-4 border border-[var(--invite-gold)]/15 rounded-2xl pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[2px] bg-[var(--invite-gold)]/20" />
+
+                <div className="space-y-8 relative z-10">
+                  {inviteData.menu.courses.map((course, index) => (
+                    <div key={course.category}>
+                      <div className="text-center">
+                        <h3 className="font-body italic text-2xl md:text-3xl text-[var(--invite-brown)] mb-3">
+                          {course.category}
+                        </h3>
+                        <div className="max-w-sm mx-auto">
+                          <p className="font-sans text-[var(--invite-brown-soft)] leading-relaxed text-sm">
+                            {course.items.join(" \u2022 ")}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Divider between courses (not after last) */}
+                      {index < inviteData.menu.courses.length - 1 && (
+                        <div className="flex justify-center mt-6 opacity-30">
+                          <div className="w-2/3 h-[1px] bg-gradient-to-r from-transparent via-[var(--invite-gold)] to-transparent" />
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Event info aside */}
+          <Reveal className="relative" delay={0.25}>
+            <div className="bg-gradient-to-br from-[var(--invite-brown)] to-[#0A1628] rounded-3xl p-8 md:p-10 text-white overflow-hidden relative">
+              {/* Decorative glow */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--invite-gold)]/10 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[var(--invite-gold)]/5 rounded-full blur-3xl" />
+
+              <div className="relative z-10 text-center">
+                <p className="font-heading text-xs uppercase tracking-[0.3em] text-[var(--invite-gold)] mb-4">
+                  Jantar de Celebra\u00e7\u00e3o
+                </p>
+                <h3 className="font-script italic font-medium text-3xl md:text-4xl text-white mb-4">
+                  Uma noite especial
+                </h3>
+                <div className="decorative-line mb-6" />
+                <p className="font-sans text-sm text-white/70 leading-relaxed max-w-sm mx-auto mb-6">
+                  O jantar ser\u00e1 servido no {inviteData.event.venueName}, em um ambiente preparado com carinho para celebrar essa conquista.
+                </p>
+                <div className="flex items-center justify-center gap-6 text-sm text-white/60">
+                  <div className="text-center">
+                    <span className="block font-script text-2xl text-[var(--invite-gold)]">{inviteData.event.timeText}</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em]">Hor\u00e1rio</span>
+                  </div>
+                  <div className="w-[1px] h-10 bg-white/15" />
+                  <div className="text-center">
+                    <span className="block font-script text-2xl text-[var(--invite-gold)]">{inviteData.event.dateLong.split(" ")[0]}</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em]">{inviteData.event.dateLong.split(" ").slice(1, 4).join(" ")}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

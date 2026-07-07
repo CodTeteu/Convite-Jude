@@ -19,8 +19,12 @@ export function StorySection() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <section className="invite-section !pb-0" id="jornada">
-      <div className="invite-container">
+    <section className="invite-section !pb-0 overflow-hidden" id="jornada">
+      {/* Decorative blobs */}
+      <div className="absolute top-20 right-0 w-72 h-72 bg-[var(--invite-gold)]/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-0 w-96 h-96 bg-[var(--invite-brown)]/5 rounded-full blur-3xl" />
+
+      <div className="invite-container relative z-10">
         <div className="text-center lg:hidden">
           <p className="font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
             {inviteData.journey.label}
@@ -38,9 +42,9 @@ export function StorySection() {
 
         <div className="mt-10 grid items-center gap-14 lg:mt-0 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <Reveal className="relative">
-            <div className="relative overflow-hidden rounded-[24px] border border-[var(--invite-gold)]/20 bg-white p-1.5 shadow-[0_16px_40px_rgba(13,39,71,0.05)]">
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex">
+            <div className="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl relative">
+              <div className="overflow-hidden h-full" ref={emblaRef}>
+                <div className="flex h-full">
                   {inviteData.journey.images.map((image) => (
                     <div className="min-w-0 flex-[0_0_100%]" key={image.asset}>
                       <div className="aspect-[3/4]">
@@ -70,6 +74,10 @@ export function StorySection() {
                 <ChevronRight className="size-5" />
               </button>
             </div>
+            {/* Decorative offset frame */}
+            <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[var(--invite-gold)]/15 rounded-3xl pointer-events-none" />
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--invite-gold)]/10 rounded-full blur-3xl" />
+            <div className="absolute -top-6 -right-6 w-24 h-24 bg-[var(--invite-brown)]/8 rounded-full blur-2xl" />
           </Reveal>
 
           <Reveal className="space-y-7 text-center lg:text-left" delay={0.1}>

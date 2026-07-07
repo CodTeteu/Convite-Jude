@@ -183,7 +183,7 @@ a {
   }
 
   .invite-container {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   .invite-section {
@@ -202,10 +202,32 @@ a {
   }
 
   .invite-card-strong {
-    @apply rounded-[30px] border shadow-[0_24px_70px_rgba(10,22,40,0.12)];
-    border-color: rgba(195, 155, 91, 0.3);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(249, 251, 249, 0.98));
-    backdrop-filter: blur(12px);
+    @apply rounded-3xl border shadow-xl;
+    border-color: var(--invite-line);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-[var(--invite-line)]/30 rounded-2xl shadow-xl;
+  }
+
+  .premium-shadow {
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 20px 25px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  .decorative-line {
+    @apply w-24 h-[1px] bg-gradient-to-r from-transparent via-[var(--invite-gold)]/50 to-transparent mx-auto;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .invite-button-primary {
