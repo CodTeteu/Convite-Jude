@@ -7,10 +7,10 @@
   --font-heading: "Playfair Display", serif;
   --font-body: "Cormorant Garamond", serif;
   --font-sans: "Manrope", sans-serif;
-  --color-background: #F8F6F2;
-  --color-background-soft: #CFC9C2;
+  --color-background: #ffffff;
+  --color-background-soft: #f5f7fc;
   --color-paper: #ffffff;
-  --color-paper-soft: #F8F6F2;
+  --color-paper-soft: #ffffff;
   --color-gold: #D4BA8C;
   --color-gold-soft: #E5D5BA;
   --color-emerald: #0D2747;
@@ -19,7 +19,7 @@
 
 :root {
   color-scheme: light;
-  --invite-cream: #F8F6F2;
+  --invite-cream: #ffffff;
   --invite-paper: #ffffff;
   --invite-sand: #CFC9C2;
   --invite-brown: #0D2747; /* Deep navy for texts */
