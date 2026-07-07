@@ -57,11 +57,11 @@ export function CelebrationSection() {
           title={inviteData.celebration.title}
         />
 
-        {/* Horizontal scroll snap cards */}
-        <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-8 pb-6 md:pb-0 scroll-smooth snap-x snap-mandatory no-scrollbar -mx-4 px-6 md:mx-0 md:px-0 mt-14">
+        {/* Two Events grid (stacked on mobile, side-by-side on desktop) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-14">
 
           {/* Card 1 — Colação de Grau */}
-          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink p-4 md:p-5 relative group overflow-hidden">
+          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between w-full p-4 md:p-5 relative group overflow-hidden">
             {/* Inner Gold Frame */}
             <div className="absolute inset-2 border border-[var(--invite-gold)]/10 rounded-[24px] pointer-events-none" />
 
@@ -144,7 +144,7 @@ export function CelebrationSection() {
           </Reveal>
 
           {/* Card 2 — Jantar de Celebração */}
-          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between snap-start shrink-0 w-[290px] sm:w-[320px] md:w-auto md:shrink p-4 md:p-5 relative group overflow-hidden" delay={0.08}>
+          <Reveal className="bg-white rounded-[32px] shadow-xl border border-[var(--invite-line)]/40 flex flex-col justify-between w-full p-4 md:p-5 relative group overflow-hidden" delay={0.08}>
             {/* Inner Gold Frame */}
             <div className="absolute inset-2 border border-[var(--invite-gold)]/10 rounded-[24px] pointer-events-none" />
 
