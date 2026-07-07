@@ -15,6 +15,7 @@ import {
   RefreshCw,
   Search,
   ShieldCheck,
+  Ticket,
   Trash2,
   UserPlus,
   Users,
@@ -26,8 +27,9 @@ import { attendanceLabels, type AttendanceStatus } from "@shared/constants";
 import { inviteData } from "@/config/invite";
 import { AdminTabs, type AdminTab } from "@/features/admin/AdminTabs";
 import { GiftSelectionsPanel } from "@/features/admin/GiftSelectionsPanel";
-import { ApiError, adminLogin, adminLogout, deleteAdminRsvp, fetchAdminRsvps, withBasePath } from "@/lib/api";
+import { ApiError, adminLogin, adminLogout, deleteAdminRsvp, fetchAdminRsvps, withBasePath, updateAdminRsvp } from "@/lib/api";
 import { formatDisplayDateTime } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 // ===========================================
 // CONSTANTS
@@ -245,9 +247,11 @@ function DeleteConfirmDialog({
 function SubmissionCard({
   item,
   onDelete,
+  onUpdateBingoStatus,
 }: {
   item: AdminRsvpItem;
   onDelete: (item: AdminRsvpItem) => void;
+  onUpdateBingoStatus: (id: string, currentStatus: "pending" | "paid" | "unpaid") => void;
 }) {
   return (
     <motion.article
@@ -298,6 +302,43 @@ function SubmissionCard({
             </span>
           </div>
         )}
+
+        {/* Bingo Status */}
+        {(() => {
+          const info = getBingoInfo(item);
+          if (!info) return null;
+          
+          return (
+            <div className="flex items-center justify-between gap-2.5 text-sm pt-2.5 border-t border-[var(--invite-line)]/30 mt-2.5">
+              <div className="flex items-center gap-2.5">
+                <Ticket className="size-3.5 text-[var(--invite-gold)] shrink-0" />
+                <span className="font-heading text-xs font-semibold text-[var(--invite-brown)] font-sans">
+                  Bingo: {info.count} cartela{info.count > 1 ? "s" : ""} (R$ {info.value},00)
+                </span>
+              </div>
+              <button
+                onClick={() => onUpdateBingoStatus(item.id, info.status)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold transition-all duration-200 shrink-0",
+                  info.status === "paid" && "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
+                  info.status === "unpaid" && "bg-red-50 border-red-200 text-red-700 hover:bg-red-100",
+                  info.status === "pending" && "bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                )}
+                title="Clique para alternar o status do pagamento"
+              >
+                <span className={cn(
+                  "size-1.5 rounded-full",
+                  info.status === "paid" && "bg-green-500",
+                  info.status === "unpaid" && "bg-red-500",
+                  info.status === "pending" && "bg-yellow-500"
+                )} />
+                {info.status === "paid" && "Pago"}
+                {info.status === "unpaid" && "Não Pago"}
+                {info.status === "pending" && "Pendente"}
+              </button>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Footer: date + delete */}
@@ -318,6 +359,22 @@ function SubmissionCard({
   );
 }
 
+// Helper to parse Bingo info from guest notes and payment status from admin notes
+function getBingoInfo(item: AdminRsvpItem) {
+  const match = (item.notes || "").match(/\[Bingo:\s*(\d+)\s*cartela\(s\)/);
+  if (!match) return null;
+  const count = parseInt(match[1], 10);
+  
+  let status: "pending" | "paid" | "unpaid" = "pending";
+  if ((item.admin_notes || "").includes("[Bingo: PAGO]")) {
+    status = "paid";
+  } else if ((item.admin_notes || "").includes("[Bingo: NAO_PAGO]")) {
+    status = "unpaid";
+  }
+  
+  return { count, status, value: count * 10 };
+}
+
 // ===========================================
 // READ-ONLY TABLE (DESKTOP)
 // ===========================================
@@ -325,9 +382,11 @@ function SubmissionCard({
 function SubmissionsTable({
   items,
   onDelete,
+  onUpdateBingoStatus,
 }: {
   items: AdminRsvpItem[];
   onDelete: (item: AdminRsvpItem) => void;
+  onUpdateBingoStatus: (id: string, currentStatus: "pending" | "paid" | "unpaid") => void;
 }) {
   return (
     <div className="invite-card mt-8 hidden overflow-hidden lg:block">
@@ -340,6 +399,7 @@ function SubmissionsTable({
               <th className="px-5 py-4 font-medium text-center">Pessoas</th>
               <th className="px-5 py-4 font-medium">Acompanhantes</th>
               <th className="px-5 py-4 font-medium">Observações</th>
+              <th className="px-5 py-4 font-medium text-center">Bingo / Pix</th>
               <th className="px-5 py-4 font-medium">Envio</th>
               <th className="px-5 py-4 font-medium w-[80px]"></th>
             </tr>
@@ -405,6 +465,42 @@ function SubmissionsTable({
                     ) : (
                       <span className="text-xs text-[var(--invite-sage)]">—</span>
                     )}
+                  </td>
+
+                  {/* Bingo / Pix status */}
+                  <td className="px-5 py-4 text-center">
+                    {(() => {
+                      const info = getBingoInfo(item);
+                      if (!info) return <span className="text-[var(--invite-sage)]">—</span>;
+                      
+                      return (
+                        <button
+                          onClick={() => onUpdateBingoStatus(item.id, info.status)}
+                          className={cn(
+                            "inline-flex flex-col items-center justify-center gap-1 rounded-2xl border px-3 py-1.5 transition duration-200 text-xs font-semibold w-full max-w-[120px] mx-auto",
+                            info.status === "paid" && "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
+                            info.status === "unpaid" && "bg-red-50 border-red-200 text-red-700 hover:bg-red-100",
+                            info.status === "pending" && "bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                          )}
+                          title="Clique para alternar o status do pagamento"
+                        >
+                          <span className="text-[10px] uppercase tracking-wider text-black/60 font-sans">
+                            {info.count} cartela{info.count > 1 ? "s" : ""}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <span className={cn(
+                              "size-1.5 rounded-full",
+                              info.status === "paid" && "bg-green-500",
+                              info.status === "unpaid" && "bg-red-500",
+                              info.status === "pending" && "bg-yellow-500"
+                            )} />
+                            {info.status === "paid" && "Pago"}
+                            {info.status === "unpaid" && "Não Pago"}
+                            {info.status === "pending" && "Pendente"}
+                          </span>
+                        </button>
+                      );
+                    })()}
                   </td>
 
                   {/* Date */}
@@ -533,6 +629,36 @@ export default function AdminPage() {
       );
     } finally {
       setDeleting(false);
+    }
+  }
+
+  async function handleUpdateBingoStatus(id: string, currentStatus: "pending" | "paid" | "unpaid") {
+    let nextStatus: "pending" | "paid" | "unpaid" = "paid";
+    if (currentStatus === "pending") {
+      nextStatus = "paid";
+    } else if (currentStatus === "paid") {
+      nextStatus = "unpaid";
+    } else {
+      nextStatus = "pending";
+    }
+
+    let newAdminNotes = "";
+    if (nextStatus === "paid") {
+      newAdminNotes = "[Bingo: PAGO]";
+    } else if (nextStatus === "unpaid") {
+      newAdminNotes = "[Bingo: NAO_PAGO]";
+    } else {
+      newAdminNotes = "[Bingo: PENDENTE]";
+    }
+
+    try {
+      await updateAdminRsvp(id, { admin_notes: newAdminNotes });
+      toast.success("Status do pagamento do Bingo atualizado.");
+      await loadData();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Não foi possível atualizar o status de pagamento.",
+      );
     }
   }
 
@@ -744,7 +870,11 @@ export default function AdminPage() {
 
         {/* Desktop Table (read-only) */}
         {!loading && filteredItems.length > 0 && (
-          <SubmissionsTable items={filteredItems} onDelete={setDeleteTarget} />
+          <SubmissionsTable
+            items={filteredItems}
+            onDelete={setDeleteTarget}
+            onUpdateBingoStatus={handleUpdateBingoStatus}
+          />
         )}
 
         {/* Mobile Cards (read-only) */}
@@ -752,7 +882,12 @@ export default function AdminPage() {
           <div className="mt-8 space-y-4 lg:hidden">
             <AnimatePresence>
               {filteredItems.map((item) => (
-                <SubmissionCard key={item.id} item={item} onDelete={setDeleteTarget} />
+                <SubmissionCard
+                  key={item.id}
+                  item={item}
+                  onDelete={setDeleteTarget}
+                  onUpdateBingoStatus={handleUpdateBingoStatus}
+                />
               ))}
             </AnimatePresence>
           </div>

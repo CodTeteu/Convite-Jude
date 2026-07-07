@@ -38,8 +38,46 @@ export function RSVPSection() {
   async function handleCopyPix(pixKey: string) {
     try {
       setCopyingPix(true);
+      const name = getValues("guest_name") || "";
+      const phone = getValues("phone") || "";
+
+      if (!name.trim() || name.trim().length < 3 || !phone.trim() || phone.replace(/\D/g, "").length < 10) {
+        toast.error("Por favor, preencha seu Nome e Celular no topo do formulário antes de copiar a chave Pix, para podermos registrar seu pagamento!");
+        setCopyingPix(false);
+        return;
+      }
+
       await navigator.clipboard.writeText(pixKey);
       toast.success("Chave Pix copiada com sucesso!");
+
+      // Submit RSVP in the background to log the purchase intention in Supabase immediately
+      let rawNotes = getValues("notes") || "";
+      const bingoNote = ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`;
+      if (rawNotes.length + bingoNote.length > 490) {
+        rawNotes = rawNotes.substring(0, 490 - bingoNote.length) + "...";
+      }
+      const finalNotes = rawNotes + bingoNote;
+
+      const payload = {
+        guest_name: name.trim(),
+        phone: phone.replace(/\D/g, ""),
+        attendance_status: (getValues("attendance_status") || "attending") as "attending" | "not-attending",
+        companions_count: Number(getValues("companions_count") || 0),
+        companions_names: getValues("companions_names") || [],
+        notes: finalNotes,
+        acknowledged_guidelines: true as const,
+        source: defaultSource,
+        event_slug: eventSlug,
+      };
+
+      submitRsvp(payload)
+        .then(() => {
+          toast.success("Chave Pix copiada! Pedido registrado no painel administrativo.");
+        })
+        .catch((err) => {
+          console.error("Erro ao registrar intenção de bingo no Supabase:", err);
+          queueFailedSubmission(payload);
+        });
     } catch {
       toast.error("Erro ao copiar a chave Pix.");
     } finally {
