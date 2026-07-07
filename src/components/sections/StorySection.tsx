@@ -25,12 +25,12 @@ export function StorySection() {
           <p className="font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
             {inviteData.journey.label}
           </p>
-          <h2 className="mt-4 font-script text-5xl text-[var(--invite-brown)] sm:text-6xl">
+          <h2 className="mt-4 font-script italic font-medium text-5xl text-[var(--invite-brown)] sm:text-6xl">
             {inviteData.journey.title}
           </h2>
           <div className="mt-6 text-center italic text-[var(--invite-brown)]/90">
-            <p className="font-script text-3xl leading-[1.3] sm:text-4xl">
-              “{inviteData.graduate.signatureQuote}”
+            <p className="font-script italic text-2xl leading-[1.3] sm:text-3xl">
+              {inviteData.graduate.signatureQuote}
             </p>
           </div>
         </div>
@@ -76,12 +76,12 @@ export function StorySection() {
               <p className="font-heading text-[0.72rem] uppercase tracking-[0.32em] text-[var(--invite-sage)]">
                 {inviteData.journey.label}
               </p>
-              <h2 className="mt-4 font-script text-6xl text-[var(--invite-brown)]">
+              <h2 className="mt-4 font-script italic font-medium text-6xl text-[var(--invite-brown)]">
                 {inviteData.journey.title}
               </h2>
               <div className="mt-6 text-center italic text-[var(--invite-brown)]/90 lg:text-left">
-                <p className="font-script text-3xl leading-[1.3] sm:text-4xl">
-                  “{inviteData.graduate.signatureQuote}”
+                <p className="font-script italic text-2xl leading-[1.3] sm:text-3xl">
+                  {inviteData.graduate.signatureQuote}
                 </p>
               </div>
             </div>

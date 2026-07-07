@@ -29,9 +29,9 @@ coverage
 
 # Generated assets
 public/images/generated
-public/og-camilla.jpg
-public/og-camilla.webp
-public/og-camilla.avif
+public/og-template.jpg
+public/og-template.webp
+public/og-template.avif
 public/sitemap.xml
 
 .vercel

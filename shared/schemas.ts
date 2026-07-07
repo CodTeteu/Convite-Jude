@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EVENT_SLUG, attendanceStatuses } from "./constants.js";
+import { DEFAULT_EVENT_SLUG, attendanceStatuses, paymentStatuses } from "./constants.js";
 
 const phoneTransformer = z
   .string()
@@ -29,8 +29,8 @@ export const rsvpSchema = z
       .number()
       .int()
       .min(0, "Quantidade inválida.")
-      .max(8, "Limite máximo de 8 acompanhantes."),
-    companions_names: z.array(companionNameSchema).max(8).default([]),
+      .max(20, "Limite máximo de 20 acompanhantes."),
+    companions_names: z.array(companionNameSchema).max(20).default([]),
     notes: z
       .string()
       .trim()
@@ -40,7 +40,7 @@ export const rsvpSchema = z
       message: "Confirme que leu as orientações para continuar.",
     }),
     source: z.string().trim().max(60).default("site"),
-    event_slug: z.string().trim().default(EVENT_SLUG),
+    event_slug: z.string().trim().default(DEFAULT_EVENT_SLUG),
   })
   .transform((input) => {
     if (input.attendance_status === "not-attending") {
@@ -86,10 +86,53 @@ export const adminUpdateSchema = z
     "Nenhuma alteração informada.",
   );
 
+export const giftSelectionSchema = z.object({
+  guest_name: z
+    .string()
+    .trim()
+    .min(3, "Informe seu nome completo.")
+    .max(120, "Nome muito longo."),
+  guest_phone: phoneTransformer.refine(
+    (value) => value.length >= 10 && value.length <= 13,
+    "Informe um telefone válido com DDD.",
+  ),
+  message: z
+    .string()
+    .trim()
+    .max(500, "A mensagem deve ter no máximo 500 caracteres.")
+    .default(""),
+  event_slug: z.string().trim().default(DEFAULT_EVENT_SLUG),
+  items: z
+    .array(
+      z.object({
+        gift_item_id: z.string().uuid("Presente inválido."),
+        quantity: z.coerce.number().int().min(1).max(20),
+      }),
+    )
+    .min(1, "Escolha pelo menos um presente."),
+});
+
+export const adminGiftSelectionUpdateSchema = z
+  .object({
+    payment_status: z.enum(paymentStatuses).optional(),
+    admin_notes: z
+      .string()
+      .trim()
+      .max(500, "A observação deve ter no máximo 500 caracteres.")
+      .optional(),
+  })
+  .refine(
+    (value) => value.payment_status !== undefined || value.admin_notes !== undefined,
+    "Nenhuma alteração informada.",
+  );
+
 export type RSVPInput = z.input<typeof rsvpSchema>;
 export type RSVPSubmission = z.output<typeof rsvpSchema>;
 export type AdminLoginInput = z.infer<typeof adminLoginSchema>;
 export type AdminUpdateInput = z.infer<typeof adminUpdateSchema>;
+export type GiftSelectionInput = z.input<typeof giftSelectionSchema>;
+export type GiftSelectionSubmission = z.output<typeof giftSelectionSchema>;
+export type AdminGiftSelectionUpdateInput = z.infer<typeof adminGiftSelectionUpdateSchema>;
 
 export interface AdminRsvpItem {
   id: string;
@@ -118,4 +161,47 @@ export interface AdminRsvpSummary {
 export interface AdminRsvpsResponse {
   items: AdminRsvpItem[];
   summary: AdminRsvpSummary;
+}
+
+export interface GiftItem {
+  id: string;
+  name: string;
+  description: string;
+  price_cents: number;
+  category: string;
+  image_url: string;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export interface GiftSelectionItem {
+  id: string;
+  gift_item_id: string;
+  name: string;
+  quantity: number;
+  unit_price_cents: number;
+}
+
+export interface GiftSelectionWithItems {
+  id: string;
+  guest_name: string;
+  guest_phone: string;
+  message: string;
+  total_cents: number;
+  payment_status: "pending" | "paid" | "cancelled";
+  admin_notes: string;
+  created_at: string;
+  updated_at: string;
+  items: GiftSelectionItem[];
+}
+
+export interface AdminGiftSelectionsResponse {
+  items: GiftSelectionWithItems[];
+  summary: {
+    total: number;
+    pending: number;
+    paid: number;
+    cancelled: number;
+    totalPaidCents: number;
+  };
 }

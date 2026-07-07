@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { z } from "zod";
 import { adminUpdateSchema, type AdminRsvpItem } from "../../shared/schemas.js";
+import { eventSlug } from "../../shared/invite.js";
 import { requireAdmin } from "../_lib/auth.js";
 import { parseBody, sendJson } from "../_lib/http.js";
 import { computeSummary } from "../_lib/rsvps.js";
@@ -40,7 +41,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { error } = await supabase
       .from("rsvp_confirmations")
       .delete()
-      .eq("id", idParsed.data.id);
+      .eq("id", idParsed.data.id)
+      .eq("event_slug", eventSlug);
 
     if (error) {
       return sendJson(res, 500, {
@@ -80,7 +82,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { error } = await supabase
       .from("rsvp_confirmations")
       .update(updateParsed.data)
-      .eq("id", idParsed.data.id);
+      .eq("id", idParsed.data.id)
+      .eq("event_slug", eventSlug);
 
     if (error) {
       return sendJson(res, 500, {
@@ -96,6 +99,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select(
       "id, guest_name, phone, attendance_status, companions_count, companions_names, notes, admin_notes, source, event_slug, submitted_at, created_at, updated_at",
     )
+    .eq("event_slug", eventSlug)
     .order("created_at", { ascending: false });
 
   if (error) {

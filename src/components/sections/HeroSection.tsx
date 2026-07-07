@@ -19,7 +19,7 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative flex h-[100svh] min-h-[600px] items-center justify-center overflow-hidden bg-[#06110c] sm:h-screen sm:min-h-screen"
+      className="relative flex h-[100svh] min-h-[600px] items-center justify-center overflow-hidden bg-[#0D2747] sm:h-screen sm:min-h-screen"
       id="inicio"
     >
       <motion.div
@@ -29,7 +29,7 @@ export function HeroSection() {
       >
         <ResponsiveImage
           asset={inviteData.hero.imageAsset}
-          alt="Camilla Santana Conegundes em retrato principal de formatura"
+          alt="Retrato principal do convite"
           className="absolute left-1/2 top-1/2 min-h-full w-full -translate-x-1/2 -translate-y-[46%] object-cover lg:min-h-0 lg:h-auto lg:min-w-full lg:w-auto lg:-translate-y-[42%]"
           eager
           sizes="100vw"
@@ -42,7 +42,7 @@ export function HeroSection() {
       <div className="absolute inset-0 z-0 sm:hidden">
         <ResponsiveImage
           asset={inviteData.hero.imageAsset}
-          alt="Camilla Santana Conegundes"
+          alt={inviteData.hero.name}
           className="h-full w-full object-cover object-[center_22%]"
           eager
           sizes="100vw"
@@ -75,6 +75,9 @@ export function HeroSection() {
             </h1>
             <p className="mt-5 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-6 sm:text-lg">
               {inviteData.hero.courseLine}
+            </p>
+            <p className="mt-2 text-[0.68rem] font-sans font-semibold uppercase tracking-[0.22em] text-white/60 sm:text-[0.72rem]">
+              Cuidar de dentro transforma tudo.
             </p>
           </div>
         </div>

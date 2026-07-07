@@ -63,14 +63,14 @@ export function FamilyGallerySection() {
             </div>
 
             <button
-              className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#ccb89a] bg-[var(--invite-paper)] text-[#4c3a2f] shadow-lg md:inline-flex"
+              className="absolute left-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex"
               onClick={() => emblaApi?.scrollPrev()}
               type="button"
             >
               <ChevronLeft className="size-5" />
             </button>
             <button
-              className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#ccb89a] bg-[var(--invite-paper)] text-[#4c3a2f] shadow-lg md:inline-flex"
+              className="absolute right-2 top-1/2 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--invite-gold)]/40 bg-[var(--invite-paper)] text-[var(--invite-brown)] shadow-lg md:inline-flex"
               onClick={() => emblaApi?.scrollNext()}
               type="button"
             >

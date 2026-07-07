@@ -23,6 +23,9 @@ import {
 import { toast } from "sonner";
 import type { AdminRsvpItem, AdminRsvpsResponse } from "@shared/schemas";
 import { attendanceLabels, type AttendanceStatus } from "@shared/constants";
+import { inviteData } from "@/config/invite";
+import { AdminTabs, type AdminTab } from "@/features/admin/AdminTabs";
+import { GiftSelectionsPanel } from "@/features/admin/GiftSelectionsPanel";
 import { ApiError, adminLogin, adminLogout, deleteAdminRsvp, fetchAdminRsvps, withBasePath } from "@/lib/api";
 import { formatDisplayDateTime } from "@/lib/format";
 
@@ -449,6 +452,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearch = useDeferredValue(searchTerm);
   const [statusFilter, setStatusFilter] = useState<AttendanceStatus | "all">("all");
+  const [activeTab, setActiveTab] = useState<AdminTab>("rsvps");
 
   // Delete state
   const [deleteTarget, setDeleteTarget] = useState<AdminRsvpItem | null>(null);
@@ -582,7 +586,7 @@ export default function AdminPage() {
                   Painel Administrativo
                 </h1>
                 <p className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--invite-sage)]">
-                  Admin / Camilla
+                  Admin / {inviteData.footer.name}
                 </p>
               </div>
             </div>
@@ -620,6 +624,15 @@ export default function AdminPage() {
 
       {/* Main */}
       <main className="invite-container py-8 sm:py-10">
+        <AdminTabs
+          active={activeTab}
+          giftsEnabled={inviteData.features.giftList && inviteData.giftList.enabled}
+          onChange={setActiveTab}
+        />
+        {activeTab === "gifts" && inviteData.features.giftList && inviteData.giftList.enabled ? (
+          <GiftSelectionsPanel />
+        ) : (
+          <>
         {/* Welcome */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -764,6 +777,8 @@ export default function AdminPage() {
               pelos convidados.
             </p>
           </motion.div>
+        )}
+          </>
         )}
       </main>
     </div>

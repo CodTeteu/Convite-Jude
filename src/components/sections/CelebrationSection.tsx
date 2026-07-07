@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Check, Clock3, Copy, MapPin, Navigation, Shirt, Users } from "lucide-react";
+import { Calendar, Check, Clock3, Copy, MapPin, Navigation, Shirt, Users, Camera, Ticket, Car } from "lucide-react";
 import { toast } from "sonner";
 import { inviteData } from "@/config/invite";
 import { buildGoogleCalendarUrl } from "@/lib/calendar";
@@ -12,7 +12,7 @@ const essentials = [
   {
     icon: Clock3,
     label: "Chegue no horário",
-    value: "Início às 22:00.",
+    value: `Início às ${inviteData.event.timeText}.`,
   },
   {
     icon: Shirt,
@@ -25,6 +25,16 @@ const essentials = [
     value: `Até ${inviteData.event.confirmationDeadline}.`,
   },
 ] as const;
+
+const quickNoteIcons: Record<string, typeof Clock3> = {
+  "Colação de Grau": Calendar,
+  "Jantar de Celebração": Clock3,
+  "Traje": Shirt,
+  "Confirmação": Users,
+  "Estacionamento": Car,
+  "Fotos": Camera,
+  "Bingo Especial": Ticket,
+};
 
 export function CelebrationSection() {
   const [copying, setCopying] = useState(false);
@@ -55,26 +65,43 @@ export function CelebrationSection() {
             <div className="relative h-[240px] overflow-hidden sm:h-[280px]">
               <ResponsiveImage
                 asset={inviteData.celebration.primaryImageAsset}
-                alt="Camilla em retrato de celebração"
+                alt="Retrato de celebração do convite"
                 className="h-full w-full object-cover object-[center_25%]"
                 sizes="(min-width: 768px) 45vw, 100vw"
               />
               <div className="absolute inset-x-0 top-0 px-6 pt-8 text-center">
-                <p className="font-heading text-lg uppercase tracking-[0.4em] text-[var(--invite-emerald)]">
-                  Data e hora
+                <p className="font-heading text-lg uppercase tracking-[0.4em] text-white drop-shadow-lg">
+                  Datas e horários
                 </p>
               </div>
 
             </div>
 
             <div className="space-y-5 px-6 py-6 sm:px-7">
-              <div className="space-y-1 text-center sm:text-left">
-                <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
-                  Data: 18 de julho de 2026
-                </p>
-                <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
-                  Horário: 22:00
-                </p>
+              <div className="space-y-3 text-center sm:text-left">
+                <div className="space-y-1">
+                  <p className="font-heading text-sm uppercase tracking-[0.3em] text-[var(--invite-sage)]">
+                    Colação de Grau
+                  </p>
+                  <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
+                    7 de agosto de 2026
+                  </p>
+                  <p className="font-body text-lg text-[var(--invite-brown-soft)]/70">
+                    Espaço Palaciu&apos;s Real Eventos
+                  </p>
+                </div>
+                <div className="invite-divider my-3" />
+                <div className="space-y-1">
+                  <p className="font-heading text-sm uppercase tracking-[0.3em] text-[var(--invite-sage)]">
+                    Jantar de Celebração
+                  </p>
+                  <p className="font-body text-xl text-[var(--invite-brown-soft)] sm:text-2xl">
+                    {inviteData.event.dateLong} • {inviteData.event.timeText}
+                  </p>
+                  <p className="font-body text-lg text-[var(--invite-brown-soft)]/70">
+                    {inviteData.event.venueName}
+                  </p>
+                </div>
               </div>
 
               <div className="flex justify-center sm:justify-start">
@@ -92,9 +119,9 @@ export function CelebrationSection() {
           </Reveal>
 
           <Reveal className="invite-card-strong overflow-hidden" delay={0.08}>
-            <div className="bg-white px-6 pt-8 pb-4 text-center">
-              <p className="font-heading text-lg uppercase tracking-[0.4em] text-[var(--invite-emerald)]">
-                LOCAL
+            <div className="bg-transparent px-6 pt-8 pb-4 text-center">
+              <p className="font-heading text-lg uppercase tracking-[0.4em] text-[var(--invite-brown)]">
+                LOCAL DO JANTAR
               </p>
             </div>
             <div className="relative h-[160px] overflow-hidden sm:h-[200px]">
@@ -119,10 +146,10 @@ export function CelebrationSection() {
                 </p>
                 <button
                   onClick={() => void handleCopyAddress()}
-                  className="absolute right-5 top-5 text-[var(--invite-brown-soft)] transition-colors hover:text-[var(--invite-emerald)]"
+                  className="absolute right-5 top-5 text-[var(--invite-brown-soft)] transition-colors hover:text-[var(--invite-brown)]"
                   title="Copiar endereço"
                 >
-                  {copying ? <Check className="size-5 text-[var(--invite-emerald)]" /> : <Copy className="size-5" />}
+                  {copying ? <Check className="size-5 text-[var(--invite-gold)]" /> : <Copy className="size-5" />}
                 </button>
               </div>
 
@@ -149,6 +176,38 @@ export function CelebrationSection() {
             </div>
           </Reveal>
         </div>
+
+        {/* Quick Notes / Manual do Convidado */}
+        {inviteData.celebration.quickNotes.length > 0 && (
+          <Reveal className="invite-card-strong mx-auto mt-10 max-w-4xl px-6 py-8 sm:px-8" delay={0.12}>
+            <p className="mb-6 text-center font-heading text-xs uppercase tracking-[0.3em] text-[var(--invite-sage)]">
+              Manual do Convidado
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {inviteData.celebration.quickNotes.map((note, index) => {
+                const Icon = quickNoteIcons[note.title] ?? Clock3;
+                return (
+                  <div
+                    className="flex items-start gap-4 rounded-[20px] border border-[var(--invite-line)] bg-[var(--invite-sage-soft)]/20 px-5 py-4"
+                    key={index}
+                  >
+                    <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--invite-sage-soft)] text-[var(--invite-brown)]">
+                      <Icon className="size-4" strokeWidth={1.8} />
+                    </div>
+                    <div>
+                      <p className="font-heading text-base text-[var(--invite-brown)]">
+                        {note.title}
+                      </p>
+                      <p className="mt-1 font-body text-lg leading-relaxed text-[var(--invite-brown-soft)] sm:text-xl">
+                        {note.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Reveal>
+        )}
 
         <div className="mx-auto mt-8 flex w-fit flex-col gap-6 sm:mt-12 sm:w-full sm:flex-row sm:gap-8">
           {essentials.map((item, index) => {
@@ -180,3 +239,4 @@ export function CelebrationSection() {
     </section>
   );
 }
+

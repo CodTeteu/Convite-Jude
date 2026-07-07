@@ -1,0 +1,25 @@
+# QA Checklist
+
+- [ ] `npm run typecheck` passa.
+- [ ] `npm run build` passa.
+- [ ] `npm run lint` passa ou os avisos foram revisados.
+- [ ] Home abre no desktop.
+- [ ] Home abre no mobile.
+- [ ] RSVP salva no Supabase.
+- [ ] Mensagem de sucesso aparece.
+- [ ] WhatsApp abre com numero e mensagem corretos, quando ativado.
+- [ ] Admin abre com `ADMIN_PASSWORD`.
+- [ ] Admin lista RSVPs.
+- [ ] Admin edita status/notas.
+- [ ] Admin exclui RSVP.
+- [ ] CSV exporta.
+- [ ] Links de mapa funcionam.
+- [ ] Calendario funciona, quando ativado.
+- [ ] `/presentes` redireciona para `/` quando `giftList.enabled` e `false`.
+- [ ] Presentes carregam quando `giftList.enabled` e `true`.
+- [ ] Selecao de presentes salva no Supabase.
+- [ ] PIX manual exibe chave, nome e total corretos.
+- [ ] Admin mostra selecoes de presentes quando modulo ativo.
+- [ ] Admin atualiza status de pagamento manual.
+- [ ] Variaveis da Vercel estao preenchidas.
+- [ ] Dominio final esta correto.

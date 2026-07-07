@@ -57,6 +57,7 @@ export function RSVPSection() {
       control,
       name: "phone",
     }) || "";
+  const maxCompanions = inviteData.rsvp.maxCompanions;
 
   useEffect(() => {
     const currentNames = getValues("companions_names") ?? [];
@@ -74,13 +75,18 @@ export function RSVPSection() {
       return;
     }
 
+    if (currentCount > maxCompanions) {
+      setValue("companions_count", maxCompanions);
+      return;
+    }
+
     if (currentNames.length !== companionsCount) {
       setValue(
         "companions_names",
         Array.from({ length: companionsCount }, (_, index) => currentNames[index] ?? ""),
       );
     }
-  }, [attendanceStatus, companionsCount, getValues, setValue]);
+  }, [attendanceStatus, companionsCount, getValues, maxCompanions, setValue]);
 
   async function onSubmit(values: RSVPInput) {
     try {
@@ -101,14 +107,20 @@ export function RSVPSection() {
 
       const whatsappUrl = `https://wa.me/${inviteData.rsvp.whatsappIntl}?text=${encodeURIComponent(message)}`;
 
-      toast.success("Confirmação registrada! Redirecionando para o WhatsApp...");
+      toast.success(
+        inviteData.rsvp.openWhatsAppAfterSubmit
+          ? "Confirmação registrada! Redirecionando para o WhatsApp..."
+          : inviteData.rsvp.successMessage,
+      );
       reset(defaultValues);
 
       // Use window.location.href instead of window.open()
       // window.open() inside async/setTimeout is BLOCKED by mobile popup blockers
       // on devices without prior popup permission (new phones, incognito, etc.)
       // window.location.href is a navigation, not a popup — it ALWAYS works.
-      window.location.assign(whatsappUrl);
+      if (inviteData.rsvp.openWhatsAppAfterSubmit) {
+        window.location.assign(whatsappUrl);
+      }
     } catch {
       const payload = rsvpSchema.parse({
         ...getValues(),
@@ -239,7 +251,7 @@ export function RSVPSection() {
                       className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-5 py-4 text-lg text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
                       {...register("companions_count")}
                     >
-                      {Array.from({ length: 9 }, (_, number) => (
+                      {Array.from({ length: maxCompanions + 1 }, (_, number) => (
                         <option key={number} value={number}>
                           {number === 0 ? "Apenas eu" : `${number} acompanhante${number > 1 ? "s" : ""}`}
                         </option>
@@ -284,7 +296,7 @@ export function RSVPSection() {
               <div>
                 <textarea
                   className="min-h-32 w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent px-5 py-4 text-lg text-[var(--invite-brown)] outline-none transition focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
-                  placeholder="Se desejar, escreva um recado carinhoso para a formanda."
+                  placeholder={inviteData.rsvp.messagePlaceholder}
                   {...register("notes")}
                 />
                 {errors.notes ? (

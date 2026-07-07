@@ -24,16 +24,27 @@ function BrandLogo({
   return (
     <div
       className={cn(
-        "transition-all duration-500",
-        variant === "onDark" ? "brightness-0 invert" : "brightness-0",
+        "relative flex items-center justify-center font-heading text-xl tracking-normal transition-all duration-500",
         className,
       )}
     >
-      <img
-        src={`${import.meta.env.BASE_URL || "/"}logo-camilla.png`}
-        alt="Logo Camilla"
-        className="h-full w-auto object-contain"
+      {/* Incomplete circular arc matching the branding guide */}
+      <div 
+        className={cn(
+          "absolute inset-0 rounded-full border border-l-transparent transition-all duration-500 rotate-[-12deg]",
+          variant === "onDark"
+            ? "border-white/40"
+            : "border-[var(--invite-gold)]/60",
+        )}
       />
+      <span
+        className={cn(
+          "font-heading font-medium tracking-normal select-none -translate-x-[1px]",
+          variant === "onDark" ? "text-white" : "text-[var(--invite-brown)]",
+        )}
+      >
+        {inviteData.people.monogram}
+      </span>
     </div>
   );
 }
@@ -72,10 +83,10 @@ export function Navigation() {
             onClick={() => scrollToHash("#inicio")}
             type="button"
           >
-            <BrandLogo
-              variant={scrolled ? "onLight" : "onDark"}
-              className={scrolled ? "h-11" : "h-14 lg:h-16"}
-            />
+              <BrandLogo
+                variant={scrolled ? "onLight" : "onDark"}
+                className={scrolled ? "size-11" : "size-14 lg:size-16"}
+              />
           </button>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -134,8 +145,8 @@ export function Navigation() {
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
             />
-            <motion.aside
-              className="fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-[320px] flex-col overflow-y-auto bg-gradient-to-b from-[#0a1c14] to-[#040907] shadow-2xl md:hidden"
+             <motion.aside
+              className="fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-[320px] flex-col overflow-y-auto bg-gradient-to-b from-[var(--invite-brown)] to-[#06101e] shadow-2xl md:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -151,7 +162,7 @@ export function Navigation() {
               </button>
 
               <div className="border-b border-white/10 px-8 pb-6 pt-10 text-center flex flex-col items-center">
-                <BrandLogo variant="onDark" className="h-14" />
+                <BrandLogo variant="onDark" className="size-14" />
                 <div className="mt-4 flex items-center justify-center gap-3 text-white/40">
                   <span className="h-px w-6 bg-[var(--invite-gold)]/30" />
                   <span className="text-[0.65rem] uppercase tracking-[0.3em] text-[var(--invite-gold)]/80">
@@ -187,7 +198,7 @@ export function Navigation() {
               {/* Mobile Footer Actions */}
               <div className="border-t border-white/10 px-8 pb-6 pt-5">
                 <button
-                  className="w-full rounded-full bg-[var(--invite-gold)] py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#040907] shadow-[0_0_20px_rgba(195,161,110,0.2)] transition-transform hover:scale-[1.02]"
+                  className="w-full rounded-full bg-[var(--invite-gold)] py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--invite-brown)] shadow-[0_0_20px_rgba(195,161,110,0.2)] transition-transform hover:scale-[1.02]"
                   onClick={() => {
                     scrollToHash("#rsvp");
                     setOpen(false);

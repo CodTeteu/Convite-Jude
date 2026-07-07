@@ -32,7 +32,7 @@ export function SectionHeading({
       >
         {label}
       </p>
-      <h2 className="mt-4 font-script text-5xl leading-none text-[var(--invite-brown)] sm:text-6xl md:text-7xl">
+      <h2 className="mt-4 font-script italic font-medium text-5xl leading-none text-[var(--invite-brown)] sm:text-6xl md:text-7xl">
         {title}
       </h2>
       {description ? (

@@ -1,4 +1,12 @@
-import type { AdminRsvpsResponse, AdminUpdateInput, RSVPSubmission } from "@shared/schemas";
+import type {
+  AdminGiftSelectionUpdateInput,
+  AdminGiftSelectionsResponse,
+  AdminRsvpsResponse,
+  AdminUpdateInput,
+  GiftItem,
+  GiftSelectionInput,
+  RSVPSubmission,
+} from "@shared/schemas";
 
 export class ApiError extends Error {
   constructor(
@@ -94,5 +102,27 @@ export function deleteAdminRsvp(id: string) {
   return request<{ ok: true }>(withBasePath("/api/admin/rsvps"), {
     method: "DELETE",
     body: JSON.stringify({ id }),
+  });
+}
+
+export function fetchGifts() {
+  return request<{ items: GiftItem[] }>(withBasePath("/api/gifts"));
+}
+
+export function submitGiftSelection(payload: GiftSelectionInput) {
+  return request<{ id: string; total_cents: number }>(withBasePath("/api/gifts/selections"), {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function fetchAdminGiftSelections() {
+  return request<AdminGiftSelectionsResponse>(withBasePath("/api/admin/gifts"));
+}
+
+export function updateAdminGiftSelection(id: string, payload: AdminGiftSelectionUpdateInput) {
+  return request<{ ok: true }>(withBasePath("/api/admin/gifts/selections"), {
+    method: "PATCH",
+    body: JSON.stringify({ id, ...payload }),
   });
 }

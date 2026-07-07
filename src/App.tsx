@@ -6,6 +6,7 @@ import HomePage from "@/pages/HomePage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
+const GiftListPage = lazy(() => import("@/pages/GiftListPage"));
 
 function LoadingScreen() {
   return (
@@ -30,6 +31,14 @@ export default function App() {
           element={
             <Suspense fallback={<LoadingScreen />}>
               <AdminPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/presentes"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <GiftListPage />
             </Suspense>
           }
         />

@@ -1,4 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { getExportFilename } from "../../../shared/constants.js";
+import { eventSlug } from "../../../shared/invite.js";
 import { requireAdmin } from "../../_lib/auth.js";
 import { getSupabaseClient } from "../../_lib/supabase.js";
 
@@ -26,6 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select(
       "guest_name, phone, attendance_status, companions_count, companions_names, notes, admin_notes, source, submitted_at, created_at",
     )
+    .eq("event_slug", eventSlug)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -66,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename="confirmacoes-camilla-${new Date().toISOString().slice(0, 10)}.csv"`,
+    `attachment; filename="${getExportFilename("confirmacoes", eventSlug)}"`,
   );
   return res.status(200).send(`\uFEFF${csv}`);
 }

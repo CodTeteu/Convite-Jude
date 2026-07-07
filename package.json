@@ -1,9 +1,9 @@
 {
-  "name": "formatura-camilla",
+  "name": "convite-joana-psicologia",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Convite digital premium de formatura da Camilla Santana Conegundes",
+  "description": "Template reutilizavel de convites digitais para formatura e casamento",
   "scripts": {
     "dev": "vite",
     "dev:vercel": "vercel dev --listen 4174",

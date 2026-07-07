@@ -1,15 +1,9 @@
 {
-  "name": "Formatura Camilla",
-  "short_name": "Camilla",
+  "name": "Convite Digital",
+  "short_name": "Convite",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#07100e",
   "theme_color": "#0b1714",
-  "icons": [
-    {
-      "src": "/logo-camilla.png",
-      "sizes": "1214x880",
-      "type": "image/png"
-    }
-  ]
+  "icons": []
 }

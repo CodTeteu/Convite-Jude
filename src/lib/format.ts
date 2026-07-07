@@ -27,6 +27,13 @@ export function formatDisplayDateTime(date: string) {
   }).format(new Date(date));
 }
 
+export function formatCurrencyFromCents(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value / 100);
+}
+
 export async function copyToClipboard(value: string) {
   await navigator.clipboard.writeText(value);
 }

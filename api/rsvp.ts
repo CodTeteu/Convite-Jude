@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { rsvpSchema } from "../shared/schemas.js";
+import { eventSlug } from "../shared/invite.js";
 import { parseBody, sendJson } from "./_lib/http.js";
 import { getSupabaseClient } from "./_lib/supabase.js";
 
@@ -38,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         admin_notes: "",
         acknowledged_guidelines: submission.acknowledged_guidelines,
         source: submission.source,
-        event_slug: submission.event_slug,
+        event_slug: eventSlug,
         submitted_at: new Date().toISOString(),
       })
       .select("id, submitted_at")

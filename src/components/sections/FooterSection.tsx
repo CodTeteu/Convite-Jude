@@ -6,14 +6,14 @@ export function FooterSection() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-[#0a1b15] to-[#06110d] py-12 text-white/80">
+    <footer className="bg-gradient-to-b from-[#071324] to-[#0A1628] py-12 text-white/80">
       <div className="mx-auto max-w-4xl px-4 text-center">
-        <h2 className="mb-3 font-script text-4xl text-[var(--invite-gold)] md:text-5xl">
+        <h2 className="mb-3 font-script italic font-medium text-4xl text-[var(--invite-gold)] md:text-5xl">
           {inviteData.graduate.fullName}
         </h2>
         
         <p className="mx-auto mb-2 max-w-lg font-heading text-base italic leading-relaxed text-white/80 md:text-lg">
-          "{inviteData.graduate.signatureQuote}"
+          {inviteData.graduate.signatureQuote}
         </p>
         <p className="mb-5 text-xs uppercase tracking-[0.2em] text-[var(--invite-gold)]">
           — {inviteData.graduate.firstName}
