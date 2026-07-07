@@ -28,7 +28,7 @@ export function HeroSection() {
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       >
         <ResponsiveImage
-          asset={inviteData.hero.imageAsset}
+          asset="hero/portrait-desktop.jpg"
           alt="Retrato principal do convite"
           className="absolute left-1/2 top-1/2 min-h-full w-full -translate-x-1/2 -translate-y-[46%] object-cover lg:min-h-0 lg:h-auto lg:min-w-full lg:w-auto lg:-translate-y-[42%]"
           eager
@@ -41,7 +41,7 @@ export function HeroSection() {
       {/* Mobile Fixed Background (No-scale to prevent zoom bugs) */}
       <div className="absolute inset-0 z-0 sm:hidden">
         <ResponsiveImage
-          asset={inviteData.hero.imageAsset}
+          asset="hero/portrait-mobile.jpg"
           alt={inviteData.hero.name}
           className="h-full w-full object-cover object-[center_22%]"
           eager
