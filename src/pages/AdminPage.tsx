@@ -316,26 +316,20 @@ function SubmissionCard({
                   Bingo: {info.count} cartela{info.count > 1 ? "s" : ""} (R$ {info.value},00)
                 </span>
               </div>
-              <button
-                onClick={() => onUpdateBingoStatus(item.id, info.status)}
+              <select
+                value={info.status}
+                onChange={(e) => onUpdateBingoStatus(item.id, e.target.value as "pending" | "paid" | "unpaid")}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold transition-all duration-200 shrink-0",
+                  "rounded-full border px-3 py-1 text-[10px] font-semibold outline-none cursor-pointer transition-all duration-200 shrink-0",
                   info.status === "paid" && "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
                   info.status === "unpaid" && "bg-red-50 border-red-200 text-red-700 hover:bg-red-100",
                   info.status === "pending" && "bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
                 )}
-                title="Clique para alternar o status do pagamento"
               >
-                <span className={cn(
-                  "size-1.5 rounded-full",
-                  info.status === "paid" && "bg-green-500",
-                  info.status === "unpaid" && "bg-red-500",
-                  info.status === "pending" && "bg-yellow-500"
-                )} />
-                {info.status === "paid" && "Pago"}
-                {info.status === "unpaid" && "Não Pago"}
-                {info.status === "pending" && "Pendente"}
-              </button>
+                <option value="pending" className="bg-white text-yellow-700 font-semibold">Pendente</option>
+                <option value="paid" className="bg-white text-green-700 font-semibold">Pago</option>
+                <option value="unpaid" className="bg-white text-red-700 font-semibold">Não Pago</option>
+              </select>
             </div>
           );
         })()}
@@ -474,31 +468,25 @@ function SubmissionsTable({
                       if (!info) return <span className="text-[var(--invite-sage)]">—</span>;
                       
                       return (
-                        <button
-                          onClick={() => onUpdateBingoStatus(item.id, info.status)}
-                          className={cn(
-                            "inline-flex flex-col items-center justify-center gap-1 rounded-2xl border px-3 py-1.5 transition duration-200 text-xs font-semibold w-full max-w-[120px] mx-auto",
-                            info.status === "paid" && "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
-                            info.status === "unpaid" && "bg-red-50 border-red-200 text-red-700 hover:bg-red-100",
-                            info.status === "pending" && "bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
-                          )}
-                          title="Clique para alternar o status do pagamento"
-                        >
-                          <span className="text-[10px] uppercase tracking-wider text-black/60 font-sans">
+                        <div className="flex flex-col items-center justify-center">
+                          <span className="text-[10px] uppercase tracking-wider text-black/60 font-sans block mb-1">
                             {info.count} cartela{info.count > 1 ? "s" : ""}
                           </span>
-                          <span className="flex items-center gap-1">
-                            <span className={cn(
-                              "size-1.5 rounded-full",
-                              info.status === "paid" && "bg-green-500",
-                              info.status === "unpaid" && "bg-red-500",
-                              info.status === "pending" && "bg-yellow-500"
-                            )} />
-                            {info.status === "paid" && "Pago"}
-                            {info.status === "unpaid" && "Não Pago"}
-                            {info.status === "pending" && "Pendente"}
-                          </span>
-                        </button>
+                          <select
+                            value={info.status}
+                            onChange={(e) => onUpdateBingoStatus(item.id, e.target.value as "pending" | "paid" | "unpaid")}
+                            className={cn(
+                              "rounded-2xl border px-3 py-1.5 transition duration-200 text-xs font-semibold outline-none cursor-pointer text-center w-full max-w-[125px] mx-auto block",
+                              info.status === "paid" && "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
+                              info.status === "unpaid" && "bg-red-50 border-red-200 text-red-700 hover:bg-red-100",
+                              info.status === "pending" && "bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                            )}
+                          >
+                            <option value="pending" className="bg-white text-yellow-700 font-semibold">Pendente</option>
+                            <option value="paid" className="bg-white text-green-700 font-semibold">Pago</option>
+                            <option value="unpaid" className="bg-white text-red-700 font-semibold">Não Pago</option>
+                          </select>
+                        </div>
                       );
                     })()}
                   </td>
@@ -632,16 +620,7 @@ export default function AdminPage() {
     }
   }
 
-  async function handleUpdateBingoStatus(id: string, currentStatus: "pending" | "paid" | "unpaid") {
-    let nextStatus: "pending" | "paid" | "unpaid" = "paid";
-    if (currentStatus === "pending") {
-      nextStatus = "paid";
-    } else if (currentStatus === "paid") {
-      nextStatus = "unpaid";
-    } else {
-      nextStatus = "pending";
-    }
-
+  async function handleUpdateBingoStatus(id: string, nextStatus: "pending" | "paid" | "unpaid") {
     let newAdminNotes = "";
     if (nextStatus === "paid") {
       newAdminNotes = "[Bingo: PAGO]";
