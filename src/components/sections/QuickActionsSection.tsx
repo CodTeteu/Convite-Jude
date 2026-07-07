@@ -85,7 +85,7 @@ export function QuickActionsSection() {
     <section className="relative z-20 px-4 py-6 sm:px-6 sm:py-8" id="acoes-rapidas">
       <div className="mx-auto max-w-3xl">
         <motion.div
-          className="grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-5"
+          className="grid grid-cols-4 gap-2 sm:gap-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"

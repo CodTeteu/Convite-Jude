@@ -74,19 +74,19 @@ export function MenuSection() {
 
               <div className="relative z-10 text-center">
                 <p className="font-heading text-xs uppercase tracking-[0.3em] text-[var(--invite-gold)] mb-4">
-                  Jantar de Celebra\u00e7\u00e3o
+                  Jantar de Celebração
                 </p>
                 <h3 className="font-script italic font-medium text-3xl md:text-4xl text-white mb-4">
                   Uma noite especial
                 </h3>
                 <div className="decorative-line mb-6" />
                 <p className="font-sans text-sm text-white/70 leading-relaxed max-w-sm mx-auto mb-6">
-                  O jantar ser\u00e1 servido no {inviteData.event.venueName}, em um ambiente preparado com carinho para celebrar essa conquista.
+                  O jantar será servido no {inviteData.event.venueName}, em um ambiente preparado com carinho para celebrar essa conquista.
                 </p>
                 <div className="flex items-center justify-center gap-6 text-sm text-white/60">
                   <div className="text-center">
                     <span className="block font-script text-2xl text-[var(--invite-gold)]">{inviteData.event.timeText}</span>
-                    <span className="text-[10px] uppercase tracking-[0.2em]">Hor\u00e1rio</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em]">Horário</span>
                   </div>
                   <div className="w-[1px] h-10 bg-white/15" />
                   <div className="text-center">

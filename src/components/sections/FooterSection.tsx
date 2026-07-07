@@ -16,7 +16,7 @@ export function FooterSection() {
 
         {/* Date */}
         <p className="font-heading text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/80 mb-3">
-          {inviteData.event.dateLong} &bull; {inviteData.event.timeText}
+          {inviteData.event.dateLong} • {inviteData.event.timeText}
         </p>
 
         {/* Separator */}
@@ -25,10 +25,10 @@ export function FooterSection() {
         {/* Quote */}
         <div className="mb-3 max-w-lg mx-auto">
           <p className="font-heading text-sm italic text-white/90 mb-1 leading-relaxed">
-            &ldquo;{inviteData.graduate.signatureQuote}&rdquo;
+            “{inviteData.graduate.signatureQuote}”
           </p>
           <p className="font-sans text-[9px] uppercase tracking-widest text-white/50">
-            &mdash; {inviteData.graduate.firstName}
+            — {inviteData.graduate.firstName}
           </p>
         </div>
 

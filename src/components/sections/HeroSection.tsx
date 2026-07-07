@@ -76,9 +76,6 @@ export function HeroSection() {
             <p className="mt-5 text-[0.9rem] uppercase tracking-[0.28em] text-white/80 sm:mt-6 sm:text-lg">
               {inviteData.hero.courseLine}
             </p>
-            <p className="mt-2 text-[0.68rem] font-sans font-semibold uppercase tracking-[0.22em] text-white/60 sm:text-[0.72rem]">
-              Cuidar de dentro transforma tudo.
-            </p>
           </div>
         </div>
 

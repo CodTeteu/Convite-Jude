@@ -125,7 +125,7 @@ export const inviteConfig: InviteConfig = {
   features: {
     rsvp: true,
     admin: true,
-    giftList: true,
+    giftList: false,
     music: false,
     gallery: true,
     countdown: true,
@@ -159,7 +159,6 @@ export const inviteConfig: InviteConfig = {
     { label: "Galeria", href: "#familia" },
     { label: "Evento", href: "#celebracao" },
     { label: "RSVP", href: "#rsvp" },
-    { label: "Presentes", href: "/presentes" },
   ],
   hero: {
     eyebrow: "Convite de Formatura",
@@ -244,7 +243,7 @@ export const inviteConfig: InviteConfig = {
     messagePlaceholder: "Se desejar, escreva uma mensagem especial para a Joana.",
   },
   giftList: {
-    enabled: true,
+    enabled: false,
     title: "Contribuição",
     description:
       "Se desejar contribuir, o valor vai diretamente para a formanda. Toda contribuição é muito bem-vinda!",
