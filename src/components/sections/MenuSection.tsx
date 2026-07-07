@@ -5,7 +5,7 @@ export function MenuSection() {
   if (!inviteData.menu?.enabled) return null;
 
   return (
-    <section className="invite-section relative bg-[var(--invite-cream)] overflow-hidden" id="cardapio">
+    <section className="invite-section relative overflow-hidden" id="cardapio">
       {/* Background pattern and blobs */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
         <div className="absolute top-20 left-10 w-80 h-80 bg-[var(--invite-brown)] rounded-full blur-3xl" />

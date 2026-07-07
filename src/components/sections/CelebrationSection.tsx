@@ -43,7 +43,7 @@ export function CelebrationSection() {
   const colacaoCalendarUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Colação+de+Grau+-+Joana+Darc&dates=20260807T220000Z/20260808T010000Z&details=Colação+de+Grau+de+Psicologia+da+Joana+Darc&location=Espaço+Palaciu's+Real+Eventos+-+Gurupi+TO";
 
   return (
-    <section className="invite-section relative bg-[var(--invite-cream)] overflow-hidden" id="celebracao">
+    <section className="invite-section relative overflow-hidden" id="celebracao">
       {/* Background blobs */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--invite-gold)] rounded-full blur-3xl" />
