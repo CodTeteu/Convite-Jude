@@ -171,7 +171,7 @@ export const inviteConfig: InviteConfig = {
   },
   story: {
     label: "Minha jornada",
-    title: "Uma História de Fé e Perseverança",
+    title: "Minha História",
     images: [
       { asset: "gallery/photo-1.jpg", alt: "Joana no consultório de Psicologia" },
       { asset: "gallery/photo-2.jpg", alt: "Joana com os livros de Psicologia" },

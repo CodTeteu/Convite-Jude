@@ -106,11 +106,8 @@ export function QuickActionsSection() {
                 key={action.id}
                 onClick={action.onClick}
                 variants={itemVariants}
-                className={`group relative flex flex-col items-center justify-center rounded-xl border border-[var(--invite-gold)]/20 bg-gradient-to-b from-white/95 to-[#f8fafc]/90 p-3 shadow-[0_4px_20px_rgba(10,22,40,0.02)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(10,22,40,0.06)] active:scale-[0.97]`}
+                className="group relative flex flex-col items-center justify-center p-2 transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.97]"
               >
-                {/* Accent thin line on top */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--invite-gold)]/30 to-transparent transition-all duration-300 group-hover:via-[var(--invite-gold)]" />
-
                 {/* Compact icon container */}
                 <div className="relative mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--invite-brown)] text-[var(--invite-gold)] shadow-sm transition-all duration-300 group-hover:scale-105">
                   <div className="absolute inset-[-3px] rounded-full border border-[var(--invite-gold)]/20 scale-95 transition-all duration-300 group-hover:scale-105" />
