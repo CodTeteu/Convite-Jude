@@ -100,6 +100,7 @@ export function RSVPSection() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<RSVPFormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(rsvpFormSchema) as any,
     defaultValues: defaultFormValues,
   });

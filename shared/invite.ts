@@ -64,6 +64,7 @@ export interface InviteConfig {
       alt: string;
       caption: string;
       positionClass?: string;
+      aspect?: "portrait" | "landscape";
     }>;
   };
   celebration: {
@@ -197,12 +198,12 @@ export const inviteConfig: InviteConfig = {
     ],
     slides: [
       { asset: "gallery/photo-3.jpg", alt: "Joana com os pais no dia da formatura", caption: "Minha base, minha fortaleza." },
-      { asset: "gallery/photo-4.jpg", alt: "Joana com os pais segurando o diploma", caption: "O diploma é nosso!" },
-      { asset: "gallery/photo-5.jpg", alt: "Joana com família e amigos", caption: "Juntos em cada conquista." },
+      { asset: "gallery/photo-4.jpg", alt: "Joana com os pais segurando o diploma", caption: "O diploma é nosso!", aspect: "landscape" },
+      { asset: "gallery/photo-5.jpg", alt: "Joana com família e amigos", caption: "Juntos em cada conquista.", aspect: "landscape" },
       { asset: "gallery/photo-6.jpg", alt: "Joana celebrando com o pai", caption: "Orgulho de pai." },
       { asset: "gallery/photo-7.jpg", alt: "Joana com a bíblia e o diploma", caption: "Fé e conquista caminham juntas." },
       { asset: "gallery/photo-8.jpg", alt: "Joana com a estola de Psicologia", caption: "Uma jornada de dedicação." },
-      { asset: "gallery/photo-9.jpg", alt: "Joana com o capelo de formatura", caption: "O futuro é agora!" },
+      { asset: "gallery/photo-9.jpg", alt: "Joana com o capelo de formatura", caption: "O futuro é agora!", aspect: "landscape" },
     ],
   },
   celebration: {

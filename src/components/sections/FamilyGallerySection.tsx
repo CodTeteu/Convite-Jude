@@ -62,26 +62,37 @@ export function FamilyGallerySection() {
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="-ml-4 flex">
-                {inviteData.familyGallery.slides.map((slide, index) => (
-                  <div
-                    className="min-w-0 flex-[0_0_80%] pl-4 sm:flex-[0_0_50%] md:flex-[0_0_40%] lg:flex-[0_0_30%]"
-                    key={slide.asset}
-                  >
+                {inviteData.familyGallery.slides.map((slide, index) => {
+                  const isLandscape = slide.aspect === "landscape";
+                  return (
                     <div
-                      onClick={() => setSelectedImageIndex(index)}
-                      className="group relative cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-lg border border-[var(--invite-line)]/35"
+                      className={cn(
+                        "min-w-0 pl-4 transition-all duration-300",
+                        isLandscape
+                          ? "flex-[0_0_95%] sm:flex-[0_0_90%] md:flex-[0_0_70%] lg:flex-[0_0_56%]"
+                          : "flex-[0_0_75%] sm:flex-[0_0_45%] md:flex-[0_0_35%] lg:flex-[0_0_28%]"
+                      )}
+                      key={slide.asset}
                     >
-                      <div className="aspect-[3/4] overflow-hidden">
-                        <ResponsiveImage
-                          asset={slide.asset}
-                          alt={slide.alt}
-                          className={cn(
-                            "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
-                            slide.positionClass,
-                          )}
-                          sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 80vw"
-                        />
-                      </div>
+                      <div
+                        onClick={() => setSelectedImageIndex(index)}
+                        className="group relative cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-lg border border-[var(--invite-line)]/35"
+                      >
+                        <div className={cn("overflow-hidden", isLandscape ? "aspect-[3/2]" : "aspect-[3/4]")}>
+                          <ResponsiveImage
+                            asset={slide.asset}
+                            alt={slide.alt}
+                            className={cn(
+                              "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
+                              slide.positionClass,
+                            )}
+                            sizes={
+                              isLandscape
+                                ? "(min-width: 1024px) 56vw, (min-width: 768px) 70vw, 95vw"
+                                : "(min-width: 1024px) 28vw, (min-width: 768px) 35vw, 75vw"
+                            }
+                          />
+                        </div>
                       
                       {/* Gradient Hover Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
@@ -96,7 +107,8 @@ export function FamilyGallerySection() {
                       </p>
                     )}
                   </div>
-                ))}
+                );
+              })}
               </div>
             </div>
 
