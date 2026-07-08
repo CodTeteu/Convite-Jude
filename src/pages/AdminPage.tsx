@@ -606,10 +606,10 @@ export default function AdminPage() {
         eventFilter === "all"
           ? true
           : eventFilter === "colacao"
-          ? eventsInfo === "Colação de Grau"
+          ? eventsInfo === "Apenas Colação de Grau"
           : eventFilter === "jantar"
-          ? eventsInfo === "Jantar de Celebração"
-          : eventsInfo === "Colação de Grau e Jantar de Celebração";
+          ? eventsInfo === "Apenas Jantar de Celebração"
+          : eventsInfo === "Ambos os Eventos";
 
       const matchesSearch =
         term.length === 0
@@ -830,54 +830,61 @@ export default function AdminPage() {
           transition={{ delay: 0.45 }}
           className="invite-card mt-8 px-5 py-5"
         >
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-              <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
-                <input
-                  className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-base text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar por nome ou telefone..."
-                  value={searchTerm}
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {(["all", ...statusOptions] as const).map((status) => (
-                  <button
-                    key={status}
-                    className={`admin-filter-btn ${
-                      statusFilter === status ? "admin-filter-active" : "admin-filter-inactive"
-                    }`}
-                    onClick={() => setStatusFilter(status)}
-                    type="button"
-                  >
-                    {status === "all" ? "Todos" : attendanceLabels[status]}
-                  </button>
-                ))}
-              </div>
+          <div className="flex flex-col gap-5">
+            {/* Search Input (Full Width) */}
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
+              <input
+                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-base text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por nome ou telefone..."
+                value={searchTerm}
+              />
             </div>
 
-            {/* Event Filter Row */}
-            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[var(--invite-line)]/30">
-              <span className="text-[10px] uppercase tracking-wider text-[var(--invite-brown-soft)]/80 font-heading">Eventos:</span>
-              <div className="flex flex-wrap gap-2">
-                {([
-                  { value: "all", label: "Todos os Eventos" },
-                  { value: "colacao", label: "Apenas Colação" },
-                  { value: "jantar", label: "Apenas Jantar" },
-                  { value: "both", label: "Colação e Jantar" }
-                ] as const).map((option) => (
-                  <button
-                    key={option.value}
-                    className={`admin-filter-btn ${
-                      eventFilter === option.value ? "admin-filter-active" : "admin-filter-inactive"
-                    }`}
-                    onClick={() => setEventFilter(option.value)}
-                    type="button"
-                  >
-                    {option.label}
-                  </button>
-                ))}
+            {/* Filters (Side-by-side on desktop) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[var(--invite-line)]/30">
+              {/* Status Filter Block */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--invite-brown-soft)]/85 font-heading">Filtrar por Presença:</span>
+                <div className="flex flex-wrap gap-2">
+                  {(["all", ...statusOptions] as const).map((status) => (
+                    <button
+                      key={status}
+                      className={`admin-filter-btn ${
+                        statusFilter === status ? "admin-filter-active" : "admin-filter-inactive"
+                      }`}
+                      onClick={() => setStatusFilter(status)}
+                      type="button"
+                    >
+                      {status === "all" ? "Todos" : attendanceLabels[status]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Event Filter Block */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--invite-brown-soft)]/85 font-heading">Filtrar por Evento:</span>
+                <div className="flex flex-wrap gap-2">
+                  {([
+                    { value: "all", label: "Todos os Eventos" },
+                    { value: "colacao", label: "Apenas Colação" },
+                    { value: "jantar", label: "Apenas Jantar" },
+                    { value: "both", label: "Colação e Jantar" }
+                  ] as const).map((option) => (
+                    <button
+                      key={option.value}
+                      className={`admin-filter-btn ${
+                        eventFilter === option.value ? "admin-filter-active" : "admin-filter-inactive"
+                      }`}
+                      onClick={() => setEventFilter(option.value)}
+                      type="button"
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
