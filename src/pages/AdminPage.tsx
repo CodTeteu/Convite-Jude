@@ -277,9 +277,10 @@ function SubmissionCard({
               const events = getEventsInfo(item);
               if (!events) return null;
               return (
-                <span className="mt-1.5 inline-flex items-center gap-1 rounded bg-[var(--invite-sage-soft)]/40 px-2 py-0.5 text-[9px] font-semibold text-[var(--invite-brown)] uppercase tracking-wider font-sans">
-                  {events}
-                </span>
+                <div className="mt-2 flex items-center gap-1 w-fit rounded bg-[var(--invite-gold)]/10 border border-[var(--invite-gold)]/20 px-2 py-0.5 text-[9px] font-semibold text-[var(--invite-gold-deep)] uppercase tracking-wider font-sans">
+                  <Calendar className="size-2.5 shrink-0" />
+                  <span>{events}</span>
+                </div>
               );
             })()}
           </div>
@@ -303,14 +304,18 @@ function SubmissionCard({
         </div>
 
         {/* Notes */}
-        {item.notes && (
-          <div className="flex items-start gap-2.5 text-sm">
-            <MessageSquare className="mt-0.5 size-3.5 flex-shrink-0 text-[var(--invite-sage)]" />
-            <span className="italic leading-relaxed text-[var(--invite-brown-soft)]">
-              "{item.notes}"
-            </span>
-          </div>
-        )}
+        {(() => {
+          const cleaned = cleanNotes(item.notes);
+          if (!cleaned) return null;
+          return (
+            <div className="flex items-start gap-2.5 text-sm">
+              <MessageSquare className="mt-0.5 size-3.5 flex-shrink-0 text-[var(--invite-sage)]" />
+              <span className="italic leading-relaxed text-[var(--invite-brown-soft)]">
+                "{cleaned}"
+              </span>
+            </div>
+          );
+        })()}
 
         {/* Bingo Status */}
         {(() => {
@@ -385,6 +390,15 @@ function getEventsInfo(item: AdminRsvpItem) {
   return match[1];
 }
 
+// Helper to clean up technical metadata from guest notes
+function cleanNotes(notes: string | null) {
+  if (!notes) return "";
+  return notes
+    .replace(/\[Eventos:\s*[^\]]+\]/g, "")
+    .replace(/\[Bingo:\s*[^\]]+\]/g, "")
+    .trim();
+}
+
 // ===========================================
 // READ-ONLY TABLE (DESKTOP)
 // ===========================================
@@ -444,9 +458,10 @@ function SubmissionsTable({
                           const events = getEventsInfo(item);
                           if (!events) return null;
                           return (
-                            <span className="mt-1 inline-flex items-center gap-1 rounded bg-[var(--invite-sage-soft)]/40 px-1.5 py-0.5 text-[9px] font-semibold text-[var(--invite-brown)] uppercase tracking-wider font-sans">
-                              {events}
-                            </span>
+                            <div className="mt-1.5 flex items-center gap-1 w-fit rounded bg-[var(--invite-gold)]/10 border border-[var(--invite-gold)]/20 px-2 py-0.5 text-[9px] font-semibold text-[var(--invite-gold-deep)] uppercase tracking-wider font-sans">
+                              <Calendar className="size-2.5 shrink-0" />
+                              <span>{events}</span>
+                            </div>
                           );
                         })()}
                       </div>
@@ -477,13 +492,15 @@ function SubmissionsTable({
 
                   {/* Notes */}
                   <td className="max-w-[260px] px-5 py-4">
-                    {item.notes ? (
-                      <div className="admin-message-box whitespace-pre-wrap break-words">
-                        "{item.notes}"
-                      </div>
-                    ) : (
-                      <span className="text-xs text-[var(--invite-sage)]">—</span>
-                    )}
+                    {(() => {
+                      const cleaned = cleanNotes(item.notes);
+                      if (!cleaned) return <span className="text-xs text-[var(--invite-sage)]">—</span>;
+                      return (
+                        <div className="admin-message-box whitespace-pre-wrap break-words">
+                          "{cleaned}"
+                        </div>
+                      );
+                    })()}
                   </td>
 
                   {/* Bingo / Pix status */}
