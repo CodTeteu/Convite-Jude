@@ -24,27 +24,18 @@ function BrandLogo({
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center font-heading text-xl tracking-normal transition-all duration-500",
+        "relative flex items-center justify-center transition-all duration-500",
         className,
       )}
     >
-      {/* Incomplete circular arc matching the branding guide */}
-      <div 
-        className={cn(
-          "absolute inset-0 rounded-full border border-l-transparent transition-all duration-500 rotate-[-12deg]",
-          variant === "onDark"
-            ? "border-white/40"
-            : "border-[var(--invite-gold)]/60",
-        )}
+      <img
+        src="/images/logo.png"
+        alt="Logo Joana Darc"
+        className="size-full object-contain"
+        style={{
+          filter: variant === "onDark" ? "brightness(0) invert(1)" : undefined,
+        }}
       />
-      <span
-        className={cn(
-          "font-heading font-medium tracking-normal select-none -translate-x-[1px]",
-          variant === "onDark" ? "text-white" : "text-[var(--invite-brown)]",
-        )}
-      >
-        {inviteData.people.monogram}
-      </span>
     </div>
   );
 }
