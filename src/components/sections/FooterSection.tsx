@@ -73,7 +73,7 @@ export function FooterSection() {
           </a>
 
           <p className="text-[10px] text-white/50 mt-1 leading-relaxed">
-            Quer um site assim para sua formatura? Chama a gente! ✨
+            Quer um site assim para seu evento? Chama a gente! ✨
           </p>
         </div>
       </div>
