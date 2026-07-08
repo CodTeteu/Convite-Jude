@@ -561,6 +561,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearch = useDeferredValue(searchTerm);
   const [statusFilter, setStatusFilter] = useState<AttendanceStatus | "all">("all");
+  const [eventFilter, setEventFilter] = useState<"all" | "colacao" | "jantar" | "both">("all");
   const [activeTab, setActiveTab] = useState<AdminTab>("rsvps");
 
   // Delete state
@@ -599,13 +600,25 @@ export default function AdminPage() {
     return (data.items ?? []).filter((item) => {
       const matchesStatus =
         statusFilter === "all" ? true : item.attendance_status === statusFilter;
+
+      const eventsInfo = getEventsInfo(item);
+      const matchesEvent =
+        eventFilter === "all"
+          ? true
+          : eventFilter === "colacao"
+          ? eventsInfo === "Colação de Grau"
+          : eventFilter === "jantar"
+          ? eventsInfo === "Jantar de Celebração"
+          : eventsInfo === "Colação de Grau e Jantar de Celebração";
+
       const matchesSearch =
         term.length === 0
           ? true
           : item.guest_name.toLowerCase().includes(term) || item.phone.includes(term);
-      return matchesStatus && matchesSearch;
+
+      return matchesStatus && matchesEvent && matchesSearch;
     });
-  }, [data, deferredSearch, statusFilter]);
+  }, [data, deferredSearch, statusFilter, eventFilter]);
 
   async function handleLogin(password: string) {
     try {
@@ -817,29 +830,55 @@ export default function AdminPage() {
           transition={{ delay: 0.45 }}
           className="invite-card mt-8 px-5 py-5"
         >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
-              <input
-                className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-base text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar por nome ou telefone..."
-                value={searchTerm}
-              />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--invite-brown-soft)]/40" />
+                <input
+                  className="w-full rounded-[16px] border border-[var(--invite-line)] bg-transparent py-3.5 pl-11 pr-5 text-base text-[var(--invite-brown)] outline-none transition placeholder:text-[var(--invite-brown-soft)]/40 focus:border-[var(--invite-gold)] focus:bg-[var(--invite-paper)]"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar por nome ou telefone..."
+                  value={searchTerm}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(["all", ...statusOptions] as const).map((status) => (
+                  <button
+                    key={status}
+                    className={`admin-filter-btn ${
+                      statusFilter === status ? "admin-filter-active" : "admin-filter-inactive"
+                    }`}
+                    onClick={() => setStatusFilter(status)}
+                    type="button"
+                  >
+                    {status === "all" ? "Todos" : attendanceLabels[status]}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {(["all", ...statusOptions] as const).map((status) => (
-                <button
-                  key={status}
-                  className={`admin-filter-btn ${
-                    statusFilter === status ? "admin-filter-active" : "admin-filter-inactive"
-                  }`}
-                  onClick={() => setStatusFilter(status)}
-                  type="button"
-                >
-                  {status === "all" ? "Todos" : attendanceLabels[status]}
-                </button>
-              ))}
+
+            {/* Event Filter Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[var(--invite-line)]/30">
+              <span className="text-[10px] uppercase tracking-wider text-[var(--invite-brown-soft)]/80 font-heading">Eventos:</span>
+              <div className="flex flex-wrap gap-2">
+                {([
+                  { value: "all", label: "Todos os Eventos" },
+                  { value: "colacao", label: "Apenas Colação" },
+                  { value: "jantar", label: "Apenas Jantar" },
+                  { value: "both", label: "Colação e Jantar" }
+                ] as const).map((option) => (
+                  <button
+                    key={option.value}
+                    className={`admin-filter-btn ${
+                      eventFilter === option.value ? "admin-filter-active" : "admin-filter-inactive"
+                    }`}
+                    onClick={() => setEventFilter(option.value)}
+                    type="button"
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
