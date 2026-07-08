@@ -64,6 +64,10 @@ async function createImageVariants(asset) {
 
 async function createOgImage() {
   const heroPath = path.join(sourceDir, "WhatsApp Image 2026-07-06 at 12.35.33.jpeg");
+  if (!(await fileExists(heroPath))) {
+    console.warn(`Aviso: Imagem base para OG não encontrada em ${heroPath}. Pulando geração de OG.`);
+    return;
+  }
   const overlay = buildOgOverlay();
   const ogBase = sharp(heroPath)
     .rotate()
