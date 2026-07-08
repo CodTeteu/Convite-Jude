@@ -14,10 +14,7 @@ export function FooterSection() {
           {inviteData.graduate.fullName}
         </h2>
 
-        {/* Date */}
-        <p className="font-heading text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/80 mb-3">
-          {inviteData.event.dateLong} • {inviteData.event.timeText}
-        </p>
+
 
         {/* Separator */}
         <div className="w-12 h-[1px] bg-white/20 mb-3" />
