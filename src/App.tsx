@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { Toaster } from "sonner";
 import HomePage from "@/pages/HomePage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import { assetPath } from "@/config/assets";
 
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const GiftListPage = lazy(() => import("@/pages/GiftListPage"));
@@ -22,8 +23,15 @@ function LoadingScreen() {
 }
 
 export default function App() {
+  const bgUrl = assetPath("light-bg.png");
+
   return (
     <>
+      <style>{`
+        .invite-page::before {
+          background-image: url("${bgUrl}") !important;
+        }
+      `}</style>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
