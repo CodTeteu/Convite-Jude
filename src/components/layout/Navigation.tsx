@@ -77,7 +77,7 @@ export function Navigation() {
           >
               <BrandLogo
                 variant={scrolled ? "onLight" : "onDark"}
-                className={scrolled ? "size-9" : "size-11 lg:size-13"}
+                className={scrolled ? "size-8" : "size-10 lg:size-11"}
               />
           </button>
 
