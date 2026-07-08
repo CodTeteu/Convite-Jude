@@ -13,6 +13,22 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/formatura-joana/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/formatura-joana/images/(.*)",
+      "destination": "/images/$1"
+    },
+    {
+      "source": "/formatura-joana/favicon.png",
+      "destination": "/favicon.png"
+    },
+    {
+      "source": "/formatura-joana/og-template.jpg",
+      "destination": "/og-template.jpg"
+    },
+    {
       "source": "/formatura-joana/(.*)",
       "destination": "/"
     },
