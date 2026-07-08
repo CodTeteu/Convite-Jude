@@ -216,12 +216,9 @@ export const inviteConfig: InviteConfig = {
     locationNarrative:
       "O Jantar de Celebração será no Salão Social da IAD Matriz Gurupi.",
     quickNotes: [
-      { title: "Colação de Grau", description: "7 de agosto de 2026 — Espaço Palaciu's Real Eventos." },
-      { title: "Jantar de Celebração", description: "8 de agosto de 2026 às 19h30 — Salão Social da IAD Matriz Gurupi." },
-      { title: "Traje", description: "Traje social." },
+      { title: "Programação", description: "Colação de Grau: 7 de agosto de 2026 no Espaço Palaciu's Real Eventos. Jantar de Celebração: 8 de agosto de 2026 às 19h30 no Salão Social da IAD Matriz Gurupi." },
       { title: "Confirmação", description: "Confirme sua presença até 20/07/2026." },
-      { title: "Estacionamento", description: "Estacionamento disponível no local." },
-      { title: "Fotos", description: "Amamos fotos! Registre cada momento e compartilhe conosco!" },
+      { title: "Chegue no Horário", description: "Pedimos a gentileza de chegar no horário — início às 19h30." },
       { title: "Bingo Especial", description: "Teremos um bingo especial durante o jantar! Cartelas a R$10 — adquira a sua no dia do evento e divirta-se contribuindo para este momento especial." },
     ],
   },
@@ -232,8 +229,6 @@ export const inviteConfig: InviteConfig = {
       "Sua confirmação é essencial para que possamos preparar tudo com carinho para este momento tão especial.",
     infoItems: [
       "Confirme sua presença até 20/07/2026.",
-      "Chegue no horário — início às 19h30.",
-      "Traje social.",
       "Teremos um bingo especial durante o jantar! Cartelas a R$10 — adquira a sua no dia do evento.",
     ],
     maxCompanions: 4,

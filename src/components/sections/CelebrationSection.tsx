@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Check, Clock3, Copy, MapPin, Navigation, Shirt, Users, Camera, Ticket, Car, ChevronDown } from "lucide-react";
+import { Calendar, Check, Clock3, Copy, MapPin, Navigation, Users, Ticket, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { inviteData } from "@/config/invite";
 import { buildGoogleCalendarUrl } from "@/lib/calendar";
@@ -12,12 +12,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"];
 
 const quickNoteIcons: Record<string, typeof Clock3> = {
-  "Colação de Grau": Calendar,
-  "Jantar de Celebração": Clock3,
-  "Traje": Shirt,
+  "Programação": Calendar,
   "Confirmação": Users,
-  "Estacionamento": Car,
-  "Fotos": Camera,
+  "Chegue no Horário": Clock3,
   "Bingo Especial": Ticket,
 };
 
