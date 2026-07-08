@@ -148,7 +148,7 @@ export const inviteConfig: InviteConfig = {
     endsAt: "2026-08-09T02:00:00-03:00",
     venue: "Salão Social da IAD Matriz Gurupi",
     venueName: "Salão Social da IAD Matriz",
-    venueImageAsset: "hero/venue.jpg",
+    venueImageAsset: "hero/dinner.png",
     mapsUrl: "https://maps.app.goo.gl/Rkd1TThPWxNs8UmB6",
     wazeUrl: "https://waze.com/ul?ll=-11.7279,-49.0687&navigate=yes",
     dressCode: "Traje social",
