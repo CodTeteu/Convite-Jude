@@ -19,10 +19,10 @@ async function run() {
     await sharp(sourceImage)
       .trim()
       .extend({
-        top: 4,
-        bottom: 4,
-        left: 4,
-        right: 4,
+        top: 1,
+        bottom: 1,
+        left: 1,
+        right: 1,
         background: { r: 255, g: 255, b: 255, alpha: 0 } // transparente
       })
       .toFile(outputFavicon);
