@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import HomePage from "@/pages/HomePage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { assetPath } from "@/config/assets";
+import { LoadingIntro } from "@/components/ui/LoadingIntro";
 
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const GiftListPage = lazy(() => import("@/pages/GiftListPage"));
@@ -27,6 +28,7 @@ export default function App() {
 
   return (
     <>
+      <LoadingIntro />
       <style>{`
         .invite-page::before {
           background-image: url("${bgUrl}") !important;
