@@ -4,6 +4,7 @@ import { GraduationCap, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { inviteData } from "@/config/invite";
 import { cn } from "@/lib/cn";
+import { assetPath } from "@/config/assets";
 
 function scrollToHash(hash: string) {
   const element = document.querySelector(hash);
@@ -29,7 +30,7 @@ function BrandLogo({
       )}
     >
       <img
-        src="/images/logo.png"
+        src={assetPath("images/logo.png")}
         alt="Logo Joana Darc"
         className="size-full object-contain"
         style={{

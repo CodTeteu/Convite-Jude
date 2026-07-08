@@ -1,36 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "VITE_BASE_PATH=/formatura-joana/ npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/formatura-joana/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
-    },
-    {
-      "source": "/formatura-joana/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    {
-      "source": "/formatura-joana/images/(.*)",
-      "destination": "/images/$1"
-    },
-    {
-      "source": "/formatura-joana/favicon.png",
-      "destination": "/favicon.png"
-    },
-    {
-      "source": "/formatura-joana/og-template.jpg",
-      "destination": "/og-template.jpg"
-    },
-    {
-      "source": "/formatura-joana/(.*)",
-      "destination": "/"
     },
     {
       "source": "/(.*)",
