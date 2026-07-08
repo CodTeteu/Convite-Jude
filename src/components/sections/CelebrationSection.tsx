@@ -71,7 +71,7 @@ export function CelebrationSection() {
                 <ResponsiveImage
                   asset="hero/venue.jpg"
                   alt="Colação de Grau"
-                  className="w-full h-full object-cover object-[center_70%] transition-transform duration-700 group-hover:scale-103"
+                  className="w-full h-full object-cover object-[center_45%] transition-transform duration-700 group-hover:scale-103"
                 />
               </div>
 
