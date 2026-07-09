@@ -153,7 +153,7 @@ export const inviteConfig: InviteConfig = {
     mapsUrl: "https://maps.app.goo.gl/Rkd1TThPWxNs8UmB6",
     wazeUrl: "https://waze.com/ul?ll=-11.7279,-49.0687&navigate=yes",
     dressCode: "Traje social",
-    confirmationDeadline: "20/07/2026",
+    confirmationDeadline: "17/07/2026",
   },
   navigation: [
     { label: "História", href: "#jornada" },
@@ -217,9 +217,9 @@ export const inviteConfig: InviteConfig = {
       "O Jantar de Celebração será no Salão Social da IAD Matriz Gurupi.",
     quickNotes: [
       { title: "Programação", description: "Colação de Grau: 7 de agosto de 2026 no Espaço Palaciu's Real Eventos. Jantar de Celebração: 8 de agosto de 2026 às 19h30 no Salão Social da IAD Matriz Gurupi." },
-      { title: "Confirmação", description: "Confirme sua presença até 20/07/2026." },
+      { title: "Confirmação", description: "Confirme sua presença até 17/07/2026." },
       { title: "Chegue no Horário", description: "Pedimos a gentileza de chegar no horário — início às 19h30." },
-      { title: "Bingo Especial", description: "Teremos um bingo especial durante o jantar! Cartelas a R$10 — adquira a sua no dia do evento e divirta-se contribuindo para este momento especial." },
+      { title: "Bingo Especial", description: "Teremos um bingo especial durante o jantar! As cartelas custam R$ 20,00 cada e poderão ser adquiridas antecipadamente através deste convite, no momento da confirmação da sua presença. Você poderá escolher a quantidade de cartelas que desejar e, em seguida, realizar o pagamento utilizando o Pix disponibilizado logo abaixo. As cartelas serão entregues fisicamente no dia do evento. Participe e divirta-se contribuindo para esse momento tão especial!" },
     ],
   },
   rsvp: {
@@ -228,8 +228,8 @@ export const inviteConfig: InviteConfig = {
     description:
       "Sua confirmação é essencial para que possamos preparar tudo com carinho para este momento tão especial.",
     infoItems: [
-      "Confirme sua presença até 20/07/2026.",
-      "Teremos um bingo especial durante o jantar! Cartelas a R$10 — adquira a sua no dia do evento.",
+      "Confirme sua presença até 17/07/2026.",
+      "Teremos um bingo especial durante o jantar! As cartelas custam R$ 20,00 cada e poderão ser adquiridas antecipadamente no momento da confirmação da sua presença.",
     ],
     maxCompanions: 4,
     whatsappNumber: "63991084042",
@@ -249,7 +249,7 @@ export const inviteConfig: InviteConfig = {
       "Faça o PIX usando a chave CPF abaixo. Após o envio, o presente ficará pendente até conferência manual.",
   },
   menu: {
-    enabled: true,
+    enabled: false,
     label: "Cardápio",
     title: "O que vamos saborear",
     description: "Preparamos um cardápio especial para celebrar esta noite com você.",

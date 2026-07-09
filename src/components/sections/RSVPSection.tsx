@@ -172,7 +172,7 @@ export function RSVPSection() {
       const eventLabel = eventLabelMap[currentSelectedEvents] || "Nenhum";
       const eventNotes = `[Eventos: ${eventLabel}]`;
       const bingoNote = bingoCardsCount > 0
-        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 20}]`
         : " [Bingo: Não deseja cartelas]";
 
       let rawNotes = getValues("notes") || "";
@@ -253,7 +253,7 @@ export function RSVPSection() {
 
       const eventNotes = `[Eventos: ${eventLabel}]`;
       const bingoNote = values.attendance_status === "attending" && bingoCardsCount > 0
-        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 20}]`
         : " [Bingo: Não deseja cartelas]";
 
       let rawNotes = values.notes || "";
@@ -311,7 +311,7 @@ export function RSVPSection() {
 
       const eventNotes = `[Eventos: ${eventLabel}]`;
       const bingoNote = attendanceStatus === "attending" && bingoCardsCount > 0
-        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 10}]`
+        ? ` [Bingo: ${bingoCardsCount} cartela(s) - R$ ${bingoCardsCount * 20}]`
         : " [Bingo: Não deseja cartelas]";
 
       let rawNotes = getValues("notes") || "";
@@ -560,7 +560,7 @@ export function RSVPSection() {
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 flex items-center gap-2 font-body text-sm text-[var(--invite-brown-soft)] sm:text-base">
-                      Deseja adquirir cartelas antecipadas? (R$ 10,00 cada)
+                      Deseja adquirir cartelas antecipadas? (R$ 20,00 cada)
                     </label>
                     <select
                       className="w-full rounded-xl border border-[var(--invite-line)] bg-[var(--invite-cream)]/10 px-5 py-3.5 font-sans text-base text-[var(--invite-brown)] outline-none transition-all duration-300 focus:border-[var(--invite-gold)] focus:bg-white focus:ring-2 focus:ring-[var(--invite-gold)]/20"
@@ -568,11 +568,11 @@ export function RSVPSection() {
                     >
                       <option value="">Selecione uma opção...</option>
                       <option value="0">Não desejo adquirir no momento</option>
-                      <option value="1">1 cartela — R$ 10,00</option>
-                      <option value="2">2 cartelas — R$ 20,00</option>
-                      <option value="3">3 cartelas — R$ 30,00</option>
-                      <option value="4">4 cartelas — R$ 40,00</option>
-                      <option value="5">5 cartelas — R$ 50,00</option>
+                      <option value="1">1 cartela — R$ 20,00</option>
+                      <option value="2">2 cartelas — R$ 40,00</option>
+                      <option value="3">3 cartelas — R$ 60,00</option>
+                      <option value="4">4 cartelas — R$ 80,00</option>
+                      <option value="5">5 cartelas — R$ 100,00</option>
                     </select>
                     {errors.bingo_option ? (
                       <p className="mt-2 text-sm text-rose-600">{errors.bingo_option.message as string}</p>
@@ -583,7 +583,7 @@ export function RSVPSection() {
                     <div className="rounded-2xl border border-[var(--invite-gold)]/25 bg-[#fffbf2]/70 p-5 animate-in fade-in slide-in-from-top-2 duration-300">
                       <p className="font-heading text-xs text-[var(--invite-gold-deep)] uppercase tracking-wider mb-2 font-semibold">Pagamento via Pix</p>
                       <p className="text-xs text-[var(--invite-brown-soft)] mb-4 leading-relaxed">
-                        Realize o pagamento de <strong>R$ {bingoCardsCount * 10},00</strong> copiando a chave Pix abaixo. O comprovante Pix deve ser enviado no WhatsApp a seguir.
+                        Realize o pagamento de <strong>R$ {bingoCardsCount * 20},00</strong> copiando a chave Pix abaixo. O comprovante Pix deve ser enviado no WhatsApp a seguir.
                       </p>
                       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                         <div className="flex-1 bg-white border border-[var(--invite-line)] rounded-xl px-4 py-3 font-sans text-xs text-[var(--invite-brown)] select-all break-all text-center sm:text-left">

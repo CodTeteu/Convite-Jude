@@ -52,7 +52,7 @@ export function buildWhatsAppMessage(params: {
 
   const bingoSection =
     params.attendance === "attending" && params.bingoCardsCount && params.bingoCardsCount > 0
-      ? `\nComprei ${params.bingoCardsCount} cartela(s) do Bingo Especial (R$ ${params.bingoCardsCount * 10},00 pagos via Pix).`
+      ? `\nComprei ${params.bingoCardsCount} cartela(s) do Bingo Especial (R$ ${params.bingoCardsCount * 20},00 pagos via Pix).`
       : "";
 
   return `Olá! ${attendanceStatus}${eventsSection}${companionsSection}${bingoSection}\n\nConvidado: ${params.name}`;

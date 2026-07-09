@@ -37,7 +37,7 @@ export function CelebrationSection() {
   const colacaoAddress = "Rua 3, Qd 27, Lts 05 a 16, nº 1346 - Setor Waldir Lins I, Gurupi - TO";
   const colacaoMapsUrl = "https://www.google.com/maps/search/?api=1&query=Palaciu%27s+Real+Eventos+Gurupi";
   const colacaoWazeUrl = "https://waze.com/ul?q=Palaciu%27s+Real+Eventos+Gurupi&navigate=yes";
-  const colacaoCalendarUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Colação+de+Grau+-+Joana+Darc&dates=20260807T220000Z/20260808T010000Z&details=Colação+de+Grau+de+Psicologia+da+Joana+Darc&location=Espaço+Palaciu's+Real+Eventos+-+Gurupi+TO";
+  const colacaoCalendarUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Colação+de+Grau+-+Joana+Darc&dates=20260807T223000Z/20260808T013000Z&details=Colação+de+Grau+de+Psicologia+da+Joana+Darc&location=Espaço+Palaciu's+Real+Eventos+-+Gurupi+TO";
 
   return (
     <section className="invite-section relative overflow-hidden" id="celebracao">
@@ -82,7 +82,7 @@ export function CelebrationSection() {
                   7 de agosto de 2026
                 </p>
                 <p className="font-script italic text-2xl text-[var(--invite-gold-deep)] mt-0.5">
-                  às 19h00
+                  às 19h30
                 </p>
               </div>
 

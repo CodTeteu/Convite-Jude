@@ -380,7 +380,7 @@ function getBingoInfo(item: AdminRsvpItem) {
     status = "unpaid";
   }
   
-  return { count, status, value: count * 10 };
+  return { count, status, value: count * 20 };
 }
 
 // Helper to parse selected events from notes
